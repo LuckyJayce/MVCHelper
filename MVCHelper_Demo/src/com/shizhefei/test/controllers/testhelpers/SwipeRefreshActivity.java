@@ -27,7 +27,7 @@ import com.shizhefei.mvc.MVCSwipeRefreshHelper;
 import com.shizhefei.test.models.datasource.BooksDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.view.adapters.BooksAdapter;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 /**
  * 测试下拉刷新组件，MVCSwipeRefreshHelper

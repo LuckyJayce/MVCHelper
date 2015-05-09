@@ -31,7 +31,7 @@ import com.shizhefei.mvc.IDataAdapter;
 import com.shizhefei.mvc.data.Data3;
 import com.shizhefei.test.models.enties.Discuss;
 import com.shizhefei.test.models.enties.Movie;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 public class MovieDetailAdapter extends RecyclerView.Adapter<ViewHolder> implements IDataAdapter<Data3<Movie, List<Discuss>, List<Movie>>> {
 

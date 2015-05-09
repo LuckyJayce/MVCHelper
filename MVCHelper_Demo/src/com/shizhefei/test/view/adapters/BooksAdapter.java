@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.shizhefei.mvc.IDataAdapter;
 import com.shizhefei.test.models.enties.Book;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 public class BooksAdapter extends BaseAdapter implements IDataAdapter<List<Book>> {
 	private List<Book> books = new ArrayList<Book>();

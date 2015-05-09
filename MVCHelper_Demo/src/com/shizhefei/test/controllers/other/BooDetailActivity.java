@@ -26,7 +26,7 @@ import com.shizhefei.mvc.MVCHelper;
 import com.shizhefei.mvc.MVCUltraHelper;
 import com.shizhefei.test.models.datasource.BookDetailDataSource;
 import com.shizhefei.test.models.enties.Book;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 /***
  * 测试下拉组件的非列表界面

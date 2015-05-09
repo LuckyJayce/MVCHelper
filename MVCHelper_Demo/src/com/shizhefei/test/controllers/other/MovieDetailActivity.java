@@ -32,7 +32,7 @@ import com.shizhefei.test.models.datasource.MovieDetailDataSource;
 import com.shizhefei.test.models.enties.Discuss;
 import com.shizhefei.test.models.enties.Movie;
 import com.shizhefei.test.view.adapters.MovieDetailAdapter;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 /***
  * 测试下拉组件的超复杂的列表界面，MVCUltraHelper，RecyclerView

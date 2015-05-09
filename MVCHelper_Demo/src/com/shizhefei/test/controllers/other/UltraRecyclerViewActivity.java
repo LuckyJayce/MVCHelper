@@ -30,7 +30,7 @@ import com.shizhefei.mvc.MVCUltraHelper;
 import com.shizhefei.test.models.datasource.BooksDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.view.adapters.ReBooksAdapter;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 /***
  * 测试下拉组件的简单的列表界面，MVCUltraHelper，RecyclerView

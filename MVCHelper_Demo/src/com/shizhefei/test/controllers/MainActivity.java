@@ -27,7 +27,7 @@ import com.shizhefei.test.controllers.testhelpers.NormalActivity;
 import com.shizhefei.test.controllers.testhelpers.PullrefshActivity;
 import com.shizhefei.test.controllers.testhelpers.SwipeRefreshActivity;
 import com.shizhefei.test.controllers.testhelpers.UltraActivity;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 public class MainActivity extends Activity {
 

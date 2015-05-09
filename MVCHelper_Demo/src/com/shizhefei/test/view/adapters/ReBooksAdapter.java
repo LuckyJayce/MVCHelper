@@ -20,7 +20,7 @@ import java.util.List;
 
 import com.shizhefei.mvc.IDataAdapter;
 import com.shizhefei.test.models.enties.Book;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.demo.R;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

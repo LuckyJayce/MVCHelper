@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shizhefei.mvc.ILoadViewFactory;
-import com.shizhefei.view.listviewhelper.R;
+import com.shizhefei.view.mvc.R;
 import com.shizhefei.view.vary.VaryViewHelper;
 
 public class DefaultLoadViewFactory implements ILoadViewFactory {
