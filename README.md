@@ -111,7 +111,7 @@ Activity负责调度，代码如下
 	
 	public class MainActivity extends Activity {
 
-		private MVCHelper<List<Book>> listViewHelper;
+		private MVCHelper<List<Book>> mvcHelper;
 	
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
@@ -119,16 +119,16 @@ Activity负责调度，代码如下
 			// 设置LoadView的factory，用于创建用户自定义的加载失败，加载中，加载更多等布局
 			// ListViewHelper.setLoadViewFractory(new LoadViewFractory());
 	
-		PullToRefreshListView refreshListView = (PullToRefreshListView) findViewById(R.id.pullToRefreshListView);
-		MVCHelper<List<Book>> mvcHelper = new MVCPullrefshHelper<List<Book>>(refreshListView);
-
-		// 设置数据源
-		mvcHelper.setDataSource(new BooksDataSource());
-		// 设置适配器
-		mvcHelper.setAdapter(new BooksAdapter(this));
-
-		// 加载数据
-		mvcHelper.refresh();
+			PullToRefreshListView refreshListView = (PullToRefreshListView) findViewById(R.id.pullToRefreshListView);
+			mvcHelper = new MVCPullrefshHelper<List<Book>>(refreshListView);
+	
+			// 设置数据源
+			mvcHelper.setDataSource(new BooksDataSource());
+			// 设置适配器
+			mvcHelper.setAdapter(new BooksAdapter(this));
+	
+			// 加载数据
+			mvcHelper.refresh();
 		}
 
 		@Override
