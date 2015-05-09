@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp" >
+
+    <TextView
+        android:id="@+id/item_dicuss_user_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user1："
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/item_dicuss_content_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="真精彩"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/item_dicuss_time_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="21:11"
+        android:textColor="#888"
+        android:textSize="14sp" />
+
+</LinearLayout>
