@@ -294,7 +294,7 @@ Activity负责调度，代码如下
 	
 	}
 
-## 9.说明
+## 8.说明
 
 以下三个是目前支持的下拉刷新的第三方开源类库  
 Android-PullToRefresh-Library  
