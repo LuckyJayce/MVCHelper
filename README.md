@@ -44,13 +44,14 @@ MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，
 
 	}
 ## 2.View（IDataAdapter<DATA>）
-	public interface IDataAdapter<DATA> extends ListAdapter {
-
-		public abstract void notifyDataChanged(DATA data, boolean isRefresh)
+	public interface IDataAdapter<DATA> {
+	
+		public abstract void notifyDataChanged(DATA data, boolean isRefresh);
 	
 		public abstract DATA getData();
 	
 		public boolean isEmpty();
+	
 	}
 
 例如：分页显示书籍列表数据
