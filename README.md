@@ -1,5 +1,10 @@
+###MVCHelper更倾向于获取数据并显示数据，比较适用于http的get请求。
+
+###TaskHelper更倾向于任务的执行的失败，成功，取消，比较适用于http的post请求
+
 #一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
+
 Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
 ## 1.Model (IDataSource<DATA>)
