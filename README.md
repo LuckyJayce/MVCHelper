@@ -1,4 +1,4 @@
-# MVCHelper
+#一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
 Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
@@ -296,7 +296,149 @@ Activity负责调度，代码如下
 	
 	}
 
-## 8.说明
+#二、 TaskHelper
+## 1.Model (Task<SUCCESS, FAIL>)
+	/**
+	 * @param <SUCCESS>
+	 *            成功的数据类型
+	 * @param <FAIL>
+	 *            失败的数据类型
+	 */
+	public interface Task<SUCCESS, FAIL> {
+	
+		/**
+		 * 执行后台任务
+		 * 
+		 * @param progressSender
+		 *            进度更新发送者
+		 * @return
+		 * @throws Exception
+		 */
+		public Data<SUCCESS, FAIL> execute(ProgressSender progressSender) throws Exception;
+	
+		/**
+		 * 注意cancle 和 execute 有可能不在同一个线程，cancle可能在UI线程被调用
+		 */
+		public void cancle();
+	
+	}
+
+例如登陆
+
+	public class LoginTask implements Task<User, String> {
+		private String name;
+		private String password;
+	
+		public LoginTask(String name, String password) {
+			super();
+			this.name = name;
+			this.password = password;
+		}
+	
+		@Override
+		public Data<User, String> execute(ProgressSender progressSender) throws Exception {
+			if (name.equals("aaa") && password.equals("111")) {
+				return Data.madeSuccess(new User("1", "aaa", 23, "中国人"));
+			} else {
+				return Data.madeFail("用户名或者密码不正确");
+			}
+		}
+	
+		@Override
+		public void cancle() {
+	
+		}
+	
+	}
+## 2.View（Callback<SUCCESS, FAIL>）
+	/**
+	 *
+	 * @param <SUCCESS>
+	 *            执行成功返回的数据类型
+	 * @param <FAIL>
+	 *            执行失败返回的数据类型
+	 */
+	public interface Callback<SUCCESS, FAIL> {
+	
+		/**
+		 * 执行task之前的回调
+		 */
+		public void onPreExecute();
+	
+		/**
+		 * 进度更新回调
+		 * 
+		 * @param percent
+		 * @param current
+		 * @param total
+		 * @param exraData
+		 */
+		public void onProgressUpdate(int percent, long current, long total, Object exraData);
+	
+		/**
+		 * 执行task结束的回调，通过code判断是什么情况结束task，（成功，失败，异常，取消）
+		 * 
+		 * @param code
+		 *            返回码
+		 * @param exception
+		 *            异常信息（throw exception 时才有值）
+		 * @param success
+		 *            成功返回的数据
+		 * @param fail
+		 *            失败返回的数据
+		 */
+		public void onPostExecute(Code code, Exception exception, SUCCESS success, FAIL fail);
+	
+	}
+
+例如登陆请求更新UI
+
+	private Callback<User, String> loginCallback = new Callback<User, String>() {
+			@Override
+			public void onPreExecute() {
+				loginButton.setEnabled(false);
+				loginButton.setText("登陆中...");
+			}
+	
+			@Override
+			public void onProgressUpdate(int percent, long current, long total, Object exraData) {
+	
+			}
+	
+			@Override
+			public void onPostExecute(Code code, Exception exception, User success, String fail) {
+				loginButton.setEnabled(true);
+				loginButton.setText("登陆");
+				switch (code) {
+				case FAIL:
+				case EXCEPTION:
+					if (TextUtils.isEmpty(fail)) {
+						Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+					} else {
+						Toast.makeText(getApplicationContext(), fail, Toast.LENGTH_SHORT).show();
+					}
+					break;
+				case SUCESS:
+					Toast.makeText(getApplicationContext(), "登陆成功：" + new Gson().toJson(success), Toast.LENGTH_LONG).show();
+					break;
+				default:
+					break;
+				}
+			}
+		};
+
+## 3.Controller (Activity,Fragment,TaskHelper)
+
+Activity负责调度，代码如下
+	
+	loginHelper.setTask(new LoginTask(name, password));
+	loginHelper.setCallback(loginCallback);
+	loginHelper.execute();
+
+	//loginHelper.cancle();//执行取消操作
+	//loginHelper.destory();//执行释放操作
+
+## 三、说明
 
 以下三个是目前支持的下拉刷新的第三方开源类库  
 Android-PullToRefresh-Library  
