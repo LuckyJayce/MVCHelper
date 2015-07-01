@@ -1,10 +1,22 @@
 package com.shizhefei.task;
 
+/**
+ * 任务
+ * 
+ * @author LuckyJayce
+ *
+ * @param <SUCCESS>
+ *            成功的数据类型
+ * @param <FAIL>
+ *            失败的数据类型
+ */
 public interface Task<SUCCESS, FAIL> {
 
 	/**
-	 * 执行
+	 * 执行后台任务
 	 * 
+	 * @param progressSender
+	 *            进度更新发送者
 	 * @return
 	 * @throws Exception
 	 */
