@@ -23,6 +23,8 @@ import android.view.View;
 import com.shizhefei.test.controllers.other.BooDetailActivity;
 import com.shizhefei.test.controllers.other.MovieDetailActivity;
 import com.shizhefei.test.controllers.other.UltraRecyclerViewActivity;
+import com.shizhefei.test.controllers.task.LoginActivity;
+import com.shizhefei.test.controllers.task.UploadActivity;
 import com.shizhefei.test.controllers.testhelpers.NormalActivity;
 import com.shizhefei.test.controllers.testhelpers.PullrefshActivity;
 import com.shizhefei.test.controllers.testhelpers.SwipeRefreshActivity;
@@ -63,6 +65,14 @@ public class MainActivity extends Activity {
 
 	public void onClickDemo7(View view) {
 		startActivity(new Intent(getApplicationContext(), MovieDetailActivity.class));
+	}
+
+	public void onClickTask1(View view) {
+		startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+	}
+
+	public void onClickTask2(View view) {
+		startActivity(new Intent(getApplicationContext(), UploadActivity.class));
 	}
 
 }
