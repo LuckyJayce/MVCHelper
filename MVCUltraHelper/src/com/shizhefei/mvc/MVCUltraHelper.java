@@ -4,7 +4,14 @@ import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.AbsListView;
 
 import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadView;
@@ -46,7 +53,7 @@ public class MVCUltraHelper<DATA> extends MVCHelper<DATA> {
 
 				@Override
 				public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-					return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+					return checkContentCanBePulledDown(frame, content, header);
 				}
 			});
 		}
@@ -78,6 +85,33 @@ public class MVCUltraHelper<DATA> extends MVCHelper<DATA> {
 			return mPtrFrame;
 		}
 
+	}
+
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	public static boolean canChildScrollUp(View mTarget) {
+		if (android.os.Build.VERSION.SDK_INT < 14) {
+			if (mTarget instanceof AbsListView) {
+				final AbsListView absListView = (AbsListView) mTarget;
+				return absListView.getChildCount() > 0
+						&& (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0).getTop() < absListView.getPaddingTop());
+			} else {
+				return ViewCompat.canScrollVertically(mTarget, -1) || mTarget.getScrollY() > 0;
+			}
+		} else {
+			return ViewCompat.canScrollVertically(mTarget, -1);
+		}
+	}
+
+	/**
+	 * Default implement for check can perform pull to refresh
+	 *
+	 * @param frame
+	 * @param content
+	 * @param header
+	 * @return
+	 */
+	public static boolean checkContentCanBePulledDown(PtrFrameLayout frame, View content, View header) {
+		return !canChildScrollUp(content);
 	}
 
 }
