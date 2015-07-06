@@ -162,7 +162,7 @@ public class MVCHelper<DATA> {
 				((AbsListView) contentView).setAdapter((ListAdapter) adapter);
 			} else {
 				try {
-					Method method = contentView.getClass().getDeclaredMethod("setAdapter", ListAdapter.class);
+					Method method = contentView.getClass().getMethod("setAdapter", ListAdapter.class);
 					method.invoke(contentView, adapter);
 				} catch (Exception e) {
 					e.printStackTrace();
