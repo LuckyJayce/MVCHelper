@@ -2,7 +2,6 @@ package com.shizhefei.mvc;
 
 import android.view.View;
 
-import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
@@ -11,18 +10,18 @@ import com.shizhefei.mvc.ILoadViewFactory.ILoadView;
 
 public class MVCPullrefshHelper<DATA> extends MVCHelper<DATA> {
 
-	public MVCPullrefshHelper(PullToRefreshAdapterViewBase<?> pullToRefreshAdapterViewBase) {
+	public MVCPullrefshHelper(PullToRefreshBase<?> pullToRefreshAdapterViewBase) {
 		super(new RefreshView(pullToRefreshAdapterViewBase));
 	}
 
-	public MVCPullrefshHelper(PullToRefreshAdapterViewBase<?> pullToRefreshAdapterViewBase, ILoadView loadView, ILoadMoreView loadMoreView) {
+	public MVCPullrefshHelper(PullToRefreshBase<?> pullToRefreshAdapterViewBase, ILoadView loadView, ILoadMoreView loadMoreView) {
 		super(new RefreshView(pullToRefreshAdapterViewBase), loadView, loadMoreView);
 	}
 
 	private static class RefreshView implements IRefreshView {
-		private PullToRefreshAdapterViewBase<? extends View> pullToRefreshAdapterViewBase;
+		private PullToRefreshBase<? extends View> pullToRefreshAdapterViewBase;
 
-		public RefreshView(PullToRefreshAdapterViewBase<? extends View> pullToRefreshAdapterViewBase) {
+		public RefreshView(PullToRefreshBase<? extends View> pullToRefreshAdapterViewBase) {
 			this.pullToRefreshAdapterViewBase = pullToRefreshAdapterViewBase;
 			pullToRefreshAdapterViewBase.setMode(Mode.PULL_FROM_START);
 			pullToRefreshAdapterViewBase.setOnRefreshListener(new OnRefreshListener211());
