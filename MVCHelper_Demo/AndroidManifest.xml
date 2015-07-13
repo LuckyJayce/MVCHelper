@@ -51,6 +51,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="com.shizhefei.test.controllers.other.GridViewActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="com.shizhefei.test.controllers.task.LoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateVisible" >

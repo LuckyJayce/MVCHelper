@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.shizhefei.test.controllers.other.BooDetailActivity;
+import com.shizhefei.test.controllers.other.GridViewActivity;
 import com.shizhefei.test.controllers.other.MovieDetailActivity;
 import com.shizhefei.test.controllers.other.UltraRecyclerViewActivity;
 import com.shizhefei.test.controllers.task.LoginActivity;
@@ -65,6 +66,10 @@ public class MainActivity extends Activity {
 
 	public void onClickDemo7(View view) {
 		startActivity(new Intent(getApplicationContext(), MovieDetailActivity.class));
+	}
+
+	public void onClickDemo8(View view) {
+		startActivity(new Intent(getApplicationContext(), GridViewActivity.class));
 	}
 
 	public void onClickTask1(View view) {
