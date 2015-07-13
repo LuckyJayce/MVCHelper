@@ -116,7 +116,7 @@ public class MVCHelper<DATA> {
 				}, onClickLoadMoreListener);
 			} else if (contentView instanceof RecyclerView) {
 				RecyclerView recyclerView = (RecyclerView) contentView;
-				recyclerView.setOnScrollListener(new RecyclerViewOnScrollListener());
+				recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener());
 				mLoadMoreView = loadMoreView;
 			}
 		}
