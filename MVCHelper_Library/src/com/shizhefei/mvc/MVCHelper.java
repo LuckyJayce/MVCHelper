@@ -15,33 +15,22 @@ limitations under the License.
  */
 package com.shizhefei.mvc;
 
-import java.lang.reflect.Method;
-
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.shizhefei.mvc.ILoadViewFactory.FootViewAdder;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadView;
 import com.shizhefei.mvc.IRefreshView.OnRefreshListener;
 import com.shizhefei.mvc.imp.DefaultLoadViewFactory;
-import com.shizhefei.recyclerview.HFAdapter;
-import com.shizhefei.recyclerview.HFRecyclerAdapter;
+import com.shizhefei.mvc.viewhandler.ListViewHandler;
+import com.shizhefei.mvc.viewhandler.RecyclerViewHandler;
+import com.shizhefei.mvc.viewhandler.ViewHandler;
 import com.shizhefei.utils.NetworkUtils;
 
 /**
@@ -77,6 +66,10 @@ public class MVCHelper<DATA> {
 	private ILoadMoreView mLoadMoreView;
 	public static ILoadViewFactory loadViewFactory = new DefaultLoadViewFactory();
 
+	private ListViewHandler listViewHandler = new ListViewHandler();
+
+	private RecyclerViewHandler recyclerViewHandler = new RecyclerViewHandler();
+
 	public MVCHelper(IRefreshView refreshView) {
 		this(refreshView, loadViewFactory.madeLoadView(), loadViewFactory.madeLoadMoreView());
 	}
@@ -93,34 +86,8 @@ public class MVCHelper<DATA> {
 		contentView = refreshView.getContentView();
 		contentView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		refreshView.setOnRefreshListener(onRefreshListener);
-		if (loadMoreView != null) {
-			if (contentView instanceof ListView) {
-				final ListView listView = (ListView) contentView;
-				listView.setCacheColorHint(Color.TRANSPARENT);
-				listView.setOnScrollListener(new ListViewOnScrollListener());
-				listView.setOnItemSelectedListener(new ListViewOnItemSelectedListener());
-				mLoadMoreView = loadMoreView;
-				mLoadMoreView.init(new FootViewAdder() {
-
-					@Override
-					public View addFootView(int layoutId) {
-						View view = LayoutInflater.from(context).inflate(layoutId, listView, false);
-						return addFootView(view);
-					}
-
-					@Override
-					public View addFootView(View view) {
-						listView.addFooterView(view);
-						return view;
-					}
-				}, onClickLoadMoreListener);
-			} else if (contentView instanceof RecyclerView) {
-				RecyclerView recyclerView = (RecyclerView) contentView;
-				recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener());
-				mLoadMoreView = loadMoreView;
-			}
-		}
 		mLoadView = loadView;
+		mLoadMoreView = loadMoreView;
 		mLoadView.init(refreshView.getSwitchView(), onClickRefresListener);
 	}
 
@@ -156,49 +123,30 @@ public class MVCHelper<DATA> {
 	 * 
 	 * @param adapter
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void setAdapter(IDataAdapter<DATA> adapter) {
-		if (contentView instanceof AbsListView) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				((AbsListView) contentView).setAdapter((ListAdapter) adapter);
-			} else {
-				try {
-					Method method = contentView.getClass().getMethod("setAdapter", ListAdapter.class);
-					method.invoke(contentView, adapter);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} else if (contentView instanceof RecyclerView) {
-			final RecyclerView recyclerView = (RecyclerView) contentView;
-			Adapter<?> adapter2 = (Adapter<?>) adapter;
-			if (mLoadMoreView != null) {
-				final HFAdapter hfAdapter;
-				if (adapter instanceof HFAdapter) {
-					hfAdapter = (HFAdapter) adapter;
-				} else {
-					hfAdapter = new HFRecyclerAdapter(adapter2);
-				}
-				adapter2 = hfAdapter;
-				mLoadMoreView.init(new FootViewAdder() {
-
-					@Override
-					public View addFootView(int layoutId) {
-						View view = LayoutInflater.from(context).inflate(layoutId, recyclerView, false);
-						return addFootView(view);
-					}
-
-					@Override
-					public View addFootView(View view) {
-						hfAdapter.addFooter(view);
-						return view;
-					}
-				}, onClickLoadMoreListener);
-			}
-			recyclerView.setAdapter(adapter2);
+		View view = getContentView();
+		hasInitLoadMoreView = false;
+		if (view instanceof ListView) {
+			hasInitLoadMoreView = listViewHandler.handleSetAdapter(view, adapter, mLoadMoreView, onClickLoadMoreListener);
+			listViewHandler.setOnScrollBottomListener(view, onScrollBottomListener);
+		} else if (view instanceof RecyclerView) {
+			hasInitLoadMoreView = recyclerViewHandler.handleSetAdapter(view, adapter, mLoadMoreView, onClickLoadMoreListener);
+			recyclerViewHandler.setOnScrollBottomListener(view, onScrollBottomListener);
 		}
 		this.dataAdapter = adapter;
 	}
+
+	public void setAdapter(IDataAdapter<DATA> adapter, ViewHandler viewHandler) {
+		hasInitLoadMoreView = false;
+		if (viewHandler != null) {
+			View view = getContentView();
+			hasInitLoadMoreView = viewHandler.handleSetAdapter(view, adapter, mLoadMoreView, onClickLoadMoreListener);
+			viewHandler.setOnScrollBottomListener(view, onScrollBottomListener);
+		}
+		this.dataAdapter = adapter;
+	}
+
+	private boolean hasInitLoadMoreView = false;
 
 	/**
 	 * 设置状态监听，监听开始刷新，刷新成功，开始加载更多，加载更多成功
@@ -245,7 +193,7 @@ public class MVCHelper<DATA> {
 			private volatile Exception e;
 
 			protected void onPreExecute() {
-				if (mLoadMoreView != null) {
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
 					mLoadMoreView.showNormal();
 				}
 				if (dataAdapter.isEmpty()) {
@@ -286,7 +234,7 @@ public class MVCHelper<DATA> {
 						mLoadView.restore();
 					}
 					hasMoreData = dataSource.hasMore();
-					if (mLoadMoreView != null) {
+					if (hasInitLoadMoreView && mLoadMoreView != null) {
 						if (hasMoreData) {
 							mLoadMoreView.showNormal();
 						} else {
@@ -333,7 +281,7 @@ public class MVCHelper<DATA> {
 
 			protected void onPreExecute() {
 				onStateChangeListener.onStartLoadMore(dataAdapter);
-				if (mLoadMoreView != null) {
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
 					mLoadMoreView.showLoading();
 				}
 			}
@@ -354,7 +302,7 @@ public class MVCHelper<DATA> {
 				super.onPostExecute(result);
 				if (result == null) {
 					mLoadView.tipFail(e);
-					if (mLoadMoreView != null) {
+					if (hasInitLoadMoreView && mLoadMoreView != null) {
 						mLoadMoreView.showFail(e);
 					}
 				} else {
@@ -365,7 +313,7 @@ public class MVCHelper<DATA> {
 						mLoadView.restore();
 					}
 					hasMoreData = dataSource.hasMore();
-					if (mLoadMoreView != null) {
+					if (hasInitLoadMoreView && mLoadMoreView != null) {
 						if (hasMoreData) {
 							mLoadMoreView.showNormal();
 						} else {
@@ -489,63 +437,6 @@ public class MVCHelper<DATA> {
 		}
 	};
 
-	/**
-	 * 滚动到底部自动加载更多数据
-	 */
-	private class ListViewOnScrollListener implements OnScrollListener {
-
-		@Override
-		public void onScrollStateChanged(AbsListView listView, int scrollState) {
-			if (autoLoadMore) {
-				if (hasMoreData) {
-					if (!isLoading()) {
-						if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && listView.getLastVisiblePosition() + 1 == listView.getCount()) {// 如果滚动到最后一行
-							// 如果网络可以用
-							if (needCheckNetwork && !NetworkUtils.hasNetwork(context)) {
-								mLoadMoreView.showFail(new Exception("网络不可用"));
-							} else {
-								loadMore();
-							}
-						}
-					}
-				}
-			}
-		}
-
-		@Override
-		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		}
-	};
-
-	/**
-	 * 针对于电视 选择到了底部项的时候自动加载更多数据
-	 */
-	private class ListViewOnItemSelectedListener implements OnItemSelectedListener {
-
-		@Override
-		public void onItemSelected(AdapterView<?> listView, View view, int position, long id) {
-			if (autoLoadMore) {
-				if (hasMoreData) {
-					if (!isLoading()) {
-						if (listView.getLastVisiblePosition() + 1 == listView.getCount()) {// 如果滚动到最后一行
-							// 如果网络可以用
-							if (needCheckNetwork && !NetworkUtils.hasNetwork(context)) {
-								mLoadMoreView.showFail(new Exception("网络不可用"));
-							} else {
-								loadMore();
-							}
-						}
-					}
-				}
-			}
-		}
-
-		@Override
-		public void onNothingSelected(AdapterView<?> parent) {
-
-		}
-	};
-
 	protected IRefreshView getRefreshView() {
 		return refreshView;
 	}
@@ -612,34 +503,22 @@ public class MVCHelper<DATA> {
 
 	}
 
-	/**
-	 * 滑动监听
-	 */
-	private class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener {
-		@Override
-		public void onScrollStateChanged(android.support.v7.widget.RecyclerView recyclerView, int newState) {
-			LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-			if (newState == RecyclerView.SCROLL_STATE_IDLE && layoutManager.findLastVisibleItemPosition() + 1 == layoutManager.getItemCount()) {// 如果滚动到最后一行
-				if (autoLoadMore) {
-					if (hasMoreData) {
-						if (!isLoading()) {
-							// 如果网络可以用
-							if (needCheckNetwork && !NetworkUtils.hasNetwork(context)) {
-								mLoadMoreView.showFail(new Exception("网络不可用"));
-							} else {
-								loadMore();
-							}
-						}
-					}
-				}
+	private OnScrollBottomListener onScrollBottomListener = new OnScrollBottomListener() {
 
+		@Override
+		public void onScorllBootom() {
+			if (autoLoadMore && hasMoreData && !isLoading()) {
+				// 如果网络可以用
+				if (needCheckNetwork && !NetworkUtils.hasNetwork(context)) {
+					mLoadMoreView.showFail(new Exception("网络不可用"));
+				} else {
+					loadMore();
+				}
 			}
 		}
-
-		@Override
-		public void onScrolled(android.support.v7.widget.RecyclerView recyclerView, int dx, int dy) {
-
-		}
-
 	};
+
+	public static interface OnScrollBottomListener {
+		public void onScorllBootom();
+	}
 }
