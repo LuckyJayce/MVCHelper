@@ -64,7 +64,7 @@ public class DefaultLoadViewFactory implements ILoadViewFactory {
 		}
 
 		@Override
-		public void showFail() {
+		public void showFail(Exception exception) {
 			footView.setText("加载失败，点击重新加载");
 			footView.setOnClickListener(onClickRefreshListener);
 		}
@@ -103,12 +103,12 @@ public class DefaultLoadViewFactory implements ILoadViewFactory {
 		}
 
 		@Override
-		public void tipFail() {
+		public void tipFail(Exception exception) {
 			Toast.makeText(context, "网络加载失败", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
-		public void showFail() {
+		public void showFail(Exception exception) {
 			View layout = helper.inflate(R.layout.load_error);
 			TextView textView = (TextView) layout.findViewById(R.id.textView1);
 			textView.setText("网络加载失败");

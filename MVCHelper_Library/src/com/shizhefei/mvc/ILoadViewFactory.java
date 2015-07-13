@@ -54,8 +54,9 @@ public interface ILoadViewFactory {
 
 		/**
 		 * 显示加载失败
+		 * @param e 
 		 */
-		public void showFail();
+		public void showFail(Exception e);
 
 		/**
 		 * 显示空数据布局
@@ -64,8 +65,9 @@ public interface ILoadViewFactory {
 
 		/**
 		 * 有数据的时候，toast提示失败
+		 * @param e 
 		 */
-		public void tipFail();
+		public void tipFail(Exception e);
 
 		/**
 		 * 显示原先的布局
@@ -108,8 +110,9 @@ public interface ILoadViewFactory {
 
 		/**
 		 * 显示加载失败的布局
+		 * @param e 
 		 */
-		public void showFail();
+		public void showFail(Exception e);
 
 	}
 

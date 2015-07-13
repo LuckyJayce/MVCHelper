@@ -40,6 +40,7 @@ import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadView;
 import com.shizhefei.mvc.IRefreshView.OnRefreshListener;
 import com.shizhefei.mvc.imp.DefaultLoadViewFactory;
+import com.shizhefei.recyclerview.HFAdapter;
 import com.shizhefei.recyclerview.HFRecyclerAdapter;
 import com.shizhefei.utils.NetworkUtils;
 
@@ -64,7 +65,7 @@ public class MVCHelper<DATA> {
 	private View contentView;
 	private Context context;
 	private MOnStateChangeListener<DATA> onStateChangeListener = new MOnStateChangeListener<DATA>();
-	private AsyncTask<Void, Void, DATA> asyncTask;
+	private MyAsyncTask<Void, Void, DATA> asyncTask;
 	private long loadDataTime = -1;
 	/**
 	 * 是否还有更多数据。如果服务器返回的数据为空的话，就说明没有更多数据了，也就没必要自动加载更多数据
@@ -169,10 +170,15 @@ public class MVCHelper<DATA> {
 				}
 			}
 		} else if (contentView instanceof RecyclerView) {
-			RecyclerView.Adapter<?> adapter2 = (Adapter<?>) adapter;
 			final RecyclerView recyclerView = (RecyclerView) contentView;
+			Adapter<?> adapter2 = (Adapter<?>) adapter;
 			if (mLoadMoreView != null) {
-				final HFRecyclerAdapter hfAdapter = new HFRecyclerAdapter(adapter2);
+				final HFAdapter hfAdapter;
+				if (adapter instanceof HFAdapter) {
+					hfAdapter = (HFAdapter) adapter;
+				} else {
+					hfAdapter = new HFRecyclerAdapter(adapter2);
+				}
 				adapter2 = hfAdapter;
 				mLoadMoreView.init(new FootViewAdder() {
 
@@ -190,7 +196,6 @@ public class MVCHelper<DATA> {
 				}, onClickLoadMoreListener);
 			}
 			recyclerView.setAdapter(adapter2);
-
 		}
 		this.dataAdapter = adapter;
 	}
@@ -236,7 +241,9 @@ public class MVCHelper<DATA> {
 		if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
 			asyncTask.cancel(true);
 		}
-		asyncTask = new AsyncTask<Void, Void, DATA>() {
+		asyncTask = new MyAsyncTask<Void, Void, DATA>() {
+			private volatile Exception e;
+
 			protected void onPreExecute() {
 				if (mLoadMoreView != null) {
 					mLoadMoreView.showNormal();
@@ -255,17 +262,20 @@ public class MVCHelper<DATA> {
 				try {
 					return dataSource.refresh();
 				} catch (Exception e) {
+					this.e = e;
 					e.printStackTrace();
 				}
 				return null;
 			}
 
+			@Override
 			protected void onPostExecute(DATA result) {
+				super.onPostExecute(result);
 				if (result == null) {
 					if (dataAdapter.isEmpty()) {
-						mLoadView.showFail();
+						mLoadView.showFail(e);
 					} else {
-						mLoadView.tipFail();
+						mLoadView.tipFail(e);
 					}
 				} else {
 					loadDataTime = System.currentTimeMillis();
@@ -318,7 +328,9 @@ public class MVCHelper<DATA> {
 		if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
 			asyncTask.cancel(true);
 		}
-		asyncTask = new AsyncTask<Void, Void, DATA>() {
+		asyncTask = new MyAsyncTask<Void, Void, DATA>() {
+			private volatile Exception e;
+
 			protected void onPreExecute() {
 				onStateChangeListener.onStartLoadMore(dataAdapter);
 				if (mLoadMoreView != null) {
@@ -331,16 +343,19 @@ public class MVCHelper<DATA> {
 				try {
 					return dataSource.loadMore();
 				} catch (Exception e) {
+					this.e = e;
 					e.printStackTrace();
 				}
 				return null;
 			}
 
+			@Override
 			protected void onPostExecute(DATA result) {
+				super.onPostExecute(result);
 				if (result == null) {
-					mLoadView.tipFail();
+					mLoadView.tipFail(e);
 					if (mLoadMoreView != null) {
-						mLoadMoreView.showFail();
+						mLoadMoreView.showFail(e);
 					}
 				} else {
 					dataAdapter.notifyDataChanged(result, false);
@@ -378,13 +393,36 @@ public class MVCHelper<DATA> {
 		}
 	}
 
+	private class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+		private volatile boolean post;
+
+		@Override
+		protected Result doInBackground(Params... params) {
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Result result) {
+			super.onPostExecute(result);
+			post = true;
+		}
+
+		private boolean isLoading() {
+			if (post) {
+				return false;
+			}
+			return getStatus() != Status.FINISHED;
+		}
+
+	}
+
 	/**
 	 * 是否正在加载中
 	 * 
 	 * @return
 	 */
 	public boolean isLoading() {
-		return asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED;
+		return asyncTask != null && asyncTask.isLoading();
 	}
 
 	private OnRefreshListener onRefreshListener = new OnRefreshListener() {
@@ -427,9 +465,6 @@ public class MVCHelper<DATA> {
 
 	public void setAutoLoadMore(boolean autoLoadMore) {
 		this.autoLoadMore = autoLoadMore;
-		if (!isLoading()) {
-			mLoadMoreView.showNormal();
-		}
 	}
 
 	private boolean autoLoadMore = true;
@@ -467,7 +502,7 @@ public class MVCHelper<DATA> {
 						if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && listView.getLastVisiblePosition() + 1 == listView.getCount()) {// 如果滚动到最后一行
 							// 如果网络可以用
 							if (needCheckNetwork && !NetworkUtils.hasNetwork(context)) {
-								mLoadMoreView.showFail();
+								mLoadMoreView.showFail(new Exception("网络不可用"));
 							} else {
 								loadMore();
 							}
@@ -495,7 +530,7 @@ public class MVCHelper<DATA> {
 						if (listView.getLastVisiblePosition() + 1 == listView.getCount()) {// 如果滚动到最后一行
 							// 如果网络可以用
 							if (needCheckNetwork && !NetworkUtils.hasNetwork(context)) {
-								mLoadMoreView.showFail();
+								mLoadMoreView.showFail(new Exception("网络不可用"));
 							} else {
 								loadMore();
 							}
@@ -590,7 +625,7 @@ public class MVCHelper<DATA> {
 						if (!isLoading()) {
 							// 如果网络可以用
 							if (needCheckNetwork && !NetworkUtils.hasNetwork(context)) {
-								mLoadMoreView.showFail();
+								mLoadMoreView.showFail(new Exception("网络不可用"));
 							} else {
 								loadMore();
 							}
