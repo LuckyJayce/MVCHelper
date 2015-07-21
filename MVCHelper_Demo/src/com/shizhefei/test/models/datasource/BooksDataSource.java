@@ -42,7 +42,7 @@ public class BooksDataSource implements IDataSource<List<Book>> {
 		Thread.sleep(300);
 
 		List<Book> books = new ArrayList<Book>();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 30; i++) {
 			books.add(new Book("page" + page + "  Java编程思想 " + i, 108.00d));
 		}
 		this.page = page;

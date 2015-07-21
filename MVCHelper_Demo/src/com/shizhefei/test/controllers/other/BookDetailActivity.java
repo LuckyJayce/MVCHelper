@@ -34,7 +34,7 @@ import com.shizhefei.view.mvc.demo.R;
  * @author LuckyJayce
  *
  */
-public class BooDetailActivity extends Activity {
+public class BookDetailActivity extends Activity {
 
 	private MVCHelper<Book> listViewHelper;
 	private TextView authorTextView;

@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:onClick="onClickDemo8"
-                android:text="GirdView界面" />
+                android:text="Volley网络请求—GridView界面" />
 
             <TextView
                 android:layout_width="match_parent"

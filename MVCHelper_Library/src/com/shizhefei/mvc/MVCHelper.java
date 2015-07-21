@@ -55,6 +55,7 @@ public class MVCHelper<DATA> {
 	private Context context;
 	private MOnStateChangeListener<DATA> onStateChangeListener = new MOnStateChangeListener<DATA>();
 	private MyAsyncTask<Void, Void, DATA> asyncTask;
+	private RequestHandle cancle;
 	private long loadDataTime = -1;
 	/**
 	 * 是否还有更多数据。如果服务器返回的数据为空的话，就说明没有更多数据了，也就没必要自动加载更多数据
@@ -69,6 +70,7 @@ public class MVCHelper<DATA> {
 	private ListViewHandler listViewHandler = new ListViewHandler();
 
 	private RecyclerViewHandler recyclerViewHandler = new RecyclerViewHandler();
+	private IAsyncDataSource<DATA> asyncDataSource;
 
 	public MVCHelper(IRefreshView refreshView) {
 		this(refreshView, loadViewFactory.madeLoadView(), loadViewFactory.madeLoadMoreView());
@@ -115,7 +117,18 @@ public class MVCHelper<DATA> {
 	 * @param dataSource
 	 */
 	public void setDataSource(IDataSource<DATA> dataSource) {
+		this.asyncDataSource = null;
 		this.dataSource = dataSource;
+	}
+
+	/**
+	 * 设置数据源，用于加载数据
+	 * 
+	 * @param tDataSource
+	 */
+	public void setDataSource(IAsyncDataSource<DATA> asyncDataSource) {
+		this.dataSource = null;
+		this.asyncDataSource = asyncDataSource;
 	}
 
 	/**
@@ -180,83 +193,32 @@ public class MVCHelper<DATA> {
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void refresh() {
-		if (dataAdapter == null || dataSource == null) {
+		if (dataAdapter == null || (dataSource == null && asyncDataSource == null)) {
 			if (refreshView != null) {
 				refreshView.showRefreshComplete();
 			}
 			return;
 		}
-		if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
-			asyncTask.cancel(true);
-		}
-		asyncTask = new MyAsyncTask<Void, Void, DATA>() {
-			private volatile Exception e;
-
-			protected void onPreExecute() {
-				if (hasInitLoadMoreView && mLoadMoreView != null) {
-					mLoadMoreView.showNormal();
-				}
-				if (dataAdapter.isEmpty()) {
-					mLoadView.showLoading();
-					refreshView.showRefreshComplete();
-				} else {
-					refreshView.showRefreshing();
-				}
-				onStateChangeListener.onStartRefresh(dataAdapter);
-			};
-
-			@Override
-			protected DATA doInBackground(Void... params) {
-				try {
-					return dataSource.refresh();
-				} catch (Exception e) {
-					this.e = e;
-					e.printStackTrace();
-				}
-				return null;
+		if (dataSource != null) {
+			if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+				asyncTask.cancel(true);
 			}
-
-			@Override
-			protected void onPostExecute(DATA result) {
-				super.onPostExecute(result);
-				if (result == null) {
-					if (dataAdapter.isEmpty()) {
-						mLoadView.showFail(e);
-					} else {
-						mLoadView.tipFail(e);
-					}
-				} else {
-					loadDataTime = System.currentTimeMillis();
-					dataAdapter.notifyDataChanged(result, true);
-					if (dataAdapter.isEmpty()) {
-						mLoadView.showEmpty();
-					} else {
-						mLoadView.restore();
-					}
-					hasMoreData = dataSource.hasMore();
-					if (hasInitLoadMoreView && mLoadMoreView != null) {
-						if (hasMoreData) {
-							mLoadMoreView.showNormal();
-						} else {
-							mLoadMoreView.showNomore();
-						}
-					}
-				}
-				onStateChangeListener.onEndRefresh(dataAdapter, result);
-				refreshView.showRefreshComplete();
-			};
-
-		};
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			asyncTask = new RefreshAsyncTask(dataSource, dataAdapter);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				asyncTask.execute();
+			}
 		} else {
-			asyncTask.execute();
+			if (cancle != null) {
+				cancle.cancle();
+			}
+			RefreshResponseSender responseSender = new RefreshResponseSender(asyncDataSource, dataAdapter);
+			responseSender.onPreExecute();
+			cancle = responseSender.execute();
 		}
 	}
 
-	/**
-	 * 加载更多，开启异步线程，并且显示加载中的界面，当数据加载完成自动还原成加载完成的布局，并且刷新列表数据
-	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void loadMore() {
 		if (isLoading()) {
@@ -266,68 +228,29 @@ public class MVCHelper<DATA> {
 			refresh();
 			return;
 		}
-
-		if (dataAdapter == null || dataSource == null) {
+		if (dataAdapter == null || (dataSource == null && asyncDataSource == null)) {
 			if (refreshView != null) {
 				refreshView.showRefreshComplete();
 			}
 			return;
 		}
-		if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
-			asyncTask.cancel(true);
-		}
-		asyncTask = new MyAsyncTask<Void, Void, DATA>() {
-			private volatile Exception e;
-
-			protected void onPreExecute() {
-				onStateChangeListener.onStartLoadMore(dataAdapter);
-				if (hasInitLoadMoreView && mLoadMoreView != null) {
-					mLoadMoreView.showLoading();
-				}
+		if (dataSource != null) {// 开启线程执行IDataSource
+			if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+				asyncTask.cancel(true);
 			}
-
-			@Override
-			protected DATA doInBackground(Void... params) {
-				try {
-					return dataSource.loadMore();
-				} catch (Exception e) {
-					this.e = e;
-					e.printStackTrace();
-				}
-				return null;
+			asyncTask = new LoadMoreAsyncTask(dataSource, dataAdapter);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				asyncTask.execute();
 			}
-
-			@Override
-			protected void onPostExecute(DATA result) {
-				super.onPostExecute(result);
-				if (result == null) {
-					mLoadView.tipFail(e);
-					if (hasInitLoadMoreView && mLoadMoreView != null) {
-						mLoadMoreView.showFail(e);
-					}
-				} else {
-					dataAdapter.notifyDataChanged(result, false);
-					if (dataAdapter.isEmpty()) {
-						mLoadView.showEmpty();
-					} else {
-						mLoadView.restore();
-					}
-					hasMoreData = dataSource.hasMore();
-					if (hasInitLoadMoreView && mLoadMoreView != null) {
-						if (hasMoreData) {
-							mLoadMoreView.showNormal();
-						} else {
-							mLoadMoreView.showNomore();
-						}
-					}
-				}
-				onStateChangeListener.onEndLoadMore(dataAdapter, result);
-			};
-		};
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			asyncTask.execute();
+		} else { // 开启线程执行 IAsyncDataSource
+			if (cancle != null) {
+				cancle.cancle();
+			}
+			LoadMoreResponseSender responseSender = new LoadMoreResponseSender(asyncDataSource, dataAdapter);
+			responseSender.onPreExecute();
+			cancle = responseSender.execute();
 		}
 	}
 
@@ -339,9 +262,13 @@ public class MVCHelper<DATA> {
 			asyncTask.cancel(true);
 			asyncTask = null;
 		}
+		if (cancle != null) {
+			cancle.cancle();
+			cancle = null;
+		}
 	}
 
-	private class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+	private static class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 		private volatile boolean post;
 
 		@Override
@@ -361,7 +288,276 @@ public class MVCHelper<DATA> {
 			}
 			return getStatus() != Status.FINISHED;
 		}
+	}
 
+	private abstract class MResponseSender implements ResponseSender<DATA> {
+
+		protected abstract void onPreExecute();
+
+		@Override
+		public final void sendError(Exception exception) {
+			onPostExecute(null, exception);
+		}
+
+		@Override
+		public final void sendData(DATA data) {
+			onPostExecute(data, null);
+		}
+
+		protected abstract void onPostExecute(DATA data, Exception exception);
+
+		public RequestHandle execute() {
+			try {
+				executeImp();
+			} catch (Exception e) {
+				e.printStackTrace();
+				onPostExecute(null, e);
+			}
+			return null;
+		}
+
+		public abstract RequestHandle executeImp() throws Exception;
+
+	}
+
+	private class RefreshResponseSender extends MResponseSender {
+		private IAsyncDataSource<DATA> tDataSource;
+		private IDataAdapter<DATA> tDataAdapter;
+
+		public RefreshResponseSender(IAsyncDataSource<DATA> tDataSource, IDataAdapter<DATA> tDataAdapter) {
+			super();
+			this.tDataSource = tDataSource;
+			this.tDataAdapter = tDataAdapter;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (hasInitLoadMoreView && mLoadMoreView != null) {
+				mLoadMoreView.showNormal();
+			}
+			if (tDataAdapter.isEmpty()) {
+				mLoadView.showLoading();
+				refreshView.showRefreshComplete();
+			} else {
+				refreshView.showRefreshing();
+			}
+			onStateChangeListener.onStartRefresh(tDataAdapter);
+		}
+
+		@Override
+		public RequestHandle executeImp() throws Exception {
+			return tDataSource.refresh(this);
+		}
+
+		@Override
+		protected void onPostExecute(DATA result, Exception exception) {
+			if (result == null) {
+				if (tDataAdapter.isEmpty()) {
+					mLoadView.showFail(exception);
+				} else {
+					mLoadView.tipFail(exception);
+				}
+			} else {
+				loadDataTime = System.currentTimeMillis();
+				tDataAdapter.notifyDataChanged(result, true);
+				if (tDataAdapter.isEmpty()) {
+					mLoadView.showEmpty();
+				} else {
+					mLoadView.restore();
+				}
+				hasMoreData = tDataSource.hasMore();
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
+					if (hasMoreData) {
+						mLoadMoreView.showNormal();
+					} else {
+						mLoadMoreView.showNomore();
+					}
+				}
+			}
+			onStateChangeListener.onEndRefresh(tDataAdapter, result);
+			refreshView.showRefreshComplete();
+		}
+
+	}
+
+	private class RefreshAsyncTask extends MyAsyncTask<Void, Void, DATA> {
+
+		private IDataSource<DATA> tDataSource;
+		private IDataAdapter<DATA> tDataAdapter;
+		private volatile Exception tException;
+
+		public RefreshAsyncTask(IDataSource<DATA> dataSource, IDataAdapter<DATA> dataAdapter) {
+			super();
+			this.tDataSource = dataSource;
+			this.tDataAdapter = dataAdapter;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (hasInitLoadMoreView && mLoadMoreView != null) {
+				mLoadMoreView.showNormal();
+			}
+			if (tDataAdapter.isEmpty()) {
+				mLoadView.showLoading();
+				refreshView.showRefreshComplete();
+			} else {
+				refreshView.showRefreshing();
+			}
+			onStateChangeListener.onStartRefresh(tDataAdapter);
+		};
+
+		@Override
+		protected DATA doInBackground(Void... params) {
+			try {
+				return tDataSource.refresh();
+			} catch (Exception e) {
+				this.tException = e;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(DATA result) {
+			super.onPostExecute(result);
+			if (result == null) {
+				if (tDataAdapter.isEmpty()) {
+					mLoadView.showFail(tException);
+				} else {
+					mLoadView.tipFail(tException);
+				}
+			} else {
+				loadDataTime = System.currentTimeMillis();
+				tDataAdapter.notifyDataChanged(result, true);
+				if (tDataAdapter.isEmpty()) {
+					mLoadView.showEmpty();
+				} else {
+					mLoadView.restore();
+				}
+				hasMoreData = tDataSource.hasMore();
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
+					if (hasMoreData) {
+						mLoadMoreView.showNormal();
+					} else {
+						mLoadMoreView.showNomore();
+					}
+				}
+			}
+			onStateChangeListener.onEndRefresh(tDataAdapter, result);
+			refreshView.showRefreshComplete();
+		};
+
+	}
+
+	private class LoadMoreResponseSender extends MResponseSender {
+		private IAsyncDataSource<DATA> tDataSource;
+		private IDataAdapter<DATA> tDataAdapter;
+
+		public LoadMoreResponseSender(IAsyncDataSource<DATA> tDataSource, IDataAdapter<DATA> tDataAdapter) {
+			super();
+			this.tDataSource = tDataSource;
+			this.tDataAdapter = tDataAdapter;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			onStateChangeListener.onStartLoadMore(tDataAdapter);
+			if (hasInitLoadMoreView && mLoadMoreView != null) {
+				mLoadMoreView.showLoading();
+			}
+		}
+
+		@Override
+		public RequestHandle executeImp() throws Exception {
+			return tDataSource.loadMore(this);
+		}
+
+		@Override
+		protected void onPostExecute(DATA result, Exception exception) {
+			if (result == null) {
+				mLoadView.tipFail(exception);
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
+					mLoadMoreView.showFail(exception);
+				}
+			} else {
+				tDataAdapter.notifyDataChanged(result, false);
+				if (tDataAdapter.isEmpty()) {
+					mLoadView.showEmpty();
+				} else {
+					mLoadView.restore();
+				}
+				hasMoreData = tDataSource.hasMore();
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
+					if (hasMoreData) {
+						mLoadMoreView.showNormal();
+					} else {
+						mLoadMoreView.showNomore();
+					}
+				}
+			}
+			onStateChangeListener.onEndLoadMore(tDataAdapter, result);
+		}
+	}
+
+	private class LoadMoreAsyncTask extends MyAsyncTask<Void, Void, DATA> {
+
+		private IDataSource<DATA> tDataSource;
+		private IDataAdapter<DATA> tDataAdapter;
+		private volatile Exception tException;
+
+		public LoadMoreAsyncTask(IDataSource<DATA> dataSource, IDataAdapter<DATA> dataAdapter) {
+			super();
+			this.tDataSource = dataSource;
+			this.tDataAdapter = dataAdapter;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			onStateChangeListener.onStartLoadMore(tDataAdapter);
+			if (hasInitLoadMoreView && mLoadMoreView != null) {
+				mLoadMoreView.showLoading();
+			}
+		}
+
+		@Override
+		protected DATA doInBackground(Void... params) {
+			try {
+				return tDataSource.loadMore();
+			} catch (Exception e) {
+				this.tException = e;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(DATA result) {
+			super.onPostExecute(result);
+			if (result == null) {
+				mLoadView.tipFail(tException);
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
+					mLoadMoreView.showFail(tException);
+				}
+			} else {
+				tDataAdapter.notifyDataChanged(result, false);
+				if (tDataAdapter.isEmpty()) {
+					mLoadView.showEmpty();
+				} else {
+					mLoadView.restore();
+				}
+				hasMoreData = tDataSource.hasMore();
+				if (hasInitLoadMoreView && mLoadMoreView != null) {
+					if (hasMoreData) {
+						mLoadMoreView.showNormal();
+					} else {
+						mLoadMoreView.showNomore();
+					}
+				}
+			}
+			onStateChangeListener.onEndLoadMore(tDataAdapter, result);
+		};
 	}
 
 	/**
@@ -370,6 +566,9 @@ public class MVCHelper<DATA> {
 	 * @return
 	 */
 	public boolean isLoading() {
+		if (cancle != null) {
+			return cancle.isRunning();
+		}
 		return asyncTask != null && asyncTask.isLoading();
 	}
 

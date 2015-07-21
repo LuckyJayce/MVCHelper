@@ -20,8 +20,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.shizhefei.test.controllers.other.BooDetailActivity;
-import com.shizhefei.test.controllers.other.GridViewActivity;
+import com.shizhefei.test.controllers.other.BookDetailActivity;
+import com.shizhefei.test.controllers.other.VolleyGridViewActivity;
 import com.shizhefei.test.controllers.other.MovieDetailActivity;
 import com.shizhefei.test.controllers.other.UltraRecyclerViewActivity;
 import com.shizhefei.test.controllers.task.LoginActivity;
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickDemo4(View view) {
-		startActivity(new Intent(getApplicationContext(), BooDetailActivity.class));
+		startActivity(new Intent(getApplicationContext(), BookDetailActivity.class));
 	}
 
 	public void onClickDemo5(View view) {
@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickDemo8(View view) {
-		startActivity(new Intent(getApplicationContext(), GridViewActivity.class));
+		startActivity(new Intent(getApplicationContext(), VolleyGridViewActivity.class));
 	}
 
 	public void onClickTask1(View view) {

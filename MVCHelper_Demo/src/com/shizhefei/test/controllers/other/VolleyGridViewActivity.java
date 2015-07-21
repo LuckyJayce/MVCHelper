@@ -16,7 +16,6 @@ limitations under the License.
 package com.shizhefei.test.controllers.other;
 
 import in.srain.cube.views.GridViewHandler;
-import in.srain.cube.views.GridViewWithHeaderAndFooter;
 
 import java.util.List;
 
@@ -30,6 +29,7 @@ import com.shizhefei.mvc.MVCSwipeRefreshHelper;
 import com.shizhefei.test.models.datasource.BooksDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.view.adapters.BooksAdapter;
+import com.shizhefei.utils.MyVolley;
 import com.shizhefei.view.mvc.demo.R;
 
 /**
@@ -38,7 +38,7 @@ import com.shizhefei.view.mvc.demo.R;
  * @author LuckyJayce
  *
  */
-public class GridViewActivity extends Activity {
+public class VolleyGridViewActivity extends Activity {
 
 	private MVCHelper<List<Book>> listViewHelper;
 
@@ -46,6 +46,8 @@ public class GridViewActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_girdview);
+
+		MyVolley.init(getApplicationContext());
 
 		// 设置LoadView的factory，用于创建使用者自定义的加载失败，加载中，加载更多等布局,写法参照DeFaultLoadViewFactory
 		// ListViewHelper.setLoadViewFactory(new LoadViewFactory());
