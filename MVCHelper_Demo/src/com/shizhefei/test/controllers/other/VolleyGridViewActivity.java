@@ -26,7 +26,7 @@ import android.view.View;
 
 import com.shizhefei.mvc.MVCHelper;
 import com.shizhefei.mvc.MVCSwipeRefreshHelper;
-import com.shizhefei.test.models.datasource.BooksDataSource;
+import com.shizhefei.test.models.datasource.BooksAsyncDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.view.adapters.BooksAdapter;
 import com.shizhefei.utils.MyVolley;
@@ -60,7 +60,7 @@ public class VolleyGridViewActivity extends Activity {
 		listViewHelper = new MVCSwipeRefreshHelper<List<Book>>(swipeRefreshLayout);
 
 		// 设置数据源
-		listViewHelper.setDataSource(new BooksDataSource());
+		listViewHelper.setDataSource(new BooksAsyncDataSource());
 		// 设置适配器
 		listViewHelper.setAdapter(new BooksAdapter(this), new GridViewHandler());
 
