@@ -1,13 +1,12 @@
 package com.shizhefei.test.models.datasource;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.shizhefei.mvc.RequestHandle;
 
 public class VolleyRequestHandle implements RequestHandle {
 	private Request<?> request;
 
-	public VolleyRequestHandle(RequestQueue requestQueue, Request<?> request) {
+	public VolleyRequestHandle(Request<?> request) {
 		super();
 		this.request = request;
 	}
