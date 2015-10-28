@@ -212,8 +212,9 @@ public class MVCHelper<DATA> {
 		} else {
 			if (cancle != null) {
 				cancle.cancle();
+				cancle = null;
 			}
-			RefreshResponseSender responseSender = new RefreshResponseSender(asyncDataSource, dataAdapter);
+			MResponseSender responseSender = new RefreshResponseSender(asyncDataSource, dataAdapter);
 			responseSender.onPreExecute();
 			cancle = responseSender.execute();
 		}
@@ -247,6 +248,7 @@ public class MVCHelper<DATA> {
 		} else { // 开启线程执行 IAsyncDataSource
 			if (cancle != null) {
 				cancle.cancle();
+				cancle = null;
 			}
 			LoadMoreResponseSender responseSender = new LoadMoreResponseSender(asyncDataSource, dataAdapter);
 			responseSender.onPreExecute();
@@ -297,18 +299,20 @@ public class MVCHelper<DATA> {
 		@Override
 		public final void sendError(Exception exception) {
 			onPostExecute(null, exception);
+			cancle = null;
 		}
 
 		@Override
 		public final void sendData(DATA data) {
 			onPostExecute(data, null);
+			cancle = null;
 		}
 
 		protected abstract void onPostExecute(DATA data, Exception exception);
 
 		public RequestHandle execute() {
 			try {
-				executeImp();
+				return executeImp();
 			} catch (Exception e) {
 				e.printStackTrace();
 				onPostExecute(null, e);
@@ -417,7 +421,12 @@ public class MVCHelper<DATA> {
 			}
 			return null;
 		}
-
+		
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+		}
+		
 		@Override
 		protected void onPostExecute(DATA result) {
 			super.onPostExecute(result);
@@ -566,8 +575,8 @@ public class MVCHelper<DATA> {
 	 * @return
 	 */
 	public boolean isLoading() {
-		if (cancle != null) {
-			return cancle.isRunning();
+		if (asyncDataSource != null) {
+			return cancle != null;
 		}
 		return asyncTask != null && asyncTask.isLoading();
 	}
