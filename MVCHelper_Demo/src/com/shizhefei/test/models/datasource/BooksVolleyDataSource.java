@@ -15,13 +15,6 @@ import com.shizhefei.mvc.ResponseSender;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.utils.MyVolley;
 
-/**
- * @author Alex
- * @version V2.1.0
- * @Title: ${}
- * @Description: ${todo}(获取用户关注的圈子)
- * @date ${date} 下午5:10
- */
 public class BooksVolleyDataSource implements IAsyncDataSource<List<Book>> {
 	private int mPage;
 	private int mMaxPage = 5;
