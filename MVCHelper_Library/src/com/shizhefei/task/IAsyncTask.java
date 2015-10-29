@@ -1,5 +1,7 @@
 package com.shizhefei.task;
 
+import com.shizhefei.mvc.RequestHandle;
+
 /**
  * 任务
  * 
@@ -10,7 +12,7 @@ package com.shizhefei.task;
  * @param <FAIL>
  *            失败的数据类型
  */
-public interface Task<SUCCESS, FAIL> extends SuperTask<SUCCESS, FAIL> {
+public interface IAsyncTask<SUCCESS, FAIL> extends SuperTask<SUCCESS, FAIL> {
 
 	/**
 	 * 执行后台任务
@@ -20,11 +22,6 @@ public interface Task<SUCCESS, FAIL> extends SuperTask<SUCCESS, FAIL> {
 	 * @return
 	 * @throws Exception
 	 */
-	public Data<SUCCESS, FAIL> execute(ProgressSender progressSender) throws Exception;
-
-	/**
-	 * 注意cancle 和 execute 有可能不在同一个线程，cancle可能在UI线程被调用
-	 */
-	public void cancle();
+	public RequestHandle execute(ResponseSender<SUCCESS, FAIL> sender, ProgressSender progressSender) throws Exception;
 
 }

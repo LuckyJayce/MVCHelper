@@ -1,13 +1,5 @@
 package com.shizhefei.test.controllers.task;
 
-import com.google.gson.Gson;
-import com.shizhefei.task.Callback;
-import com.shizhefei.task.Code;
-import com.shizhefei.task.TaskHelper;
-import com.shizhefei.test.models.enties.User;
-import com.shizhefei.test.models.task.LoginTask;
-import com.shizhefei.view.mvc.demo.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.shizhefei.task.Callback;
+import com.shizhefei.task.Code;
+import com.shizhefei.task.TaskHelper;
+import com.shizhefei.test.models.enties.User;
+import com.shizhefei.test.models.task.LoginAsyncTask;
+import com.shizhefei.view.mvc.demo.R;
 
 public class LoginActivity extends Activity {
 	private EditText nameEditText;
@@ -50,7 +50,8 @@ public class LoginActivity extends Activity {
 			if (v == loginButton) {
 				String name = nameEditText.getText().toString();
 				String password = pwEditText.getText().toString();
-				loginHelper.setTask(new LoginTask(name, password));
+				//loginHelper.setTask(new LoginTask(name, password));
+				loginHelper.setTask(new LoginAsyncTask(name, password));
 				loginHelper.setCallback(loginCallback);
 				loginHelper.execute();
 			}
