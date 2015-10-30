@@ -20,11 +20,13 @@ public class MVCPullrefshHelper<DATA> extends MVCHelper<DATA> {
 
 	private static class RefreshView implements IRefreshView {
 		private PullToRefreshBase<? extends View> pullToRefreshAdapterViewBase;
+		private OnRefreshListener211 onRefreshListener211 = new OnRefreshListener211();
+		private OnRefreshListenerNone onRefreshListenerNone = new OnRefreshListenerNone();
 
 		public RefreshView(PullToRefreshBase<? extends View> pullToRefreshAdapterViewBase) {
 			this.pullToRefreshAdapterViewBase = pullToRefreshAdapterViewBase;
 			pullToRefreshAdapterViewBase.setMode(Mode.PULL_FROM_START);
-			pullToRefreshAdapterViewBase.setOnRefreshListener(new OnRefreshListener211());
+			pullToRefreshAdapterViewBase.setOnRefreshListener(onRefreshListener211);
 		}
 
 		@Override
@@ -39,7 +41,24 @@ public class MVCPullrefshHelper<DATA> extends MVCHelper<DATA> {
 
 		@Override
 		public void showRefreshing() {
-			pullToRefreshAdapterViewBase.showHeadRefreshing();
+			//避免触发刷新监听
+			pullToRefreshAdapterViewBase.setOnRefreshListener(onRefreshListenerNone);
+			pullToRefreshAdapterViewBase.setRefreshing();
+			pullToRefreshAdapterViewBase.setOnRefreshListener(onRefreshListener211);
+		}
+
+		private class OnRefreshListenerNone<T extends View> implements OnRefreshListener2<T> {
+
+			@Override
+			public void onPullDownToRefresh(PullToRefreshBase<T> refreshView) {
+
+			}
+
+			@Override
+			public void onPullUpToRefresh(PullToRefreshBase<T> refreshView) {
+
+			}
+
 		}
 
 		private class OnRefreshListener211<T extends View> implements OnRefreshListener2<T> {

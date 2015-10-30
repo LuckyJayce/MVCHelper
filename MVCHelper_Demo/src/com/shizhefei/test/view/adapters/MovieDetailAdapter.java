@@ -119,7 +119,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<ViewHolder> impleme
 
 	@Override
 	public int getItemCount() {
-		return 1 + mData.getValue2().size() + mData.getValue3().size();
+		return (mData.getValue1()==null?0:1) + mData.getValue2().size() + mData.getValue3().size();
 	}
 
 	@Override

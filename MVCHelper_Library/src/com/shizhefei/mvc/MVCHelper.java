@@ -19,6 +19,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +72,7 @@ public class MVCHelper<DATA> {
 
 	private RecyclerViewHandler recyclerViewHandler = new RecyclerViewHandler();
 	private IAsyncDataSource<DATA> asyncDataSource;
+	private Handler handler;
 
 	public MVCHelper(IRefreshView refreshView) {
 		this(refreshView, loadViewFactory.madeLoadView(), loadViewFactory.madeLoadMoreView());
@@ -91,6 +93,7 @@ public class MVCHelper<DATA> {
 		mLoadView = loadView;
 		mLoadMoreView = loadMoreView;
 		mLoadView.init(refreshView.getSwitchView(), onClickRefresListener);
+		handler = new Handler();
 	}
 
 	/**
@@ -268,6 +271,8 @@ public class MVCHelper<DATA> {
 			cancle.cancle();
 			cancle = null;
 		}
+		handler.removeCallbacksAndMessages(null);
+		handler = null;
 	}
 
 	private static class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
@@ -327,6 +332,7 @@ public class MVCHelper<DATA> {
 	private class RefreshResponseSender extends MResponseSender {
 		private IAsyncDataSource<DATA> tDataSource;
 		private IDataAdapter<DATA> tDataAdapter;
+		private Runnable showRefreshing;
 
 		public RefreshResponseSender(IAsyncDataSource<DATA> tDataSource, IDataAdapter<DATA> tDataAdapter) {
 			super();
@@ -339,12 +345,27 @@ public class MVCHelper<DATA> {
 			if (hasInitLoadMoreView && mLoadMoreView != null) {
 				mLoadMoreView.showNormal();
 			}
-			if (tDataAdapter.isEmpty()) {
-				mLoadView.showLoading();
-				refreshView.showRefreshComplete();
-			} else {
-				refreshView.showRefreshing();
+			if (tDataSource instanceof IDataCacheLoader) {
+				@SuppressWarnings("unchecked")
+				IDataCacheLoader<DATA> cacheLoader = (IDataCacheLoader<DATA>) tDataSource;
+				DATA data = cacheLoader.loadCache(tDataAdapter.isEmpty());
+				if (data != null) {
+					tDataAdapter.notifyDataChanged(data, true);
+				}
 			}
+			handler.post(showRefreshing = new Runnable() {
+
+				@Override
+				public void run() {
+					if (tDataAdapter.isEmpty()) {
+						mLoadView.showLoading();
+						refreshView.showRefreshComplete();
+					} else {
+						mLoadView.restore();
+						refreshView.showRefreshing();
+					}
+				}
+			});
 			onStateChangeListener.onStartRefresh(tDataAdapter);
 		}
 
@@ -355,6 +376,7 @@ public class MVCHelper<DATA> {
 
 		@Override
 		protected void onPostExecute(DATA result, Exception exception) {
+			handler.removeCallbacks(showRefreshing);
 			if (result == null) {
 				if (tDataAdapter.isEmpty()) {
 					mLoadView.showFail(exception);
@@ -389,6 +411,7 @@ public class MVCHelper<DATA> {
 		private IDataSource<DATA> tDataSource;
 		private IDataAdapter<DATA> tDataAdapter;
 		private volatile Exception tException;
+		private Runnable showRefreshing;
 
 		public RefreshAsyncTask(IDataSource<DATA> dataSource, IDataAdapter<DATA> dataAdapter) {
 			super();
@@ -402,12 +425,27 @@ public class MVCHelper<DATA> {
 			if (hasInitLoadMoreView && mLoadMoreView != null) {
 				mLoadMoreView.showNormal();
 			}
-			if (tDataAdapter.isEmpty()) {
-				mLoadView.showLoading();
-				refreshView.showRefreshComplete();
-			} else {
-				refreshView.showRefreshing();
+			if (tDataSource instanceof IDataCacheLoader) {
+				@SuppressWarnings("unchecked")
+				IDataCacheLoader<DATA> cacheLoader = (IDataCacheLoader<DATA>) tDataSource;
+				DATA data = cacheLoader.loadCache(tDataAdapter.isEmpty());
+				if (data != null) {
+					tDataAdapter.notifyDataChanged(data, true);
+				}
 			}
+			handler.post(showRefreshing = new Runnable() {
+
+				@Override
+				public void run() {
+					if (tDataAdapter.isEmpty()) {
+						mLoadView.showLoading();
+						refreshView.showRefreshComplete();
+					} else {
+						mLoadView.restore();
+						refreshView.showRefreshing();
+					}
+				}
+			});
 			onStateChangeListener.onStartRefresh(tDataAdapter);
 		};
 
@@ -421,15 +459,17 @@ public class MVCHelper<DATA> {
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			handler.removeCallbacks(showRefreshing);
 		}
-		
+
 		@Override
 		protected void onPostExecute(DATA result) {
 			super.onPostExecute(result);
+			handler.removeCallbacks(showRefreshing);
 			if (result == null) {
 				if (tDataAdapter.isEmpty()) {
 					mLoadView.showFail(tException);

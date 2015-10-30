@@ -1,5 +1,7 @@
 package com.shizhefei.mvc;
 
+import java.math.BigDecimal;
+
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -43,19 +45,7 @@ public class MVCUltraHelper<DATA> extends MVCHelper<DATA> {
 			if (mPtrFrame.getParent() == null) {
 				throw new RuntimeException("PtrClassicFrameLayout 必须有Parent");
 			}
-			mPtrFrame.setPtrHandler(new PtrHandler() {
-				@Override
-				public void onRefreshBegin(PtrFrameLayout frame) {
-					if (onRefreshListener != null) {
-						onRefreshListener.onRefresh();
-					}
-				}
-
-				@Override
-				public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-					return checkContentCanBePulledDown(frame, content, header);
-				}
-			});
+			mPtrFrame.setPtrHandler(ptrHandler);
 		}
 
 		@Override
@@ -77,13 +67,29 @@ public class MVCUltraHelper<DATA> extends MVCHelper<DATA> {
 
 		@Override
 		public void showRefreshing() {
-			mPtrFrame.autoRefresh(true, 10000000);
+			mPtrFrame.setPtrHandler(null);
+			mPtrFrame.autoRefresh(true,150);
+			mPtrFrame.setPtrHandler(ptrHandler);
 		}
 
 		@Override
 		public View getSwitchView() {
 			return mPtrFrame;
 		}
+
+		private PtrHandler ptrHandler = new PtrHandler() {
+			@Override
+			public void onRefreshBegin(PtrFrameLayout frame) {
+				if (onRefreshListener != null) {
+					onRefreshListener.onRefresh();
+				}
+			}
+
+			@Override
+			public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+				return checkContentCanBePulledDown(frame, content, header);
+			}
+		};
 
 	}
 
