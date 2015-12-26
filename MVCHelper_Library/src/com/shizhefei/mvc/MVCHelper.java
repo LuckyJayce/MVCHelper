@@ -272,7 +272,6 @@ public class MVCHelper<DATA> {
 			cancle = null;
 		}
 		handler.removeCallbacksAndMessages(null);
-		handler = null;
 	}
 
 	private static class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
