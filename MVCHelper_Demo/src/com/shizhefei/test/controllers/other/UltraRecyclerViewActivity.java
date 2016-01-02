@@ -39,38 +39,33 @@ import com.shizhefei.view.mvc.demo.R;
  *
  */
 public class UltraRecyclerViewActivity extends Activity {
-	private MVCHelper<List<Book>> listViewHelper;
+	private MVCHelper<List<Book>> mvcHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ultrarecyclerview);
 
-		// 设置LoadView的factory，用于创建使用者自定义的加载失败，加载中，加载更多等布局,写法参照DeFaultLoadViewFactory
-		// ListViewHelper.setLoadViewFactory(new LoadViewFactory());
-
-		// PullToRefreshListView refreshListView = (PullToRefreshListView)
-		// findViewById(R.id.pullToRefreshListView);
 		PtrClassicFrameLayout mPtrFrameLayout = (PtrClassicFrameLayout) findViewById(R.id.rotate_header_list_view_frame);
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-		listViewHelper = new MVCUltraHelper<List<Book>>(mPtrFrameLayout);
+		mvcHelper = new MVCUltraHelper<List<Book>>(mPtrFrameLayout);
 		// 设置数据源
-		listViewHelper.setDataSource(new BooksDataSource());
+		mvcHelper.setDataSource(new BooksDataSource());
 		// 设置适配器
-		listViewHelper.setAdapter(new ReBooksAdapter(this));
+		mvcHelper.setAdapter(new ReBooksAdapter(this));
 
 		// 加载数据
-		listViewHelper.refresh();
+		mvcHelper.refresh();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 释放资源
-		listViewHelper.destory();
+		mvcHelper.destory();
 	}
 
 	public void onClickBack(View view) {

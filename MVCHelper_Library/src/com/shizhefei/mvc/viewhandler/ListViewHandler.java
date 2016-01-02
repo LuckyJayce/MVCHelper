@@ -1,6 +1,5 @@
 package com.shizhefei.mvc.viewhandler;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,21 +22,7 @@ public class ListViewHandler implements ViewHandler {
 		final ListView listView = (ListView) contentView;
 		boolean hasInit = false;
 		if (loadMoreView != null) {
-			final Context context = listView.getContext().getApplicationContext();
-			loadMoreView.init(new FootViewAdder() {
-
-				@Override
-				public View addFootView(int layoutId) {
-					View view = LayoutInflater.from(context).inflate(layoutId, listView, false);
-					return addFootView(view);
-				}
-
-				@Override
-				public View addFootView(View view) {
-					listView.addFooterView(view);
-					return view;
-				}
-			}, onClickLoadMoreListener);
+			loadMoreView.init(new ListViewFootViewAdder(listView), onClickLoadMoreListener);
 			hasInit = true;
 		}
 		listView.setAdapter((ListAdapter) adapter);
@@ -80,7 +65,7 @@ public class ListViewHandler implements ViewHandler {
 	/**
 	 * 滚动到底部自动加载更多数据
 	 */
-	private static class ListViewOnScrollListener implements OnScrollListener {
+	private class ListViewOnScrollListener implements OnScrollListener {
 		private OnScrollBottomListener onScrollBottomListener;
 
 		public ListViewOnScrollListener(OnScrollBottomListener onScrollBottomListener) {
@@ -102,4 +87,31 @@ public class ListViewHandler implements ViewHandler {
 
 		}
 	};
+
+	private class ListViewFootViewAdder implements FootViewAdder {
+		private ListView listView;
+
+		public ListViewFootViewAdder(ListView listView) {
+			super();
+			this.listView = listView;
+		}
+
+		@Override
+		public View addFootView(int layoutId) {
+			View view = LayoutInflater.from(listView.getContext()).inflate(layoutId, listView, false);
+			return addFootView(view);
+		}
+
+		@Override
+		public View addFootView(View view) {
+			listView.addFooterView(view);
+			return view;
+		}
+
+		@Override
+		public View getContentView() {
+			return listView;
+		}
+
+	}
 }

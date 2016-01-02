@@ -35,7 +35,7 @@ import com.shizhefei.view.mvc.demo.R;
  */
 public class NormalActivity extends Activity {
 
-	private MVCHelper<Book> listViewHelper;
+	private MVCHelper<Book> mvcHelper;
 	private TextView authorTextView;
 	private TextView contentTextView;
 	private TextView descriptionTextView;
@@ -51,22 +51,21 @@ public class NormalActivity extends Activity {
 		authorTextView = (TextView) findViewById(R.id.author_textView);
 		descriptionTextView = (TextView) findViewById(R.id.description_textView);
 		contentTextView = (TextView) findViewById(R.id.content_textView);
-		listViewHelper = new MVCNormalHelper<Book>(contentLayout);
 
+		mvcHelper = new MVCNormalHelper<Book>(contentLayout);
 		// 设置数据源
-		listViewHelper.setDataSource(new BookDetailDataSource());
+		mvcHelper.setDataSource(new BookDetailDataSource());
 		// 设置适配器
-		listViewHelper.setAdapter(dataAdapter);
-
+		mvcHelper.setAdapter(dataAdapter);
 		// 加载数据
-		listViewHelper.refresh();
+		mvcHelper.refresh();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 释放资源
-		listViewHelper.destory();
+		mvcHelper.destory();
 	}
 
 	private IDataAdapter<Book> dataAdapter = new IDataAdapter<Book>() {

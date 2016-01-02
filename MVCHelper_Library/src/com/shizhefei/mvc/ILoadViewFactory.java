@@ -121,6 +121,8 @@ public interface ILoadViewFactory {
 		public View addFootView(View view);
 
 		public View addFootView(int layoutId);
+		
+		public View getContentView();
 
 	}
 

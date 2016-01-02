@@ -36,7 +36,7 @@ import com.shizhefei.view.mvc.demo.R;
  */
 public class BookDetailActivity extends Activity {
 
-	private MVCHelper<Book> listViewHelper;
+	private MVCHelper<Book> mvcHelper;
 	private TextView authorTextView;
 	private TextView contentTextView;
 	private TextView descriptionTextView;
@@ -53,22 +53,21 @@ public class BookDetailActivity extends Activity {
 		contentTextView = (TextView) findViewById(R.id.content_textView);
 
 		PtrClassicFrameLayout contentLayout = (PtrClassicFrameLayout) findViewById(R.id.rotate_header_list_view_frame);
-		listViewHelper = new MVCUltraHelper<Book>(contentLayout);
-
+		mvcHelper = new MVCUltraHelper<Book>(contentLayout);
 		// 设置数据源
-		listViewHelper.setDataSource(new BookDetailDataSource());
+		mvcHelper.setDataSource(new BookDetailDataSource());
 		// 设置适配器
-		listViewHelper.setAdapter(dataAdapter);
+		mvcHelper.setAdapter(dataAdapter);
 
 		// 加载数据
-		listViewHelper.refresh();
+		mvcHelper.refresh();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 释放资源
-		listViewHelper.destory();
+		mvcHelper.destory();
 	}
 
 	private IDataAdapter<Book> dataAdapter = new IDataAdapter<Book>() {
