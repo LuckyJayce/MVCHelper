@@ -13,24 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package com.shizhefei.mvc.imp;
+package com.shizhefei.test.view;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shizhefei.mvc.ILoadViewFactory;
+import com.shizhefei.view.mvc.demo.R;
 import com.shizhefei.view.vary.VaryViewHelper;
 
-public class DefaultLoadViewFactory implements ILoadViewFactory {
+public class MyLoadViewFactory implements ILoadViewFactory {
 
 	@Override
 	public ILoadMoreView madeLoadMoreView() {
@@ -50,16 +46,7 @@ public class DefaultLoadViewFactory implements ILoadViewFactory {
 
 		@Override
 		public void init(FootViewAdder footViewHolder, OnClickListener onClickRefreshListener) {
-			View contentView = footViewHolder.getContentView();
-			
-			Context context = contentView.getContext();
-			TextView textView = new TextView(context);
-			textView.setTextColor(Color.GRAY);
-			textView.setPadding(0, dip2px(context, 16), 0, dip2px(context, 16));
-			textView.setGravity(Gravity.CENTER);
-			footViewHolder.addFootView(textView);
-			
-			footView = textView;
+			footView = (TextView) footViewHolder.addFootView(R.layout.layout_listview_foot);
 			this.onClickRefreshListener = onClickRefreshListener;
 			showNormal();
 		}
@@ -109,23 +96,9 @@ public class DefaultLoadViewFactory implements ILoadViewFactory {
 
 		@Override
 		public void showLoading() {
-			Context context = helper.getContext();
-			
-			LinearLayout layout = new LinearLayout(context);
-			layout.setOrientation(LinearLayout.VERTICAL);
-			layout.setGravity(Gravity.CENTER);
-			
-			ProgressBar progressBar = new ProgressBar(context);
-			layout.addView(progressBar);
-			
-			TextView textView = new TextView(context);
+			View layout = helper.inflate(R.layout.load_ing);
+			TextView textView = (TextView) layout.findViewById(R.id.textView1);
 			textView.setText("加载中...");
-			textView.setGravity(Gravity.CENTER);
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			int top = dip2px(context, 12);
-			params.setMargins(0, top, 0, 0);
-			layout.addView(textView,params);
-			
 			helper.showLayout(layout);
 		}
 
@@ -136,59 +109,17 @@ public class DefaultLoadViewFactory implements ILoadViewFactory {
 
 		@Override
 		public void showFail(Exception exception) {
-			Context context = helper.getContext();
-
-			LinearLayout layout = new LinearLayout(context);
-			layout.setOrientation(LinearLayout.VERTICAL);
-			layout.setGravity(Gravity.CENTER);
-
-			TextView textView = new TextView(context);
-			textView.setText("网络加载失败");
-			textView.setGravity(Gravity.CENTER);
-			layout.addView(textView);
-
-			Button button = new Button(context);
-			button.setText("重试");
-			button.setOnClickListener(onClickRefreshListener);
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			int top = dip2px(context, 12);
-			params.setMargins(0, top, 0, 0);
-			layout.addView(button, params);
-
+			View layout = helper.inflate(R.layout.load_error);
+			layout.setOnClickListener(onClickRefreshListener);
 			helper.showLayout(layout);
 		}
 
 		@Override
 		public void showEmpty() {
-			Context context = helper.getContext();
-
-			LinearLayout layout = new LinearLayout(context);
-			layout.setOrientation(LinearLayout.VERTICAL);
-			layout.setGravity(Gravity.CENTER);
-
-			TextView textView = new TextView(context);
-			textView.setText("暂无数据");
-			textView.setGravity(Gravity.CENTER);
-			layout.addView(textView);
-
-			Button button = new Button(context);
-			button.setText("重试");
-			button.setOnClickListener(onClickRefreshListener);
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			int top = dip2px(context, 12);
-			params.setMargins(0, top, 0, 0);
-			layout.addView(button, params);
-
+			View layout = helper.inflate(R.layout.load_empty);
+			layout.setOnClickListener(onClickRefreshListener);
 			helper.showLayout(layout);
 		}
 
-	}
-
-	/**
-	 * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
-	 */
-	public static int dip2px(Context context, float dpValue) {
-		final float scale = context.getResources().getDisplayMetrics().density;
-		return (int) (dpValue * scale + 0.5f);
 	}
 }

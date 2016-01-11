@@ -1,6 +1,5 @@
 package in.srain.cube.views;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,27 +19,13 @@ public class GridViewHandler implements ViewHandler {
 
 	@Override
 	public boolean handleSetAdapter(View contentView, IDataAdapter<?> adapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener) {
-		final GridViewWithHeaderAndFooter girdView = (GridViewWithHeaderAndFooter) contentView;
+		final GridViewWithHeaderAndFooter gridView = (GridViewWithHeaderAndFooter) contentView;
 		boolean hasInit = false;
 		if (loadMoreView != null) {
-			final Context context = girdView.getContext().getApplicationContext();
-			loadMoreView.init(new FootViewAdder() {
-
-				@Override
-				public View addFootView(int layoutId) {
-					View view = LayoutInflater.from(context).inflate(layoutId, girdView, false);
-					return addFootView(view);
-				}
-
-				@Override
-				public View addFootView(View view) {
-					girdView.addFooterView(view);
-					return view;
-				}
-			}, onClickLoadMoreListener);
+			loadMoreView.init(new GridViewFFootViewAdder(gridView), onClickLoadMoreListener);
 			hasInit = true;
 		}
-		girdView.setAdapter((ListAdapter) adapter);
+		gridView.setAdapter((ListAdapter) adapter);
 		return hasInit;
 	}
 
@@ -102,4 +87,31 @@ public class GridViewHandler implements ViewHandler {
 
 		}
 	};
+
+	private class GridViewFFootViewAdder implements FootViewAdder {
+		private GridViewWithHeaderAndFooter gridView;
+
+		public GridViewFFootViewAdder(GridViewWithHeaderAndFooter gridView) {
+			super();
+			this.gridView = gridView;
+		}
+
+		@Override
+		public View addFootView(int layoutId) {
+			View view = LayoutInflater.from(gridView.getContext()).inflate(layoutId, gridView, false);
+			return addFootView(view);
+		}
+
+		@Override
+		public View addFootView(View view) {
+			gridView.addFooterView(view);
+			return view;
+		}
+
+		@Override
+		public View getContentView() {
+			return gridView;
+		}
+
+	}
 }

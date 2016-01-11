@@ -41,15 +41,12 @@ import com.shizhefei.view.mvc.demo.R;
  *
  */
 public class UltraActivity extends Activity {
-	private MVCHelper<List<Book>> listViewHelper;
+	private MVCHelper<List<Book>> mvcHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ultra);
-
-		// 设置LoadView的factory，用于创建使用者自定义的加载失败，加载中，加载更多等布局,写法参照DeFaultLoadViewFactory
-		// ListViewHelper.setLoadViewFactory(new LoadViewFactory());
 
 		/*
 		 * 配置PtrClassicFrameLayout的刷新样式
@@ -64,21 +61,20 @@ public class UltraActivity extends Activity {
 		mPtrFrameLayout.setHeaderView(header);
 		mPtrFrameLayout.addPtrUIHandler(header);
 
-		listViewHelper = new MVCUltraHelper<List<Book>>(mPtrFrameLayout);
+		mvcHelper = new MVCUltraHelper<List<Book>>(mPtrFrameLayout);
 		// 设置数据源
-		listViewHelper.setDataSource(new BooksDataSource());
+		mvcHelper.setDataSource(new BooksDataSource());
 		// 设置适配器
-		listViewHelper.setAdapter(new BooksAdapter(this));
-
+		mvcHelper.setAdapter(new BooksAdapter(this));
 		// 加载数据
-		listViewHelper.refresh();
+		mvcHelper.refresh();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 释放资源
-		listViewHelper.destory();
+		mvcHelper.destory();
 	}
 
 	public void onClickBack(View view) {

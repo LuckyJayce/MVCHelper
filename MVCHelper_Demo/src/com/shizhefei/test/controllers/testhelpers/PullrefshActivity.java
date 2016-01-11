@@ -37,33 +37,29 @@ import com.shizhefei.view.mvc.demo.R;
  */
 public class PullrefshActivity extends Activity {
 
-	private MVCHelper<List<Book>> listViewHelper;
+	private MVCHelper<List<Book>> mvcHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pullrefsh);
 
-		// 设置LoadView的factory，用于创建使用者自定义的加载失败，加载中，加载更多等布局,写法参照DeFaultLoadViewFactory
-		// ListViewHelper.setLoadViewFactory(new LoadViewFactory());
-
 		PullToRefreshListView refreshListView = (PullToRefreshListView) findViewById(R.id.pullToRefreshListView);
-		listViewHelper = new MVCPullrefshHelper<List<Book>>(refreshListView);
-
+		
+		mvcHelper = new MVCPullrefshHelper<List<Book>>(refreshListView);
 		// 设置数据源
-		listViewHelper.setDataSource(new BooksDataSource());
+		mvcHelper.setDataSource(new BooksDataSource());
 		// 设置适配器
-		listViewHelper.setAdapter(new BooksAdapter(this));
-
+		mvcHelper.setAdapter(new BooksAdapter(this));
 		// 加载数据
-		listViewHelper.refresh();
+		mvcHelper.refresh();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 释放资源
-		listViewHelper.destory();
+		mvcHelper.destory();
 	}
 
 	public void onClickBack(View view) {

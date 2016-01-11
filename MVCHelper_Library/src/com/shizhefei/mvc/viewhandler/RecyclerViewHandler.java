@@ -1,6 +1,5 @@
 package com.shizhefei.mvc.viewhandler;
 
-import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -30,21 +29,7 @@ public class RecyclerViewHandler implements ViewHandler {
 				hfAdapter = new HFRecyclerAdapter(adapter2);
 			}
 			adapter2 = hfAdapter;
-			final Context context = recyclerView.getContext().getApplicationContext();
-			loadMoreView.init(new FootViewAdder() {
-
-				@Override
-				public View addFootView(int layoutId) {
-					View view = LayoutInflater.from(context).inflate(layoutId, recyclerView, false);
-					return addFootView(view);
-				}
-
-				@Override
-				public View addFootView(View view) {
-					hfAdapter.addFooter(view);
-					return view;
-				}
-			}, onClickLoadMoreListener);
+			loadMoreView.init(new RecyclerViewFootViewAdder(recyclerView, hfAdapter), onClickLoadMoreListener);
 			hasInit = true;
 		}
 		recyclerView.setAdapter(adapter2);
@@ -95,4 +80,33 @@ public class RecyclerViewHandler implements ViewHandler {
 		}
 
 	};
+
+	private class RecyclerViewFootViewAdder implements FootViewAdder {
+		private RecyclerView recyclerView;
+		private HFAdapter hfAdapter;
+
+		public RecyclerViewFootViewAdder(RecyclerView recyclerView, HFAdapter hfAdapter) {
+			super();
+			this.recyclerView = recyclerView;
+			this.hfAdapter = hfAdapter;
+		}
+
+		@Override
+		public View addFootView(int layoutId) {
+			View view = LayoutInflater.from(recyclerView.getContext()).inflate(layoutId, recyclerView, false);
+			return addFootView(view);
+		}
+
+		@Override
+		public View addFootView(View view) {
+			hfAdapter.addFooter(view);
+			return view;
+		}
+
+		@Override
+		public View getContentView() {
+			return recyclerView;
+		}
+
+	}
 }

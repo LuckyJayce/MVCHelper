@@ -42,7 +42,7 @@ import com.shizhefei.view.mvc.demo.R;
  */
 public class MovieDetailActivity extends Activity {
 
-	private MVCHelper<Data3<Movie, List<Discuss>, List<Movie>>> listViewHelper;
+	private MVCHelper<Data3<Movie, List<Discuss>, List<Movie>>> mvcHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,22 +53,21 @@ public class MovieDetailActivity extends Activity {
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-		listViewHelper = new MVCUltraHelper<Data3<Movie, List<Discuss>, List<Movie>>>(contentLayout);
-
+		mvcHelper = new MVCUltraHelper<Data3<Movie, List<Discuss>, List<Movie>>>(contentLayout);
 		// 设置数据源
-		listViewHelper.setDataSource(new MovieDetailDataSource());
+		mvcHelper.setDataSource(new MovieDetailDataSource());
 		// 设置适配器
-		listViewHelper.setAdapter(new MovieDetailAdapter(getApplicationContext()));
+		mvcHelper.setAdapter(new MovieDetailAdapter(getApplicationContext()));
 
 		// 加载数据
-		listViewHelper.refresh();
+		mvcHelper.refresh();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 释放资源
-		listViewHelper.destory();
+		mvcHelper.destory();
 	}
 
 	public void onClickBack(View view) {

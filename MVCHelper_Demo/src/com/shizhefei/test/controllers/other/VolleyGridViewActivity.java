@@ -39,41 +39,38 @@ import com.shizhefei.view.mvc.demo.R;
  */
 public class VolleyGridViewActivity extends Activity {
 
-	private MVCHelper<List<Book>> listViewHelper;
+	private MVCHelper<List<Book>> mvcHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_girdview);
 
-		// 设置LoadView的factory，用于创建使用者自定义的加载失败，加载中，加载更多等布局,写法参照DeFaultLoadViewFactory
-		// ListViewHelper.setLoadViewFactory(new LoadViewFactory());
-
 		// PullToRefreshListView refreshListView = (PullToRefreshListView)
 		// findViewById(R.id.pullToRefreshListView);
 		SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 		// GridViewWithHeaderAndFooter gridViewWithHeaderAndFooter =
 		// (GridViewWithHeaderAndFooter) findViewById(R.id.girdView);
-		listViewHelper = new MVCSwipeRefreshHelper<List<Book>>(swipeRefreshLayout);
+		mvcHelper = new MVCSwipeRefreshHelper<List<Book>>(swipeRefreshLayout);
 
 		// 设置数据源
-		listViewHelper.setDataSource(new BooksVolleyDataSource());
+		mvcHelper.setDataSource(new BooksVolleyDataSource());
 
 		// 设置AsyncHttpClient 作为网络请求的数据源
 		// listViewHelper.setDataSource(new BooksAsyncDataSource());
 
 		// 设置适配器
-		listViewHelper.setAdapter(new BooksAdapter(this), new GridViewHandler());
+		mvcHelper.setAdapter(new BooksAdapter(this), new GridViewHandler());
 
 		// 加载数据
-		listViewHelper.refresh();
+		mvcHelper.refresh();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 释放资源
-		listViewHelper.destory();
+		mvcHelper.destory();
 	}
 
 	public void onClickBack(View view) {
