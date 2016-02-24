@@ -259,10 +259,11 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 		@Override
 		public void onClick(View v) {
 			int position = getRealPosition(vh.getLayoutPosition());
-			if (HFAdapter.this.onItemClickListener != null) {
-				HFAdapter.this.onItemClickListener.onItemClick(HFAdapter.this, vh, position);
+			if (!onItemClick(vh, position)) {
+				if (HFAdapter.this.onItemClickListener != null) {
+					HFAdapter.this.onItemClickListener.onItemClick(HFAdapter.this, vh, position);
+				}
 			}
-			onItemClick(vh, position);
 		}
 	}
 
@@ -277,21 +278,36 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 		@Override
 		public boolean onLongClick(View v) {
 			int position = getRealPosition(vh.getLayoutPosition());
-			if (HFAdapter.this.onItemLongClickListener != null) {
-				HFAdapter.this.onItemLongClickListener.onItemLongClick(HFAdapter.this, vh, position);
+			if (!onItemLongClick(vh, position)) {
+				if (HFAdapter.this.onItemLongClickListener != null) {
+					HFAdapter.this.onItemLongClickListener.onItemLongClick(HFAdapter.this, vh, position);
+				}
 			}
-			onItemLongClick(vh, position);
 			return true;
 		}
 
 	}
 
-	protected void onItemClick(ViewHolder vh, int position) {
-
+	/**
+	 * 直接在Adapter里面处理项的点击事件
+	 * 
+	 * @param vh
+	 * @param position
+	 * @return 如果返回true，事件就被拦截不再调用onItemClickListener，否则会调用onItemClickListener
+	 */
+	protected boolean onItemClick(ViewHolder vh, int position) {
+		return false;
 	}
 
-	protected void onItemLongClick(ViewHolder vh, int position) {
-
+	/**
+	 * 直接在Adapter里面处理项的长按事件
+	 * 
+	 * @param vh
+	 * @param position
+	 * @return 如果返回true，事件就被拦截不再调用onItemLongClickListener，否则会调用onItemLongClickListener
+	 */
+	protected boolean onItemLongClick(ViewHolder vh, int position) {
+		return false;
 	}
 
 	public static interface OnItemClickListener {
