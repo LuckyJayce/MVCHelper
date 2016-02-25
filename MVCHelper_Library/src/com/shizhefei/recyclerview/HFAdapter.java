@@ -95,7 +95,7 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 			// create a new framelayout, or inflate from a resource
 			FrameLayout frameLayout = new FrameLayout(viewGroup.getContext());
 			// make sure it fills the space
-			frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+			frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			return new HeaderFooterViewHolder(frameLayout);
 		}
 	}
@@ -130,7 +130,7 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 		// if it's a staggered grid, span the whole layout
 		if (mManagerType == TYPE_MANAGER_STAGGERED_GRID) {
 			StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-					ViewGroup.LayoutParams.MATCH_PARENT);
+					ViewGroup.LayoutParams.WRAP_CONTENT);
 			layoutParams.setFullSpan(true);
 			vh.itemView.setLayoutParams(layoutParams);
 		}
@@ -304,7 +304,8 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 	 * 
 	 * @param vh
 	 * @param position
-	 * @return 如果返回true，事件就被拦截不再调用onItemLongClickListener，否则会调用onItemLongClickListener
+	 * @return 
+	 *         如果返回true，事件就被拦截不再调用onItemLongClickListener，否则会调用onItemLongClickListener
 	 */
 	protected boolean onItemLongClick(ViewHolder vh, int position) {
 		return false;
