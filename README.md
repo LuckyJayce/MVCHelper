@@ -125,7 +125,7 @@ Activity负责调度，代码如下
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			// 设置LoadView的factory，用于创建用户自定义的加载失败，加载中，加载更多等布局
-			// ListViewHelper.setLoadViewFractory(new LoadViewFractory());
+			// MVCHelper.setLoadViewFractory(new LoadViewFractory());
 	
 			PullToRefreshListView refreshListView = (PullToRefreshListView) findViewById(R.id.pullToRefreshListView);
 			mvcHelper = new MVCPullrefshHelper<List<Book>>(refreshListView);
@@ -151,7 +151,7 @@ Activity负责调度，代码如下
 
 ## 4.ILoadViewFractory 自定义 失败布局，无数据布局，加载中布局 
 实现ILoadViewFractory  
-然后ListViewHelper.setLoadViewFractory(new LoadViewFractory());  
+MVCHelper.setLoadViewFractory(new LoadViewFractory());  
 就这样，就会显示你自定义的布局
 
 ## 5.你可以自由的切换主流刷新类库 
@@ -442,6 +442,12 @@ Activity负责调度，代码如下
 
 	//loginHelper.cancle();//执行取消操作
 	//loginHelper.destory();//执行释放操作
+
+注意：  
+	1.权限：  
+		<uses-permission android:name="android.permission.INTERNET" />  
+    		<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />  
+    	2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
 
 ## 三、说明
 
