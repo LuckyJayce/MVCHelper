@@ -443,11 +443,11 @@ Activity负责调度，代码如下
 	//loginHelper.cancle();//执行取消操作
 	//loginHelper.destory();//执行释放操作
 
-注意：  
-	1.权限：  
-		<uses-permission android:name="android.permission.INTERNET" />  
-    		<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />  
-    	2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
+## 注意：  
+        1.权限：  
+	        android.permission.INTERNET  
+	        android.permission.ACCESS_NETWORK_STATE  
+        2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
 
 ## 三、说明
 
