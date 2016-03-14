@@ -7,7 +7,8 @@ MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，
 Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/files/76209/LuckyJayce_MVCHelper_1.0.0.zip)  
 Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
-## 1.Model (IDataSource<DATA>)
+## 1.Model (IDataSource<DATA>)数据源，加载数据  
+   **同步请求实现IDataSource，异步请求（okhttp,volley）实现IAsyncDataSource**  
         //数据源
 	public interface IDataSource<DATA> {
 		// 获取刷新的数据
@@ -50,7 +51,10 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 		}
 
 	}
-## 2.View（IDataAdapter<DATA>）
+## 2.View（IDataAdapter<DATA>） 视图，显示数据   
+**这里不是指Android的view，而是显示数据的概念和显示逻辑**  
+        
+       
 	public interface IDataAdapter<DATA> {
 	
 		public abstract void notifyDataChanged(DATA data, boolean isRefresh);
@@ -114,7 +118,9 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 	
 	
 	}
-## 3.Controller (Activity,Fragment,MVCHelper)
+## 3.Controller (Activity,Fragment,MVCHelper)控制器    
+**控制器负责调用读取数据，调用显示数据，处理用户交互**  
+       
 Activity负责调度，代码如下
 	
 	public class MainActivity extends Activity {
