@@ -9,7 +9,9 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 
 ## 1.Model (IDataSource<DATA>)数据源，加载数据  
    **同步请求实现IDataSource，异步请求（okhttp,volley）实现IAsyncDataSource**  
+          
         //数据源
+		
 	public interface IDataSource<DATA> {
 		// 获取刷新的数据
 		public DATA refresh() throws Exception;
@@ -21,7 +23,7 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 		public boolean hasMore();
 	}
 例如：分页加载书籍列表数据
-	
+	  
 	public class BooksDataSource implements IDataSource<List<Book>> {
 		private int page = 1;
 		private int maxPage = 5;
@@ -53,7 +55,7 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 	}
 ## 2.View（IDataAdapter<DATA>） 视图，显示数据   
 **这里不是指Android的view，而是显示数据的概念和显示逻辑**  
-        
+          
        
 	public interface IDataAdapter<DATA> {
 	
