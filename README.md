@@ -7,8 +7,11 @@ MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，
 Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/files/76209/LuckyJayce_MVCHelper_1.0.0.zip)  
 Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
-## 1.Model (IDataSource<DATA>)
+## 1.Model (IDataSource<DATA>)数据源，加载数据  
+   **同步请求实现IDataSource，异步请求（okhttp,volley）实现IAsyncDataSource**  
+          
         //数据源
+		
 	public interface IDataSource<DATA> {
 		// 获取刷新的数据
 		public DATA refresh() throws Exception;
@@ -20,7 +23,7 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 		public boolean hasMore();
 	}
 例如：分页加载书籍列表数据
-	
+	  
 	public class BooksDataSource implements IDataSource<List<Book>> {
 		private int page = 1;
 		private int maxPage = 5;
@@ -50,7 +53,10 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 		}
 
 	}
-## 2.View（IDataAdapter<DATA>）
+## 2.View（IDataAdapter<DATA>） 视图，显示数据   
+**这里不是指Android的view，而是显示数据的概念和显示逻辑**  
+          
+       
 	public interface IDataAdapter<DATA> {
 	
 		public abstract void notifyDataChanged(DATA data, boolean isRefresh);
@@ -114,7 +120,9 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 	
 	
 	}
-## 3.Controller (Activity,Fragment,MVCHelper)
+## 3.Controller (Activity,Fragment,MVCHelper)控制器    
+**控制器负责调用读取数据，调用显示数据，处理用户交互**  
+       
 Activity负责调度，代码如下
 	
 	public class MainActivity extends Activity {
@@ -125,7 +133,7 @@ Activity负责调度，代码如下
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			// 设置LoadView的factory，用于创建用户自定义的加载失败，加载中，加载更多等布局
-			// ListViewHelper.setLoadViewFractory(new LoadViewFractory());
+			// MVCHelper.setLoadViewFractory(new LoadViewFractory());
 	
 			PullToRefreshListView refreshListView = (PullToRefreshListView) findViewById(R.id.pullToRefreshListView);
 			mvcHelper = new MVCPullrefshHelper<List<Book>>(refreshListView);
@@ -151,7 +159,7 @@ Activity负责调度，代码如下
 
 ## 4.ILoadViewFractory 自定义 失败布局，无数据布局，加载中布局 
 实现ILoadViewFractory  
-然后ListViewHelper.setLoadViewFractory(new LoadViewFractory());  
+MVCHelper.setLoadViewFractory(new LoadViewFractory());  
 就这样，就会显示你自定义的布局
 
 ## 5.你可以自由的切换主流刷新类库 
@@ -442,6 +450,12 @@ Activity负责调度，代码如下
 
 	//loginHelper.cancle();//执行取消操作
 	//loginHelper.destory();//执行释放操作
+
+## 注意：  
+        1.权限：  
+	        android.permission.INTERNET  
+	        android.permission.ACCESS_NETWORK_STATE  
+        2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
 
 ## 三、说明
 
