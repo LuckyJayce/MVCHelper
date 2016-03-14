@@ -456,6 +456,8 @@ Activity负责调度，代码如下
 	        android.permission.INTERNET  
 	        android.permission.ACCESS_NETWORK_STATE  
         2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
+## 类图  
+   ![image](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png)
 
 ## 三、说明
 
