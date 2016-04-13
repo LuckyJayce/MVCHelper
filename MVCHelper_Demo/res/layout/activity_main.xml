@@ -29,6 +29,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:onClick="onClickTestCase"
+                android:text="测试用例" />
+            
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:onClick="onClickDemo"
                 android:text="进入MVCPullrefshHelper的Demo" />
 

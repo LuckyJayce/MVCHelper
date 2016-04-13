@@ -26,34 +26,37 @@ public class LoginAsyncTask implements IAsyncTask<User, String> {
 	}
 
 	@Override
-	public RequestHandle execute(final ResponseSender<User, String> sender, ProgressSender progressSender) throws Exception {
+	public RequestHandle execute(final ResponseSender<User, String> sender,
+			ProgressSender progressSender) throws Exception {
 		String url = "http://www.baidu.com";
 		Uri.Builder builder = Uri.parse(url).buildUpon();
 		builder.appendQueryParameter("userName", name);
 		builder.appendQueryParameter("password", password);
-		StringRequest jsonObjRequest = new StringRequest(Request.Method.GET, builder.toString(), new Response.Listener<String>() {
+		StringRequest jsonObjRequest = new StringRequest(Request.Method.GET,
+				builder.toString(), new Response.Listener<String>() {
 
-			@Override
-			public void onResponse(String response) {
-				if (TextUtils.isEmpty(name)) {
-					sender.sendFail("请输入用户名");
-				}
-				if (TextUtils.isEmpty(password)) {
-					sender.sendFail("请输入密码");
-				}
-				if (name.equals("aaa") && password.equals("111")) {
-					sender.sendData(new User("1", "aaa", 23, "中国人"));
-				} else {
-					sender.sendFail("用户名或者密码不正确");
-				}
-			}
-		}, new Response.ErrorListener() {
+					@Override
+					public void onResponse(String response) {
+						if (TextUtils.isEmpty(name)) {
+							sender.sendFail("请输入用户名");
+						}
+						if (TextUtils.isEmpty(password)) {
+							sender.sendFail("请输入密码");
+						}
+						if (name.equals("LuckyJayce") && password.equals("111")) {
+							sender.sendData(new User("1", "LuckyJayce", 23,
+									"中国人"));
+						} else {
+							sender.sendFail("用户名或者密码不正确");
+						}
+					}
+				}, new Response.ErrorListener() {
 
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				sender.sendError(error);
-			}
-		});
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						sender.sendError(error);
+					}
+				});
 		MyVolley.getRequestQueue().add(jsonObjRequest);
 		return new VolleyRequestHandle(jsonObjRequest);
 	}

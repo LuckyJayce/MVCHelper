@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ccc" >
+
+    <View
+        android:id="@+id/item_testcase2_state_view"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#f00" />
+
+    <CheckedTextView
+        android:id="@+id/item_testcase2_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="50dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="1111"
+        android:textColor="#000" />
+
+</LinearLayout>

@@ -1,20 +1,33 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+    <style name="AppBaseTheme" parent="@android:style/Theme.Light.NoTitleBar"></style>
+
+    <style name="AppTheme" parent="AppBaseTheme"></style>
+
+    <style name="head_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">#2196F3</item>
+    </style>
+    <style name="button_base">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#fff</item>
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="head_base_button" parent="@style/button_base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <!-- 顶部的左边按钮style -->
+    <style name="head_left_button" parent="@style/head_base_button">
+        <item name="android:layout_gravity">left|center_vertical</item>
     </style>
 
 </resources>

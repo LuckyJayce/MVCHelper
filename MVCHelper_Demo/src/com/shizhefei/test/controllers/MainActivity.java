@@ -15,6 +15,7 @@ limitations under the License.
  */
 package com.shizhefei.test.controllers;
 
+import testcase.TestCaseFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,8 +41,13 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 	}
 
+	public void onClickTestCase(View view) {
+		ProxyActivity.startActivity(this, TestCaseFragment.class, "测试用例");
+	}
+
 	public void onClickDemo(View view) {
-		startActivity(new Intent(getApplicationContext(), PullrefshActivity.class));
+		startActivity(new Intent(getApplicationContext(),
+				PullrefshActivity.class));
 	}
 
 	public void onClickDemo2(View view) {
@@ -49,11 +55,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickDemo3(View view) {
-		startActivity(new Intent(getApplicationContext(), SwipeRefreshActivity.class));
+		startActivity(new Intent(getApplicationContext(),
+				SwipeRefreshActivity.class));
 	}
 
 	public void onClickDemo4(View view) {
-		startActivity(new Intent(getApplicationContext(), BookDetailActivity.class));
+		startActivity(new Intent(getApplicationContext(),
+				BookDetailActivity.class));
 	}
 
 	public void onClickDemo5(View view) {
@@ -61,15 +69,18 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickDemo6(View view) {
-		startActivity(new Intent(getApplicationContext(), UltraRecyclerViewActivity.class));
+		startActivity(new Intent(getApplicationContext(),
+				UltraRecyclerViewActivity.class));
 	}
 
 	public void onClickDemo7(View view) {
-		startActivity(new Intent(getApplicationContext(), MovieDetailActivity.class));
+		startActivity(new Intent(getApplicationContext(),
+				MovieDetailActivity.class));
 	}
 
 	public void onClickDemo8(View view) {
-		startActivity(new Intent(getApplicationContext(), VolleyGridViewActivity.class));
+		startActivity(new Intent(getApplicationContext(),
+				VolleyGridViewActivity.class));
 	}
 
 	public void onClickTask1(View view) {
