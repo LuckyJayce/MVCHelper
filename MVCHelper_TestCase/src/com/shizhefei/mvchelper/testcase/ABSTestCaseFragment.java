@@ -37,6 +37,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.shizhefei.recyclerview.HFAdapter;
 import com.shizhefei.recyclerview.HFAdapter.OnItemClickListener;
 import com.shizhefei.task.AsyncDataSourceProxyTask;
@@ -271,15 +272,19 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
 				@Override
 				public void afterTextChanged(Editable s) {
-					String text = s.toString();
-					Object value = map.get(key);
-					Object newValue;
-					if (String.class.equals(value.getClass())) {
-						newValue = text;
-					} else {
-						newValue = gson.fromJson(text, value.getClass());
+					try {
+						String text = s.toString();
+						Object value = map.get(key);
+						Object newValue;
+						if (String.class.equals(value.getClass())) {
+							newValue = text;
+						} else {
+							newValue = gson.fromJson(text, value.getClass());
+						}
+						map2.put(key, newValue);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					map2.put(key, newValue);
 				}
 			};
 		}
