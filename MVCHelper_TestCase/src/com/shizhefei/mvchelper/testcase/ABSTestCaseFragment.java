@@ -65,7 +65,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
-		View view = inflater.inflate(R.layout.testcase2, container, false);
+		View view = inflater.inflate(R.layout.testcase, container, false);
 
 		GsonBuilder builder = new GsonBuilder();
 		builder.addSerializationExclusionStrategy(new ExclusionStrategy() {
@@ -182,7 +182,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
 		@Override
 		public ViewHolder onCreateViewHolderHF(ViewGroup viewGroup, int type) {
-			return new ItemViewHolder(inflater.inflate(R.layout.testcase2_param_item, viewGroup, false));
+			return new ItemViewHolder(inflater.inflate(R.layout.testcase_param_item, viewGroup, false));
 		}
 
 		@Override
@@ -317,7 +317,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
 		@Override
 		public ViewHolder onCreateViewHolderHF(ViewGroup viewGroup, int type) {
-			return new ItemViewHolder(inflater.inflate(R.layout.testcase2_item, viewGroup, false));
+			return new ItemViewHolder(inflater.inflate(R.layout.testcase_item, viewGroup, false));
 		}
 
 		@Override
