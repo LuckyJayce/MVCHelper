@@ -273,7 +273,12 @@ public abstract class ABSTestCaseFragment extends Fragment {
 				public void afterTextChanged(Editable s) {
 					String text = s.toString();
 					Object value = map.get(key);
-					Object newValue = gson.fromJson(text, value.getClass());
+					Object newValue;
+					if (String.class.equals(value.getClass())) {
+						newValue = text;
+					} else {
+						newValue = gson.fromJson(text, value.getClass());
+					}
 					map2.put(key, newValue);
 				}
 			};
