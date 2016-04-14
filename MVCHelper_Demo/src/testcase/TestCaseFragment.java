@@ -14,10 +14,9 @@ public class TestCaseFragment extends ABSTestCaseFragment {
 	@Override
 	protected List<TestCaseData> getTestCaseDatas() {
 		List<TestCaseData> datas = new ArrayList<TestCaseData>();
+		datas.add(new TestCaseData("测试d登录", new LoginAsyncTask("LuckyJayce", "111")));
 		datas.add(new TestCaseData("测试详情页", new BookDetailDataSource()));
 		datas.add(new TestCaseData("测试搜索文章", new SearchBookDataSource("Java")));
-		datas.add(new TestCaseData("测试d登录", new LoginAsyncTask("LuckyJayce",
-				"111")));
 		return datas;
 	}
 

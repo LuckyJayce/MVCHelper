@@ -17,6 +17,8 @@
             android:id="@+id/proxy_title_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="18sp"
             android:layout_gravity="center"
             android:text="文章详情" />
     </FrameLayout>

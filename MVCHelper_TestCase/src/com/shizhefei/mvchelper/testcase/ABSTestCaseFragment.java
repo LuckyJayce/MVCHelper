@@ -6,15 +6,22 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map.Entry;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +31,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -52,10 +60,10 @@ public abstract class ABSTestCaseFragment extends Fragment {
 	private View itemRunButton;
 	private ParamsAdapter paramsAdapter;
 	private LayoutInflater inflater;
+	private TextView resultStateTextView;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
 		View view = inflater.inflate(R.layout.testcase2, container, false);
 
@@ -79,23 +87,20 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		}).create();
 		gson = builder.create();
 
-		recyclerView = (RecyclerView) view
-				.findViewById(R.id.testcase2_recyclerView);
-		paramsRecyclerView = (RecyclerView) view
-				.findViewById(R.id.testcase2_params_recyclerView);
-		resultTextView = (TextView) view
-				.findViewById(R.id.testcase2_result_textView);
+		recyclerView = (RecyclerView) view.findViewById(R.id.testcase2_recyclerView);
+		paramsRecyclerView = (RecyclerView) view.findViewById(R.id.testcase2_params_recyclerView);
+		resultTextView = (TextView) view.findViewById(R.id.testcase2_result_textView);
 		runButton = (Button) view.findViewById(R.id.testcase2_run_button);
 		resetButton = (Button) view.findViewById(R.id.testcase2_reset_button);
 		itemRunButton = view.findViewById(R.id.testcase2_run2_button);
+		resultStateTextView = (TextView) view.findViewById(R.id.testcase2_resultState_textView);
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		recyclerView.setAdapter(tasksAdapter = new TasksAdapter());
 		// recyclerView.addItemDecoration(new
 		// DividerItemDecoration(getContext()));
 
-		paramsRecyclerView.setLayoutManager(new LinearLayoutManager(
-				getContext()));
+		paramsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		// paramsRecyclerView.addItemDecoration(new
 		// DividerItemDecoration(getContext()));
 		paramsRecyclerView.setAdapter(paramsAdapter = new ParamsAdapter());
@@ -106,6 +111,9 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		runButton.setOnClickListener(onClickListener);
 		itemRunButton.setOnClickListener(onClickListener);
 		tasksAdapter.setOnItemClickListener(onItemClickListener);
+		resultTextView.setOnClickListener(onClickListener);
+
+		onItemClickListener.onItemClick(tasksAdapter, null, selectPosition);
 
 		return view;
 	}
@@ -123,13 +131,43 @@ public abstract class ABSTestCaseFragment extends Fragment {
 				}
 				datas = getTestCaseDatas();
 				tasksAdapter.notifyDataSetChanged();
-				onItemClickListener.onItemClick(tasksAdapter, null,
-						selectPosition);
+				onItemClickListener.onItemClick(tasksAdapter, null, selectPosition);
 			} else if (v == itemRunButton) {
 				hideSoftKeyboard(itemRunButton);
 				TestCaseData data = datas.get(selectPosition);
 				data.task = paramsAdapter.getTask();
 				exe(selectPosition, data, false);
+			} else if (v == resultTextView) {
+				if (resultTextView.getText().length() == 0) {
+					return;
+				}
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setItems(new String[] { "复制", "分享" }, new AlertDialog.OnClickListener() {
+
+					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String text = resultTextView.getText().toString();
+						if (which == 0) {
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								ClipboardManager cmb = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+								cmb.setText(text);
+							} else {
+								android.text.ClipboardManager manager = (android.text.ClipboardManager) getContext().getSystemService(
+										Context.CLIPBOARD_SERVICE);
+								manager.setText(text);
+							}
+							Toast.makeText(getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+						} else {
+							Intent intent = new Intent(Intent.ACTION_SEND);
+							intent.setType("text/plain"); // 纯文本
+							intent.putExtra(Intent.EXTRA_TEXT, text);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(Intent.createChooser(intent, "分享"));
+						}
+					}
+				});
+				builder.show();
 			}
 		}
 	};
@@ -144,8 +182,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
 		@Override
 		public ViewHolder onCreateViewHolderHF(ViewGroup viewGroup, int type) {
-			return new ItemViewHolder(inflater.inflate(
-					R.layout.testcase2_param_item, viewGroup, false));
+			return new ItemViewHolder(inflater.inflate(R.layout.testcase2_param_item, viewGroup, false));
 		}
 
 		@Override
@@ -190,8 +227,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 			}
 			for (Entry<String, Object> data : map2.entrySet()) {
 				try {
-					Field field = object.getClass().getDeclaredField(
-							data.getKey());
+					Field field = object.getClass().getDeclaredField(data.getKey());
 					field.setAccessible(true);
 					field.set(object, data.getValue());
 				} catch (Exception e) {
@@ -210,8 +246,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 			public ItemViewHolder(View itemView) {
 				super(itemView);
 				keyTextView = (TextView) itemView.findViewById(R.id.textView1);
-				valueEditText = (EditText) itemView
-						.findViewById(R.id.editText1);
+				valueEditText = (EditText) itemView.findViewById(R.id.editText1);
 			}
 
 			public void setData(String key, Object value) {
@@ -225,14 +260,12 @@ public abstract class ABSTestCaseFragment extends Fragment {
 			private TextWatcher textWatcher = new TextWatcher() {
 
 				@Override
-				public void onTextChanged(CharSequence s, int start,
-						int before, int count) {
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 				}
 
 				@Override
-				public void beforeTextChanged(CharSequence s, int start,
-						int count, int after) {
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
 				}
 
@@ -259,6 +292,20 @@ public abstract class ABSTestCaseFragment extends Fragment {
 			resultTextView.setText(data.result);
 			selectPosition = position;
 			paramsAdapter.setData(data.task);
+			switch (data.status) {
+			case -1:
+				resultStateTextView.setText("ERROR");
+				break;
+			case 0:
+				resultStateTextView.setText("");
+				break;
+			case 1:
+				resultStateTextView.setText("RUNING");
+				break;
+			case 2:
+				resultStateTextView.setText("SUCCESS");
+				break;
+			}
 			paramsAdapter.notifyDataSetChanged();
 			adapter.notifyDataSetChangedHF();
 		}
@@ -270,8 +317,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
 		@Override
 		public ViewHolder onCreateViewHolderHF(ViewGroup viewGroup, int type) {
-			return new ItemViewHolder(inflater.inflate(R.layout.testcase2_item,
-					viewGroup, false));
+			return new ItemViewHolder(inflater.inflate(R.layout.testcase2_item, viewGroup, false));
 		}
 
 		@Override
@@ -298,10 +344,8 @@ public abstract class ABSTestCaseFragment extends Fragment {
 			private void setData(int index, TestCaseData data) {
 				this.index = index;
 				this.data = data;
-				TextView textView = (TextView) itemView
-						.findViewById(R.id.item_testcase2_textView);
-				View stateView = itemView
-						.findViewById(R.id.item_testcase2_state_view);
+				TextView textView = (TextView) itemView.findViewById(R.id.item_testcase2_textView);
+				View stateView = itemView.findViewById(R.id.item_testcase2_state_view);
 				if (index == selectPosition) {
 					itemView.setBackgroundColor(Color.WHITE);
 				} else {
@@ -327,7 +371,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 	}
 
 	private void exe(int index, TestCaseData data, boolean exeNext) {
-		if (taskHelper2 != null) {
+		if (taskHelper2 != null && taskHelper2.isRunning()) {
 			taskHelper2.cancle();
 		}
 		TaskHelper taskHelper = new TaskHelper();
@@ -363,47 +407,40 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		}
 
 		@Override
-		public void onProgressUpdate(int percent, long current, long total,
-				Object exraData) {
+		public void onProgressUpdate(int percent, long current, long total, Object exraData) {
 
 		}
 
 		@Override
-		public final void onPostExecute(Code code, Exception exception,
-				Object success, Object fail) {
-			StringBuilder builder;
+		public final void onPostExecute(Code code, Exception exception, Object success, Object fail) {
 			switch (code) {
 			case SUCESS:
 				data.status = 2;
-				builder = new StringBuilder("SUCESS:").append("\n");
-				builder.append(gson.toJson(success));
-				data.result = builder.toString();
+				data.result = gson.toJson(success);
 				break;
 			case EXCEPTION:
 				data.status = -1;
-				builder = new StringBuilder("EXCEPTION:").append("\n");
-				builder.append(getStackTraceString(exception));
-				data.result = builder.toString();
+				data.result = getStackTraceString(exception);
 				break;
-
 			case FAIL:
 				data.status = -1;
-				StringBuilder builder2 = new StringBuilder("FAIL:")
-						.append("\n");
-				builder2.append(gson.toJson(fail));
-				data.result = builder2.toString();
+				data.result = gson.toJson(fail);
 				break;
 			default:
-				data.status = 0;
+				if (TextUtils.isEmpty(data.result)) {
+					data.status = 0;
+				}
 				break;
 			}
 			tasksAdapter.notifyDataSetChanged();
 			onItemClickListener.onItemClick(tasksAdapter, null, selectPosition);
 
-			if (exeNext) {
-				if (index + 1 < datas.size()) {
-					TestCaseData newData = datas.get(index + 1);
-					exe(index + 1, newData, true);
+			if (code != Code.CANCLE) {
+				if (exeNext) {
+					if (index + 1 < datas.size()) {
+						TestCaseData newData = datas.get(index + 1);
+						exe(index + 1, newData, true);
+					}
 				}
 			}
 		}
@@ -424,8 +461,6 @@ public abstract class ABSTestCaseFragment extends Fragment {
 	 * 隐藏软键盘
 	 */
 	public static void hideSoftKeyboard(View mEt) {
-		((InputMethodManager) mEt.getContext().getSystemService(
-				Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-				mEt.getWindowToken(), 0);
+		((InputMethodManager) mEt.getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(mEt.getWindowToken(), 0);
 	}
 }

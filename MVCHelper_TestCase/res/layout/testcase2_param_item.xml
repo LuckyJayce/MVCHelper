@@ -14,11 +14,8 @@
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:ems="10"
         android:textColor="#000"
-        android:ems="10" >
-
-        <requestFocus />
-    </EditText>
+        android:textSize="16sp" />
 
 </LinearLayout>
