@@ -9,12 +9,12 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="友情提示；正确的用户名 aaa 密码  111" />
+        android:text="友情提示；正确的用户名 LuckyJayce 密码  111" />
 
     <LinearLayout
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical" >
 
         <TextView
@@ -27,9 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="请输入用户名" >
-
-            <requestFocus />
+            android:hint="请输入用户名"
+            android:text="LuckyJayce" >
         </EditText>
     </LinearLayout>
 
@@ -51,6 +50,8 @@
             android:ems="10"
             android:hint="请输入密码"
             android:inputType="textPassword" >
+
+            <requestFocus />
         </EditText>
     </LinearLayout>
 

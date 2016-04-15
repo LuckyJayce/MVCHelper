@@ -20,6 +20,7 @@
         android:minHeight="50dp"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
+        android:textSize="14sp"
         android:text="1111"
         android:textColor="#000" />
 

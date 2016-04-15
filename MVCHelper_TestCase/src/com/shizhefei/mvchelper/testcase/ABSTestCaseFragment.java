@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +39,6 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.shizhefei.recyclerview.HFAdapter;
 import com.shizhefei.recyclerview.HFAdapter.OnItemClickListener;
 import com.shizhefei.task.AsyncDataSourceProxyTask;
@@ -143,7 +144,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 					return;
 				}
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setItems(new String[] { "复制", "分享" }, new AlertDialog.OnClickListener() {
+				builder.setItems(new String[] { "复制", "分享", "全屏" }, new AlertDialog.OnClickListener() {
 
 					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 					@Override
@@ -159,12 +160,24 @@ public abstract class ABSTestCaseFragment extends Fragment {
 								manager.setText(text);
 							}
 							Toast.makeText(getContext(), "复制成功", Toast.LENGTH_SHORT).show();
-						} else {
+						} else if (which == 1) {
 							Intent intent = new Intent(Intent.ACTION_SEND);
 							intent.setType("text/plain"); // 纯文本
 							intent.putExtra(Intent.EXTRA_TEXT, text);
 							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 							startActivity(Intent.createChooser(intent, "分享"));
+						} else {
+							final Dialog dialog2 = new Dialog(getActivity(), R.style.testCase_dialog);
+							dialog2.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+							dialog2.setContentView(R.layout.testcase_fullscreen);
+
+							TextView textView = (TextView) dialog2.findViewById(R.id.testcase2_fullsreen_result_textView);
+							textView.setText(resultTextView.getText());
+							dialog2.show();
+							WindowManager.LayoutParams params = dialog2.getWindow().getAttributes();
+							params.width = WindowManager.LayoutParams.MATCH_PARENT;
+							params.height = WindowManager.LayoutParams.MATCH_PARENT;
+							dialog2.getWindow().setAttributes(params);
 						}
 					}
 				});
