@@ -39,6 +39,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 import com.shizhefei.recyclerview.HFAdapter;
 import com.shizhefei.recyclerview.HFAdapter.OnItemClickListener;
 import com.shizhefei.task.AsyncDataSourceProxyTask;
@@ -70,6 +71,8 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		View view = inflater.inflate(R.layout.testcase, container, false);
 
 		GsonBuilder builder = new GsonBuilder();
+		//格式化输出
+		builder.setPrettyPrinting();
 		builder.addSerializationExclusionStrategy(new ExclusionStrategy() {
 			@Override
 			public boolean shouldSkipField(FieldAttributes f) {
