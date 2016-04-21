@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import android.annotation.TargetApi;
@@ -32,6 +33,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +41,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonWriter;
+import com.shizhefei.mvchelper.testcase.TestCaseData.IParamValuesNotify;
 import com.shizhefei.recyclerview.HFAdapter;
 import com.shizhefei.recyclerview.HFAdapter.OnItemClickListener;
 import com.shizhefei.task.AsyncDataSourceProxyTask;
@@ -52,7 +54,7 @@ import com.shizhefei.task.TaskHelper;
 import com.shizhefei.utils.ArrayListMap;
 
 public abstract class ABSTestCaseFragment extends Fragment {
-	private RecyclerView paramsRecyclerView;
+	private LinearLayout paramsRecyclerView;
 	private TextView resultTextView;
 	private Button runButton;
 	private Button resetButton;
@@ -61,9 +63,9 @@ public abstract class ABSTestCaseFragment extends Fragment {
 	private TasksAdapter tasksAdapter;
 	private RecyclerView recyclerView;
 	private View itemRunButton;
-	private ParamsAdapter paramsAdapter;
 	private LayoutInflater inflater;
 	private TextView resultStateTextView;
+	private ArrayListMap<String, ParamLine> lines = new ArrayListMap<String, ParamLine>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,8 +73,9 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		View view = inflater.inflate(R.layout.testcase, container, false);
 
 		GsonBuilder builder = new GsonBuilder();
-		//格式化输出
+		// 格式化输出
 		builder.setPrettyPrinting();
+		// builder.serializeNulls();
 		builder.addSerializationExclusionStrategy(new ExclusionStrategy() {
 			@Override
 			public boolean shouldSkipField(FieldAttributes f) {
@@ -93,7 +96,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		gson = builder.create();
 
 		recyclerView = (RecyclerView) view.findViewById(R.id.testcase2_recyclerView);
-		paramsRecyclerView = (RecyclerView) view.findViewById(R.id.testcase2_params_recyclerView);
+		paramsRecyclerView = (LinearLayout) view.findViewById(R.id.testcase2_params_recyclerView);
 		resultTextView = (TextView) view.findViewById(R.id.testcase2_result_textView);
 		runButton = (Button) view.findViewById(R.id.testcase2_run_button);
 		resetButton = (Button) view.findViewById(R.id.testcase2_reset_button);
@@ -102,13 +105,13 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		recyclerView.setAdapter(tasksAdapter = new TasksAdapter());
-		// recyclerView.addItemDecoration(new
-		// DividerItemDecoration(getContext()));
-
-		paramsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-		// paramsRecyclerView.addItemDecoration(new
-		// DividerItemDecoration(getContext()));
-		paramsRecyclerView.setAdapter(paramsAdapter = new ParamsAdapter());
+		// recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+		//
+		// // paramsRecyclerView.setLayoutManager(new
+		// // LinearLayoutManager(getContext()));
+		// // paramsRecyclerView.addItemDecoration(new
+		// // DividerItemDecoration(getContext()));
+		// // paramsRecyclerView.setAdapter(paramsAdapter = new ParamsAdapter());
 
 		datas = getTestCaseDatas();
 
@@ -118,9 +121,111 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		tasksAdapter.setOnItemClickListener(onItemClickListener);
 		resultTextView.setOnClickListener(onClickListener);
 
-		onItemClickListener.onItemClick(tasksAdapter, null, selectPosition);
+		updateRight();
 
 		return view;
+	}
+
+	private void updateRight() {
+		TestCaseData data = datas.get(selectPosition);
+		// paramsRecyclerView.setText(param(data));
+		resultTextView.setText(data.result);
+		switch (data.status) {
+		case -1:
+			resultStateTextView.setText("ERROR");
+			break;
+		case 0:
+			resultStateTextView.setText("");
+			break;
+		case 1:
+			resultStateTextView.setText("RUNING");
+			break;
+		case 2:
+			resultStateTextView.setText("SUCCESS");
+			break;
+		}
+		// paramsAdapter.notifyDataSetChanged();
+		tasksAdapter.notifyDataSetChangedHF();
+
+		String json;
+		if (data.task instanceof DataSourceProxyTask) {
+			DataSourceProxyTask sourceTask = (DataSourceProxyTask) data.task;
+			json = gson.toJson(sourceTask.getDatasource());
+		} else if (data.task instanceof AsyncDataSourceProxyTask) {
+			AsyncDataSourceProxyTask sourceTask = (AsyncDataSourceProxyTask) data.task;
+			json = gson.toJson(sourceTask.getDatasource());
+		} else {
+			json = gson.toJson(data.task);
+		}
+		map2 = gson.fromJson(json, map2.getClass());
+
+		Object task = data.task;
+		Object object;
+		if (task instanceof DataSourceProxyTask) {
+			DataSourceProxyTask sourceTask = (DataSourceProxyTask) task;
+			object = sourceTask.getDatasource();
+		} else if (task instanceof AsyncDataSourceProxyTask) {
+			AsyncDataSourceProxyTask sourceTask = (AsyncDataSourceProxyTask) task;
+			object = sourceTask.getDatasource();
+		} else {
+			object = task;
+		}
+
+		for (ParamLine paramLine : lines.values()) {
+			paramLine.cancel();
+		}
+		lines.clear();
+
+		paramsRecyclerView.removeAllViews();
+		for (int i = 0; i < map2.size(); i++) {
+			ParamLine paramLine = new ParamLine();
+			View itemView = inflater.inflate(R.layout.testcase_param_item, paramsRecyclerView, false);
+			paramsRecyclerView.addView(itemView);
+			paramLine.itemView = itemView;
+			paramLine.keyTextView = (TextView) itemView.findViewById(R.id.textView1);
+			paramLine.valueEditText = (EditText) itemView.findViewById(R.id.editText1);
+			paramLine.valueGetButton = (Button) itemView.findViewById(R.id.testcase_param_item_paramGet_button);
+			Object value = map2.valueAt(i);
+			String key = map2.keyAt(i);
+
+			paramLine.key = key;
+			paramLine.keyTextView.setText(key);
+			paramLine.valueEditText.removeTextChangedListener(paramLine.textWatcher);
+			paramLine.valueEditText.setText(String.valueOf(value));
+			paramLine.valueEditText.addTextChangedListener(paramLine.textWatcher);
+			paramLine.valueGetButton.setOnClickListener(paramLine.onClickListener);
+			boolean has = false;
+			if (data.paramGets.containsKey(key)) {
+				has = true;
+				paramLine.paramGetTask = data.paramGets.get(key);
+			}
+			if (!has) {
+				out: for (Entry<String[], IAsyncTask<Map<String, String>, String>> entry : data.paramGetsMap.entrySet()) {
+					for (String param : entry.getKey()) {
+						if (param.equals(key)) {
+							has = true;
+							paramLine.paramGetTaskMap = entry.getValue();
+							break out;
+						}
+					}
+				}
+			}
+			if (has) {
+				paramLine.valueGetButton.setVisibility(View.VISIBLE);
+			} else {
+				paramLine.valueGetButton.setVisibility(View.GONE);
+			}
+
+			try {
+				Field field = object.getClass().getDeclaredField(key);
+				field.setAccessible(true);
+				paramLine.field = field;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			lines.put(key, paramLine);
+		}
 	}
 
 	private OnClickListener onClickListener = new OnClickListener() {
@@ -136,12 +241,11 @@ public abstract class ABSTestCaseFragment extends Fragment {
 				}
 				datas = getTestCaseDatas();
 				tasksAdapter.notifyDataSetChanged();
-				onItemClickListener.onItemClick(tasksAdapter, null, selectPosition);
+				updateRight();
 			} else if (v == itemRunButton) {
 				hideSoftKeyboard(itemRunButton);
-				TestCaseData data = datas.get(selectPosition);
-				data.task = paramsAdapter.getTask();
-				exe(selectPosition, data, false);
+				updateTastParams();
+				exe(selectPosition, datas.get(selectPosition), false);
 			} else if (v == resultTextView) {
 				if (resultTextView.getText().length() == 0) {
 					return;
@@ -191,151 +295,197 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
 	protected abstract List<TestCaseData> getTestCaseDatas();
 
-	private class ParamsAdapter extends HFAdapter {
-
-		private ArrayListMap<String, Object> map = new ArrayListMap<String, Object>();
-		private ArrayListMap<String, Object> map2 = new ArrayListMap<String, Object>();
-		private Object task;
-
-		@Override
-		public ViewHolder onCreateViewHolderHF(ViewGroup viewGroup, int type) {
-			return new ItemViewHolder(inflater.inflate(R.layout.testcase_param_item, viewGroup, false));
-		}
-
-		@Override
-		public void onBindViewHolderHF(ViewHolder vh, int position) {
-			ItemViewHolder holder = (ItemViewHolder) vh;
-			Object value = map.valueAt(position);
-			String key = map.keyAt(position);
-			holder.setData(key, value);
-		}
-
-		@Override
-		public int getItemCountHF() {
-			return map.size();
-		}
-
-		private void setData(Object task) {
-			this.task = task;
-			String json;
-			if (task instanceof DataSourceProxyTask) {
-				DataSourceProxyTask sourceTask = (DataSourceProxyTask) task;
-				json = gson.toJson(sourceTask.getDatasource());
-			} else if (task instanceof AsyncDataSourceProxyTask) {
-				AsyncDataSourceProxyTask sourceTask = (AsyncDataSourceProxyTask) task;
-				json = gson.toJson(sourceTask.getDatasource());
-			} else {
-				json = gson.toJson(task);
-			}
-			map = gson.fromJson(json, map.getClass());
-			map2 = new ArrayListMap<String, Object>(map);
-		}
-
-		private Object getTask() {
-			Object object;
-			if (task instanceof DataSourceProxyTask) {
-				DataSourceProxyTask sourceTask = (DataSourceProxyTask) task;
-				object = sourceTask.getDatasource();
-			} else if (task instanceof AsyncDataSourceProxyTask) {
-				AsyncDataSourceProxyTask sourceTask = (AsyncDataSourceProxyTask) task;
-				object = sourceTask.getDatasource();
-			} else {
-				object = task;
-			}
-			for (Entry<String, Object> data : map2.entrySet()) {
-				try {
-					Field field = object.getClass().getDeclaredField(data.getKey());
-					field.setAccessible(true);
-					field.set(object, data.getValue());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return task;
-		}
-
-		private class ItemViewHolder extends ViewHolder {
-
-			private TextView keyTextView;
-			private EditText valueEditText;
-			private String key;
-
-			public ItemViewHolder(View itemView) {
-				super(itemView);
-				keyTextView = (TextView) itemView.findViewById(R.id.textView1);
-				valueEditText = (EditText) itemView.findViewById(R.id.editText1);
-			}
-
-			public void setData(String key, Object value) {
-				this.key = key;
-				keyTextView.setText(key);
-				valueEditText.removeTextChangedListener(textWatcher);
-				valueEditText.setText(String.valueOf(value));
-				valueEditText.addTextChangedListener(textWatcher);
-			}
-
-			private TextWatcher textWatcher = new TextWatcher() {
-
-				@Override
-				public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-				}
-
-				@Override
-				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-				}
-
-				@Override
-				public void afterTextChanged(Editable s) {
-					try {
-						String text = s.toString();
-						Object value = map.get(key);
-						Object newValue;
-						if (String.class.equals(value.getClass())) {
-							newValue = text;
-						} else {
-							newValue = gson.fromJson(text, value.getClass());
-						}
-						map2.put(key, newValue);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			};
-		}
-
-	}
-
 	private int selectPosition = 0;
 
 	private OnItemClickListener onItemClickListener = new OnItemClickListener() {
-
 		@Override
 		public void onItemClick(HFAdapter adapter, ViewHolder vh, int position) {
-			TestCaseData data = datas.get(position);
-			// paramsRecyclerView.setText(param(data));
-			resultTextView.setText(data.result);
 			selectPosition = position;
-			paramsAdapter.setData(data.task);
-			switch (data.status) {
-			case -1:
-				resultStateTextView.setText("ERROR");
-				break;
-			case 0:
-				resultStateTextView.setText("");
-				break;
-			case 1:
-				resultStateTextView.setText("RUNING");
-				break;
-			case 2:
-				resultStateTextView.setText("SUCCESS");
-				break;
-			}
-			paramsAdapter.notifyDataSetChanged();
-			adapter.notifyDataSetChangedHF();
+			updateRight();
 		}
 	};
+
+	private ArrayListMap<String, Object> map2 = new ArrayListMap<String, Object>();
+
+	private void updateTastParams() {
+		TestCaseData testCaseData = datas.get(selectPosition);
+		Object task = testCaseData.task;
+		Object object;
+		if (task instanceof DataSourceProxyTask) {
+			DataSourceProxyTask sourceTask = (DataSourceProxyTask) task;
+			object = sourceTask.getDatasource();
+		} else if (task instanceof AsyncDataSourceProxyTask) {
+			AsyncDataSourceProxyTask sourceTask = (AsyncDataSourceProxyTask) task;
+			object = sourceTask.getDatasource();
+		} else {
+			object = task;
+		}
+		for (Entry<String, Object> data : map2.entrySet()) {
+			try {
+				Field field = object.getClass().getDeclaredField(data.getKey());
+				field.setAccessible(true);
+				field.set(object, data.getValue());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		testCaseData.task = task;
+	}
+
+	private class ParamLine {
+		public Field field;
+		protected View itemView;
+		private TextView keyTextView;
+		private EditText valueEditText;
+		private String key;
+		private Button valueGetButton;
+		private IAsyncTask<String, String> paramGetTask;
+		private IAsyncTask<Map<String, String>, String> paramGetTaskMap;
+
+		public void cancel() {
+			if (paramGetTaskHelper != null) {
+				paramGetTaskHelper.cancle();
+			}
+			if (paramGetMapTaskHelper != null) {
+				paramGetMapTaskHelper.cancle();
+			}
+		}
+
+		public void setValue(String value) {
+			valueEditText.removeTextChangedListener(textWatcher);
+			valueEditText.setText(value);
+			valueEditText.addTextChangedListener(textWatcher);
+			updateParam();
+		}
+
+		private TextWatcher textWatcher = new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				updateParam();
+			}
+		};
+
+		private void updateParam() {
+			try {
+				String text = valueEditText.getText().toString();
+				Object newValue;
+				if (String.class.equals(field.getType())) {
+					newValue = text;
+				} else {
+					newValue = gson.fromJson(text, field.getType());
+				}
+				map2.put(key, newValue);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		private TaskHelper<String, String> paramGetTaskHelper;
+		private TaskHelper<Map<String, String>, String> paramGetMapTaskHelper;
+
+		private OnClickListener onClickListener = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (v == valueGetButton) {
+					if (paramGetTask != null) {
+						if (paramGetTask instanceof IParamValuesNotify) {
+							IParamValuesNotify getParamTask = (IParamValuesNotify) paramGetTask;
+							getParamTask.notifyCurrentParamValues(map2, v);
+						}
+						paramGetTaskHelper = new TaskHelper<String, String>();
+						paramGetTaskHelper.setTask(paramGetTask);
+						paramGetTaskHelper.setCallback(new Callback<String, String>() {
+
+							@Override
+							public void onProgressUpdate(int percent, long current, long total, Object exraData) {
+
+							}
+
+							@Override
+							public void onPreExecute() {
+								valueGetButton.setText("正在获取..");
+							}
+
+							@Override
+							public void onPostExecute(Code code, Exception exception, String success, String fail) {
+								switch (code) {
+								case SUCESS:
+									valueGetButton.setText("获取");
+									valueEditText.setText(success);
+									break;
+								case FAIL:
+									Toast.makeText(getContext(), "111", Toast.LENGTH_SHORT).show();
+									break;
+								case EXCEPTION:
+									Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+									break;
+								default:
+									break;
+								}
+							}
+						});
+						paramGetTaskHelper.execute();
+					} else if (paramGetTaskMap != null) {
+						if (paramGetTask instanceof IParamValuesNotify) {
+							IParamValuesNotify getParamTask = (IParamValuesNotify) paramGetTask;
+							getParamTask.notifyCurrentParamValues(map2, v);
+						}
+						paramGetMapTaskHelper = new TaskHelper<Map<String, String>, String>();
+						paramGetMapTaskHelper.setTask(paramGetTaskMap);
+						paramGetMapTaskHelper.setCallback(new Callback<Map<String, String>, String>() {
+
+							@Override
+							public void onProgressUpdate(int percent, long current, long total, Object exraData) {
+
+							}
+
+							@Override
+							public void onPreExecute() {
+								valueGetButton.setText("正在获取..");
+							}
+
+							@Override
+							public void onPostExecute(Code code, Exception exception, Map<String, String> success, String fail) {
+								switch (code) {
+								case SUCESS:
+									valueGetButton.setText("获取");
+									for (Entry<String, String> testCaseData : success.entrySet()) {
+										ParamLine paramLine = lines.get(testCaseData.getKey());
+										if (paramLine != null) {
+											paramLine.setValue(testCaseData.getValue());
+										}
+									}
+									break;
+								case FAIL:
+									Toast.makeText(getContext(), "111", Toast.LENGTH_SHORT).show();
+									break;
+								case EXCEPTION:
+									Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+									break;
+								default:
+									break;
+								}
+							}
+						});
+						paramGetMapTaskHelper.execute();
+					}
+				}
+			}
+		};
+
+	}
 
 	private TaskHelper taskHelper2;
 
@@ -427,9 +577,8 @@ public abstract class ABSTestCaseFragment extends Fragment {
 		public void onPreExecute() {
 			data.status = 1;
 			data.result = "";
-
 			tasksAdapter.notifyDataSetChanged();
-			onItemClickListener.onItemClick(tasksAdapter, null, selectPosition);
+			updateRight();
 		}
 
 		@Override
@@ -459,7 +608,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
 				break;
 			}
 			tasksAdapter.notifyDataSetChanged();
-			onItemClickListener.onItemClick(tasksAdapter, null, selectPosition);
+			updateRight();
 
 			if (code != Code.CANCLE) {
 				if (exeNext) {

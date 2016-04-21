@@ -1,5 +1,10 @@
 package com.shizhefei.mvchelper.testcase;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import android.view.View;
+
 import com.shizhefei.mvc.IAsyncDataSource;
 import com.shizhefei.mvc.IDataSource;
 import com.shizhefei.task.AsyncDataSourceProxyTask;
@@ -35,5 +40,25 @@ public class TestCaseData {
 		super();
 		this.text = text;
 		this.task = new AsyncDataSourceProxyTask(datasource);
+	}
+
+	public void addParamGet(String paramName, IAsyncTask<String, String> paramGetTask) {
+		paramGets.put(paramName, paramGetTask);
+	}
+
+	public void addParamGet(String[] paramNames, IAsyncTask<Map<String, String>, String> paramGetTask) {
+		paramGetsMap.put(paramNames, paramGetTask);
+	}
+
+	interface ParamGet {
+		public String get();
+	}
+
+	Map<String, IAsyncTask<String, String>> paramGets = new HashMap<String, IAsyncTask<String, String>>();
+
+	Map<String[], IAsyncTask<Map<String, String>, String>> paramGetsMap = new HashMap<String[], IAsyncTask<Map<String, String>, String>>();
+
+	public interface IParamValuesNotify {
+		public void notifyCurrentParamValues(Map<String, Object> currentParamValue, View button);
 	}
 }

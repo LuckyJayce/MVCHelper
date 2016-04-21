@@ -64,8 +64,9 @@
                     android:textColor="#858585" >
                 </TextView>
 
-                <android.support.v7.widget.RecyclerView
+                <LinearLayout
                     android:id="@+id/testcase2_params_recyclerView"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

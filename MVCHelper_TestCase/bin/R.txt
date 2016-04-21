@@ -18,6 +18,7 @@ int id testcase2_resultState_textView 0x7f050006
 int id testcase2_result_textView 0x7f050007
 int id testcase2_run2_button 0x7f050004
 int id testcase2_run_button 0x7f050001
+int id testcase_param_item_paramGet_button 0x7f05000d
 int id textView1 0x7f05000b
 int layout testcase 0x7f030000
 int layout testcase_fullscreen 0x7f030001
