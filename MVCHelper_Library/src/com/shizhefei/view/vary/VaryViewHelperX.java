@@ -19,7 +19,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 
 /**
- * 用于切换布局,用一个新的布局覆盖在原布局之上
+ * 用于切换布局,用一个新的布局覆盖在原布局之上,但原先的布局依然在底部显示
  * 
  * @author LuckyJayce
  *
