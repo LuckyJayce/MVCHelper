@@ -8,24 +8,24 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/MVCHelper_Library" />
+            <option value="$PROJECT_DIR$/MVCHelper_TestCase" />
+            <option value="$PROJECT_DIR$/MVCPullrefshHelper" />
+            <option value="$PROJECT_DIR$/MVCSwipeRefreshHelper" />
+            <option value="$PROJECT_DIR$/MVCUltraHelper" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/mvchelper_library" />
-            <option value="$PROJECT_DIR$/mvchelper_testcase" />
-            <option value="$PROJECT_DIR$/mvcpullrefshhelper" />
-            <option value="$PROJECT_DIR$/mvcswiperefreshhelper" />
-            <option value="$PROJECT_DIR$/mvcultrahelper" />
             <option value="$PROJECT_DIR$/pulltorefresh_library" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/MVCHelper_Library" />
+            <option value="$PROJECT_DIR$/MVCHelper_TestCase" />
+            <option value="$PROJECT_DIR$/MVCPullrefshHelper" />
+            <option value="$PROJECT_DIR$/MVCSwipeRefreshHelper" />
+            <option value="$PROJECT_DIR$/MVCUltraHelper" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/mvchelper_library" />
-            <option value="$PROJECT_DIR$/mvchelper_testcase" />
-            <option value="$PROJECT_DIR$/mvcpullrefshhelper" />
-            <option value="$PROJECT_DIR$/mvcswiperefreshhelper" />
-            <option value="$PROJECT_DIR$/mvcultrahelper" />
             <option value="$PROJECT_DIR$/pulltorefresh_library" />
           </set>
         </option>

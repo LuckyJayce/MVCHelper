@@ -20,7 +20,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
@@ -301,15 +303,37 @@ public class MVCHelper<DATA> {
 		protected abstract void onPreExecute();
 
 		@Override
-		public final void sendError(Exception exception) {
-			onPostExecute(null, exception);
-			cancle = null;
+		public final void sendError(final Exception exception) {
+			if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						onPostExecute(null, exception);
+						cancle = null;
+					}
+				});
+				Log.i("xxxx", "sendError  " + Thread.currentThread());
+			} else {
+				onPostExecute(null, exception);
+				cancle = null;
+			}
 		}
 
 		@Override
-		public final void sendData(DATA data) {
-			onPostExecute(data, null);
-			cancle = null;
+		public final void sendData(final DATA data) {
+			if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						onPostExecute(data, null);
+						cancle = null;
+					}
+				});
+				Log.i("xxxx", "sendError  " + Thread.currentThread());
+			} else {
+				onPostExecute(data, null);
+				cancle = null;
+			}
 		}
 
 		protected abstract void onPostExecute(DATA data, Exception exception);

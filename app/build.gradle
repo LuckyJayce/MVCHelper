@@ -29,4 +29,6 @@ dependencies {
     compile project(':mvcultrahelper')
     compile project(':mvcpullrefshhelper')
     compile project(':mvchelper_testcase')
+    compile 'com.squareup.okio:okio:1.8.0'
+    compile 'com.squareup.okhttp:okhttp:2.7.5'
 }

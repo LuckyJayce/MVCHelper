@@ -1,10 +1,12 @@
 package com.shizhefei.task;
 
-import com.shizhefei.mvc.RequestHandle;
-
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+
+import com.shizhefei.mvc.RequestHandle;
 
 /**
  * task执行类
@@ -18,6 +20,7 @@ import android.os.Build;
  */
 public class TaskHelper<SUCCESS, FAIL> {
 
+	private final Handler handler;
 	private SuperTask<SUCCESS, FAIL> task;
 
 	private Callback<SUCCESS, FAIL> callback;
@@ -28,16 +31,17 @@ public class TaskHelper<SUCCESS, FAIL> {
 
 	public TaskHelper() {
 		super();
+		handler = new Handler(Looper.getMainLooper());
 	}
 
 	public TaskHelper(Task<SUCCESS, FAIL> task, Callback<SUCCESS, FAIL> callback) {
-		super();
+		this();
 		this.task = task;
 		this.callback = callback;
 	}
 
 	public TaskHelper(IAsyncTask<SUCCESS, FAIL> task, Callback<SUCCESS, FAIL> callback) {
-		super();
+		this();
 		this.task = task;
 		this.callback = callback;
 	}
@@ -113,7 +117,7 @@ public class TaskHelper<SUCCESS, FAIL> {
 		cancle();
 	}
 
-	private static class MyAsyncTask<SUCCESS, FAIL> implements ResponseSender<SUCCESS, FAIL>, ProgressSender {
+	private  class MyAsyncTask<SUCCESS, FAIL> implements ResponseSender<SUCCESS, FAIL>, ProgressSender {
 		private RequestHandle handle;
 		private boolean isCancle = false;
 		private Callback<SUCCESS, FAIL> callback;
@@ -129,19 +133,44 @@ public class TaskHelper<SUCCESS, FAIL> {
 		}
 
 		@Override
-		public final void sendError(Exception exception) {
-			onPostExecute(Code.EXCEPTION, exception, null, null);
-		}
-
-		@Override
-		public final void sendData(SUCCESS success) {
-			if (success != null) {
-				callback.onPostExecute(Code.SUCESS, null, success, null);
+		public final void sendError(final Exception exception) {
+			if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						onPostExecute(Code.EXCEPTION, exception, null, null);
+						handle = null;
+					}
+				});
 			} else {
-				callback.onPostExecute(Code.FAIL, null, null, null);
+				onPostExecute(Code.EXCEPTION, exception, null, null);
+				handle = null;
 			}
 		}
 
+		@Override
+		public final void sendData(final SUCCESS success) {
+			if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						if (success != null) {
+							callback.onPostExecute(Code.SUCESS, null, success, null);
+						} else {
+							callback.onPostExecute(Code.FAIL, null, null, null);
+						}
+						handle = null;
+					}
+				});
+			} else {
+				if (success != null) {
+					callback.onPostExecute(Code.SUCESS, null, success, null);
+				} else {
+					callback.onPostExecute(Code.FAIL, null, null, null);
+				}
+				handle = null;
+			}
+		}
 		public boolean isRunning() {
 			return isRunning;
 		}

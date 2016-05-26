@@ -15,10 +15,6 @@ limitations under the License.
  */
 package com.shizhefei.test.controllers.other;
 
-import in.srain.cube.views.GridViewHandler;
-
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,10 +22,14 @@ import android.view.View;
 
 import com.shizhefei.mvc.MVCHelper;
 import com.shizhefei.mvc.MVCSwipeRefreshHelper;
-import com.shizhefei.test.models.datasource.BooksVolleyDataSource;
+import com.shizhefei.test.models.datasource.BooksAsyncDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.view.adapters.BooksAdapter;
 import com.shizhefei.view.mvc.demo.R;
+
+import java.util.List;
+
+import in.srain.cube.views.GridViewHandler;
 
 /**
  * 测试下拉刷新组件，MVCSwipeRefreshHelper
@@ -54,7 +54,7 @@ public class VolleyGridViewActivity extends Activity {
 		mvcHelper = new MVCSwipeRefreshHelper<List<Book>>(swipeRefreshLayout);
 
 		// 设置数据源
-		mvcHelper.setDataSource(new BooksVolleyDataSource());
+		mvcHelper.setDataSource(new BooksAsyncDataSource());
 
 		// 设置AsyncHttpClient 作为网络请求的数据源
 		// listViewHelper.setDataSource(new BooksAsyncDataSource());

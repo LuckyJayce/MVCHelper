@@ -46,7 +46,7 @@ public class BooksAsyncDataSource implements IAsyncDataSource<List<Book>> {
         FormEncodingBuilder formEncodingBuilder = new FormEncodingBuilder();
         formEncodingBuilder.add("api_key", "75ee6c644cad38dc8e53d3598c8e6b6c");
         Request request = new Request.Builder()
-                .url("http://www.baidu.com").post(formEncodingBuilder.build())
+                .url("https://www.baidu.com").post(formEncodingBuilder.build())
                 .build();
 
         Call call = new OkHttpClient().newCall(request);
