@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MVCHelper4.iml" filepath="$PROJECT_DIR$/MVCHelper4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvchelper_library/mvchelper_library.iml" filepath="$PROJECT_DIR$/mvchelper_library/mvchelper_library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvchelper_testcase/mvchelper_testcase.iml" filepath="$PROJECT_DIR$/mvchelper_testcase/mvchelper_testcase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvcpullrefshhelper/mvcpullrefshhelper.iml" filepath="$PROJECT_DIR$/mvcpullrefshhelper/mvcpullrefshhelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvcswiperefreshhelper/mvcswiperefreshhelper.iml" filepath="$PROJECT_DIR$/mvcswiperefreshhelper/mvcswiperefreshhelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvcultrahelper/mvcultrahelper.iml" filepath="$PROJECT_DIR$/mvcultrahelper/mvcultrahelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pulltorefresh_library/pulltorefresh_library.iml" filepath="$PROJECT_DIR$/pulltorefresh_library/pulltorefresh_library.iml" />
+    </modules>
+  </component>
+</project>
