@@ -53,10 +53,10 @@ public class UploadCallback implements Callback<String, String> {
 		alertDialog.dismiss();
 		switch (code) {
 		case SUCESS:
-			Toast.makeText(context, success, 1).show();
+			Toast.makeText(context, success, Toast.LENGTH_SHORT).show();
 			break;
 		case CANCLE:
-			Toast.makeText(context, "您取消了操作", 1).show();
+			Toast.makeText(context, "您取消了操作", Toast.LENGTH_SHORT).show();
 			break;
 		default:
 			break;

@@ -17,13 +17,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.shizhefei:pulltorefresh:1.0.0'
     compile project(':mvchelper_library')
     compile project(':mvcswiperefreshhelper')
     compile project(':mvcultrahelper')

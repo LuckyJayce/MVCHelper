@@ -128,7 +128,7 @@ public class MVCHelper<DATA> {
 	/**
 	 * 设置数据源，用于加载数据
 	 * 
-	 * @param tDataSource
+	 * @param asyncDataSource
 	 */
 	public void setDataSource(IAsyncDataSource<DATA> asyncDataSource) {
 		this.dataSource = null;
@@ -176,18 +176,15 @@ public class MVCHelper<DATA> {
 
 	/**
 	 * 设置状态监听，监听开始刷新，刷新成功
-	 * 
-	 * @param onStateChangeListener
-	 */
+	 * @param onRefreshStateChangeListener
+     */
 	public void setOnStateChangeListener(OnRefreshStateChangeListener<DATA> onRefreshStateChangeListener) {
 		this.onStateChangeListener.setOnRefreshStateChangeListener(onRefreshStateChangeListener);
 	}
-
 	/**
 	 * 设置状态监听，监听开始加载更多，加载更多成功
-	 * 
-	 * @param onStateChangeListener
-	 */
+	 * @param onLoadMoreStateChangeListener
+     */
 	public void setOnStateChangeListener(OnLoadMoreStateChangeListener<DATA> onLoadMoreStateChangeListener) {
 		this.onStateChangeListener.setOnLoadMoreStateChangeListener(onLoadMoreStateChangeListener);
 	}

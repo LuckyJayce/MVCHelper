@@ -22,7 +22,7 @@ import com.shizhefei.mvc.ILoadViewFactory.ILoadView;
 
 /**
  * 注意 ：<br>
- * <2>contentView 必须有Parent
+ * contentView 必须有Parent
  * 
  * @author LuckyJayce
  *

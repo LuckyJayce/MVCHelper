@@ -15,7 +15,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 
 /**
  * 注意 ：<br>
- * <2>PtrClassicFrameLayout 必须有Parent
+ * PtrClassicFrameLayout 必须有Parent
  * 
  * @author zsy
  *

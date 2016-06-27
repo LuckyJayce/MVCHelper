@@ -1,8 +1,5 @@
 package com.shizhefei.recyclerview;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -12,6 +9,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class HFAdapter extends RecyclerView.Adapter {
 
@@ -302,8 +302,8 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 	/**
 	 * 直接在Adapter里面处理项的长按事件
 	 * 
-	 * @param vh
-	 * @param position
+	 * @param vh ViewHolder
+	 * @param position item位置
 	 * @return 
 	 *         如果返回true，事件就被拦截不再调用onItemLongClickListener，否则会调用onItemLongClickListener
 	 */

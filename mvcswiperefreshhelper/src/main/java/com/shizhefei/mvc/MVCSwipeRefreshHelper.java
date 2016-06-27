@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 
 /**
  * 注意 ：<br>
- * <2>SwipeRefreshLayout必须有Parent
+ * SwipeRefreshLayout必须有Parent
  * 
  * @author zsy
  *

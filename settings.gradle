@@ -1,1 +1,1 @@
-include ':app', ':mvchelper_library', ':mvcswiperefreshhelper', ':mvcultrahelper', ':mvcpullrefshhelper', ':pulltorefresh_library', ':mvchelper_testcase'
+include ':app', ':mvchelper_library', ':mvcswiperefreshhelper', ':mvcultrahelper', ':mvcpullrefshhelper', ':mvchelper_testcase'
