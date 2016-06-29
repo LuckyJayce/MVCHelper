@@ -11,14 +11,14 @@
     compile 'com.android.support:recyclerview-v7:24.0.0'
 
 ## 2.可选：   ##
-<1>  使用 https://github.com/chrisbanes/Android-PullToRefresh的刷新控件导入
+<1>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入
 	
 	//里面包含一个MVCPullrefshHelper 是适配这个控件的 MVCHelper
     compile 'com.shizhefei:MVCHelper-Pullrefresh:1.0.4'
 	//由于没有找到gradle排至，我自己把它上传到jcenter上
     compile 'com.shizhefei:pulltorefresh:1.0.1'
 
-<2>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh的刷新控件导入 
+<2>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh 的刷新控件导入 
 
     //里面包含一个MVCUltraHelper 是适配这个控件的 MVCHelper
 	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.4'
