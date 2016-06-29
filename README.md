@@ -2,10 +2,48 @@
 
 ###TaskHelper更倾向于任务的执行的失败，成功，取消，比较适用于http的post请求
 
+# Gradle导入 #
+## 1.必须导入： ##
+	
+	//MVCHelper核心类库
+	compile 'com.shizhefei:MVCHelper-Library:1.0.4'
+	//里面有使用recyclerview，所以需要导入recyclerview
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+
+## 2.可选：   ##
+<1>  使用 https://github.com/chrisbanes/Android-PullToRefresh的刷新控件导入
+	
+	//里面包含一个MVCPullrefshHelper 是适配这个控件的 MVCHelper
+    compile 'com.shizhefei:MVCHelper-Pullrefresh:1.0.4'
+	//由于没有找到gradle排至，我自己把它上传到jcenter上
+    compile 'com.shizhefei:pulltorefresh:1.0.1'
+
+<2>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh的刷新控件导入 
+
+    //里面包含一个MVCUltraHelper 是适配这个控件的 MVCHelper
+	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.4'
+	//这里6月29号目前最新的，要实时关注新版本去秋大的网站上去看
+    compile 'in.srain.cube:ultra-ptr:1.0.11'
+
+<3>  使用android v4的SwipeRefreshLayout的作为刷新控件导入  
+
+	//里面包含一个MVCSwipeRefreshHelper 是适配这个控件的 MVCHelper
+    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.4'
+	//v4包应该都有导入吧，v7包里面包含v4包
+	compile 'com.android.support:support-v4:24.0.0'
+
+<4> 测试用例，可以方便的查看MVCHelper，Task的运行情况和返回数据，还提供了修改接口字段，用于接口测试很方便哦
+
+	//MVCHelper的测试用例，继承ABSTestCaseFragment实现List<TestCaseData> getTestCaseDatas()方法
+	compile 'com.shizhefei:MVCHelper-TestCase:1.0.4'
+	//里面用到了gson
+	compile 'com.google.code.gson:gson:2.2.4'
+  
+
 #一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
 Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/releases/download/1.0.2/LuckyJayce_MVCHelper_1.0.2.zip)  
-Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
+Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/mastear/raw/MVCHelper_Demo.apk?raw=true)  
 
 ## 1.Model (IDataSource<DATA>)数据源，加载数据  
    **同步请求实现IDataSource，异步请求（okhttp,volley）实现IAsyncDataSource**  
