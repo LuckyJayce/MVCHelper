@@ -31,6 +31,11 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.google.code.gson:gson:2.2.4'
+//    compile 'com.shizhefei:MVCHelper-Library:1.0.3'
+//    compile 'com.shizhefei:MVCHelper-Pullrefreh:1.0.2'
+//    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.2'
+//    compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.2'
+
     compile 'com.shizhefei:pulltorefresh:1.0.0'
     compile project(':mvchelper_library')
     compile project(':mvcswiperefreshhelper')

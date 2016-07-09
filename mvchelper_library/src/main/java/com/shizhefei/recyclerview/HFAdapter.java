@@ -125,6 +125,10 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 
 	public abstract void onBindViewHolderHF(ViewHolder vh, int position);
 
+	private boolean isHeader(int position) {
+		return (position < mHeaders.size());
+	}
+
 	private void prepareHeaderFooter(HeaderFooterViewHolder vh, View view) {
 
 		// if it's a staggered grid, span the whole layout
@@ -144,10 +148,6 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 		vh.base.removeAllViews();
 		vh.base.addView(view);
 
-	}
-
-	private boolean isHeader(int position) {
-		return (position < mHeaders.size());
 	}
 
 	private boolean isFooter(int position) {

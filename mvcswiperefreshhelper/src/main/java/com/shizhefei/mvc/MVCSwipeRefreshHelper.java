@@ -21,7 +21,6 @@ public class MVCSwipeRefreshHelper<DATA> extends MVCHelper<DATA> {
 	public MVCSwipeRefreshHelper(SwipeRefreshLayout swipeRefreshLayout) {
 		super(new RefreshView(swipeRefreshLayout));
 	}
-
 	public MVCSwipeRefreshHelper(SwipeRefreshLayout swipeRefreshLayout, ILoadView loadView, ILoadMoreView loadMoreView) {
 		super(new RefreshView(swipeRefreshLayout), loadView, loadMoreView);
 	}

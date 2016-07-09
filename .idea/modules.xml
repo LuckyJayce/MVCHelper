@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/MVCPullrefshHelper/mvcpullrefshhelper.iml" filepath="$PROJECT_DIR$/MVCPullrefshHelper/mvcpullrefshhelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/MVCSwipeRefreshHelper/mvcswiperefreshhelper.iml" filepath="$PROJECT_DIR$/MVCSwipeRefreshHelper/mvcswiperefreshhelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/MVCUltraHelper/mvcultrahelper.iml" filepath="$PROJECT_DIR$/MVCUltraHelper/mvcultrahelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pulltorefresh_library/pulltorefresh_library.iml" filepath="$PROJECT_DIR$/pulltorefresh_library/pulltorefresh_library.iml" />
     </modules>
   </component>
 </project>
