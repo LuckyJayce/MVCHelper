@@ -7,7 +7,7 @@ import com.shizhefei.task.IAsyncTask;
 import com.shizhefei.task.ProgressSender;
 import com.shizhefei.task.ResponseSender;
 import com.shizhefei.test.models.datasource.BookDetailDataSource;
-import com.shizhefei.test.models.datasource.BooksOkHttpDataSource;
+import com.shizhefei.test.models.datasource.BooksOkHttpNormal_DataSource;
 import com.shizhefei.test.models.datasource.SearchBookDataSource;
 import com.shizhefei.test.models.task.LoginAsyncTask;
 import com.shizhefei.utils.ArrayListMap;
@@ -47,7 +47,7 @@ public class TestCaseFragment extends ABSTestCaseFragment {
 		datas.add(caseData);
 		datas.add(new TestCaseData("测试详情页", new BookDetailDataSource()));
 		datas.add(new TestCaseData("测试搜索文章", new SearchBookDataSource("Java")));
-		datas.add(new TestCaseData("测试文章列表", new BooksOkHttpDataSource()));
+		datas.add(new TestCaseData("测试文章列表", new BooksOkHttpNormal_DataSource()));
 		return datas;
 	}
 

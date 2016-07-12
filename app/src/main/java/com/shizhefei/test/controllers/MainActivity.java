@@ -23,7 +23,7 @@ import android.view.View;
 import com.shizhefei.test.controllers.other.BookDetailActivity;
 import com.shizhefei.test.controllers.other.MovieDetailActivity;
 import com.shizhefei.test.controllers.other.UltraRecyclerViewActivity;
-import com.shizhefei.test.controllers.other.VolleyGridViewActivity;
+import com.shizhefei.test.controllers.other.Volley_OKHttp_GridViewActivity;
 import com.shizhefei.test.controllers.task.LoginActivity;
 import com.shizhefei.test.controllers.task.UploadActivity;
 import com.shizhefei.test.controllers.testhelpers.NormalActivity;
@@ -36,54 +36,110 @@ import testcase.TestCaseFragment;
 
 public class MainActivity extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
 
-	public void onClickTestCase(View view) {
-		ProxyActivity.startActivity(this, TestCaseFragment.class, "测试用例");
-	}
+    /**
+     * 测试用例
+     *
+     * @param view
+     */
+    public void onClickTestCase(View view) {
+        ProxyActivity.startActivity(this, TestCaseFragment.class, "测试用例");
+    }
 
-	public void onClickDemo(View view) {
-		startActivity(new Intent(getApplicationContext(), PullrefshActivity.class));
-	}
+    /**
+     * MVCPullrefshHelper的Demo
+     *
+     * @param view
+     */
+    public void onClickDemo(View view) {
+        startActivity(new Intent(getApplicationContext(), PullrefshActivity.class));
+    }
 
-	public void onClickDemo2(View view) {
-		startActivity(new Intent(getApplicationContext(), UltraActivity.class));
-	}
+    /**
+     * MVCUltraHelper的Demo
+     *
+     * @param view
+     */
+    public void onClickDemo2(View view) {
+        startActivity(new Intent(getApplicationContext(), UltraActivity.class));
+    }
 
-	public void onClickDemo3(View view) {
-		startActivity(new Intent(getApplicationContext(), SwipeRefreshActivity.class));
-	}
+    /**
+     * MVCSwipeRefreshHelper的Demo
+     *
+     * @param view
+     */
+    public void onClickDemo3(View view) {
+        startActivity(new Intent(getApplicationContext(), SwipeRefreshActivity.class));
+    }
 
-	public void onClickDemo4(View view) {
-		startActivity(new Intent(getApplicationContext(), BookDetailActivity.class));
-	}
+    /**
+     * 不具有下拉刷新的非ListView界面
+     *
+     * @param view
+     */
+    public void onClickDemo4(View view) {
+        startActivity(new Intent(getApplicationContext(), BookDetailActivity.class));
+    }
 
-	public void onClickDemo5(View view) {
-		startActivity(new Intent(getApplicationContext(), NormalActivity.class));
-	}
+    /**
+     * 不具有下拉刷新的非ListView界面
+     *
+     * @param view
+     */
+    public void onClickDemo5(View view) {
+        startActivity(new Intent(getApplicationContext(), NormalActivity.class));
+    }
 
-	public void onClickDemo6(View view) {
-		startActivity(new Intent(getApplicationContext(), UltraRecyclerViewActivity.class));
-	}
+    /**
+     * Ultra的RecyclerView界面
+     *
+     * @param view
+     */
+    public void onClickDemo6(View view) {
+        startActivity(new Intent(getApplicationContext(), UltraRecyclerViewActivity.class));
+    }
 
-	public void onClickDemo7(View view) {
-		startActivity(new Intent(getApplicationContext(), MovieDetailActivity.class));
-	}
+    /**
+     * 超复杂的界面
+     *
+     * @param view
+     */
+    public void onClickDemo7(View view) {
+        startActivity(new Intent(getApplicationContext(), MovieDetailActivity.class));
+    }
 
-	public void onClickDemo8(View view) {
-		startActivity(new Intent(getApplicationContext(), VolleyGridViewActivity.class));
-	}
+    /**
+     * Volley和OKhttp网络请求\nandroid-async-http网络请求\n
+     * GridView界面
+     *
+     * @param view
+     */
+    public void onClickDemo8(View view) {
+        startActivity(new Intent(getApplicationContext(), Volley_OKHttp_GridViewActivity.class));
+    }
 
-	public void onClickTask1(View view) {
-		startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-	}
+    /**
+     * 登陆Task
+     *
+     * @param view
+     */
+    public void onClickTask1(View view) {
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+    }
 
-	public void onClickTask2(View view) {
-		startActivity(new Intent(getApplicationContext(), UploadActivity.class));
-	}
+    /**
+     * 上传文件Task
+     *
+     * @param view
+     */
+    public void onClickTask2(View view) {
+        startActivity(new Intent(getApplicationContext(), UploadActivity.class));
+    }
 
 }

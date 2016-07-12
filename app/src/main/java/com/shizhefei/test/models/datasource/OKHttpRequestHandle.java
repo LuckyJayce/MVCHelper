@@ -1,7 +1,8 @@
 package com.shizhefei.test.models.datasource;
 
 import com.shizhefei.mvc.RequestHandle;
-import com.squareup.okhttp.Call;
+
+import okhttp3.Call;
 
 
 public class OKHttpRequestHandle implements RequestHandle {

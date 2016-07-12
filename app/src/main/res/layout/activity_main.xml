@@ -87,7 +87,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:onClick="onClickDemo8"
-                android:text="Volley网络请求\nandroid-async-http网络请求\n
+                android:text="Volley和OKhttp网络请求\nandroid-async-http网络请求\n
                 GridView界面" />
 
             <TextView

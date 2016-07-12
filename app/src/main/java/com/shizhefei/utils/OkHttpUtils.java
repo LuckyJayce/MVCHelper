@@ -1,7 +1,7 @@
 package com.shizhefei.utils;
 
 
-import com.squareup.okhttp.OkHttpClient;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Administrator on 2016/5/26.
