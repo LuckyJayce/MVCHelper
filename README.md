@@ -38,6 +38,14 @@
 	compile 'com.shizhefei:MVCHelper-TestCase:1.0.4'
 	//里面用到了gson
 	compile 'com.google.code.gson:gson:2.2.4'
+	
+<5> MVCHelper-OkHttp 对OKHttp的简单封装
+
+	//MVCHelper的 OKHttp的简单封装
+	compile 'com.shizhefei:MVCHelper-OkHttp:1.0.5'
+	//里面用到了okhttp3
+	compile 'com.squareup.okhttp3:okhttp:3.4.0'
+	compile 'com.squareup.okio:okio:1.9.0'
   
 
 #一、 MVCHelper
