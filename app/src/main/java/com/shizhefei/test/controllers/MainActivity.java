@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        taskHelper = new TaskHelper<>(new MemoryCacheStore<>(100));
+        taskHelper = new TaskHelper<>(new MemoryCacheStore(100));
 
         taskHelper.registerCallBack(new ICallback<Object>() {
             @Override
