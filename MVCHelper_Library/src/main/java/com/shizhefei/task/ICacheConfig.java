@@ -7,6 +7,7 @@ package com.shizhefei.task;
  */
 public interface ICacheConfig<DATA> {
     /**
+     *
      * task的id,用于唯一标识task，相同的taskKey的task被执行会合并成同一个task执行,先执行的那个task运行，后面的task添加ICallback到task上进行回调
      *
      * @param taskOrDataSource

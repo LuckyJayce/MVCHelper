@@ -7,6 +7,7 @@ public interface ICacheStore {
     void saveCache(String taskKey, long requestTime, long saveTime, Object result);
 
     class Cache {
+
         public long requestTime;
         public long saveTime;
         public Object data;

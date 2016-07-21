@@ -5,6 +5,7 @@ import android.support.v4.util.LruCache;
 import com.shizhefei.task.ICacheStore;
 
 public class MemoryCacheStore implements ICacheStore {
+
     private LruCache<String, Cache> lruCache;
 
     public MemoryCacheStore(int maxSize) {

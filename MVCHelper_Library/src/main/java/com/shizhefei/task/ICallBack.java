@@ -1,6 +1,7 @@
 package com.shizhefei.task;
 
 /**
+ * task的回调
  * Created by LuckyJayce on 2016/7/17.
  */
 public interface ICallback<DATA> {
@@ -20,5 +21,12 @@ public interface ICallback<DATA> {
      */
     void onProgress(Object task, int percent, long current, long total, Object extraData);
 
+    /**
+     * 执行完成的回调
+     * @param task
+     * @param code
+     * @param exception
+     * @param data
+     */
     void onPostExecute(Object task, Code code, Exception exception, DATA data);
 }

@@ -4,6 +4,8 @@ import com.shizhefei.task.ICallback;
 
 /**
  * Created by LuckyJayce on 2016/7/17.
+ * ICallback的空实现.
+ *
  */
 public abstract class SimpleCallback<DATA> implements ICallback<DATA> {
     @Override

@@ -24,6 +24,7 @@ import java.util.Set;
 /**
  * Created by LuckyJayce on 2016/7/17.
  * TaskHelper用于执行多个Task
+ * 可以缓存数据
  *
  * @param <BASE_DATA> 基础类型，execute的task的数据类型都继承于它，不是它的子类型的数据的task不能被执行
  *                    为什么要定义它？主要用于registerCallBack 注册全局的callback数据的返回的数据不用强制转化，

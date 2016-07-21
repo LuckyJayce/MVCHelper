@@ -7,6 +7,9 @@ import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * 用于取消task，判断task是否执行
+ */
 public class TaskHandle implements RequestHandle {
     private final Object task;
     private final ICallback callBack;
