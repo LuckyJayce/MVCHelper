@@ -1,13 +1,13 @@
 package com.shizhefei.task.imp;
 
-import com.shizhefei.task.ICallback;
+import com.shizhefei.task.ICallBack;
 
 /**
  * Created by LuckyJayce on 2016/7/17.
  * ICallback的空实现.
  *
  */
-public abstract class SimpleCallback<DATA> implements ICallback<DATA> {
+public abstract class SimpleCallBack<DATA> implements ICallBack<DATA> {
     @Override
     public void onPreExecute(Object task) {
 

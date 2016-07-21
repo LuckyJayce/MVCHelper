@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class TaskHandle implements RequestHandle {
     private final Object task;
-    private final ICallback callBack;
+    private final ICallBack callBack;
     private final int type;
     private WeakReference<TaskHelper.TaskImp> taskImpWeakReference;
     public static final int TYPE_RUN = 1;
     public static final int TYPE_CACHE = 2;
     public static final int TYPE_ATTACH = 3;
 
-    public TaskHandle(int type, Object exeTask, ICallback callBack, TaskHelper.TaskImp taskImp) {
+    public TaskHandle(int type, Object exeTask, ICallBack callBack, TaskHelper.TaskImp taskImp) {
         this.task = exeTask;
         this.callBack = callBack;
         this.type = type;
@@ -47,10 +47,10 @@ public class TaskHandle implements RequestHandle {
         if (taskImp == null) {
             return;
         }
-        List<Data2<Object, ICallback>> calls = taskImp.getCallbacks();
-        Iterator<Data2<Object, ICallback>> iterator = calls.iterator();
+        List<Data2<Object, ICallBack>> calls = taskImp.getCallbacks();
+        Iterator<Data2<Object, ICallBack>> iterator = calls.iterator();
         while (iterator.hasNext()) {
-            Data2<Object, ICallback> data = iterator.next();
+            Data2<Object, ICallBack> data = iterator.next();
             Object ct = data.getValue1();
             if (task.equals(ct)) {
                 if (calls.size() == 1) {

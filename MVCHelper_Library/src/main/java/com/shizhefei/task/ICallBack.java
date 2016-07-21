@@ -4,7 +4,7 @@ package com.shizhefei.task;
  * task的回调
  * Created by LuckyJayce on 2016/7/17.
  */
-public interface ICallback<DATA> {
+public interface ICallBack<DATA> {
 
     /**
      * 执行task之前的回调
