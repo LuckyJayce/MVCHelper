@@ -1,12 +1,12 @@
-###MVCHelper更倾向于获取数据并显示数据，比较适用于http的get请求。
+###MVCHelper主要用于下拉刷新加载，失败，加载，空数据，成功的界面切换。
 
-###TaskHelper更倾向于任务的执行的失败，成功，取消，比较适用于http的post请求
+###TaskHelper主要用于执行动作然后回调
 
 # Gradle导入 #
 ## 1.必须导入： ##
 	
 	//MVCHelper核心类库
-	compile 'com.shizhefei:MVCHelper-Library:1.0.4'
+	compile 'com.shizhefei:MVCHelper-Library:1.0.6'
 	//里面有使用recyclerview，所以需要导入recyclerview
     compile 'com.android.support:recyclerview-v7:24.0.0'
 
@@ -14,35 +14,35 @@
 <1>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入
 	
 	//里面包含一个MVCPullrefshHelper 是适配这个控件的 MVCHelper
-    compile 'com.shizhefei:MVCHelper-Pullrefresh:1.0.4'
+    compile 'com.shizhefei:MVCHelper-Pullrefresh:1.0.6'
 	//由于没有找到gradle排至，我自己把它上传到jcenter上
     compile 'com.shizhefei:pulltorefresh:1.0.1'
 
 <2>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh 的刷新控件导入 
 
     //里面包含一个MVCUltraHelper 是适配这个控件的 MVCHelper
-	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.4'
+	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.6'
 	//这里6月29号目前最新的，要实时关注新版本去秋大的网站上去看
     compile 'in.srain.cube:ultra-ptr:1.0.11'
 
 <3>  使用android v4的SwipeRefreshLayout的作为刷新控件导入  
 
 	//里面包含一个MVCSwipeRefreshHelper 是适配这个控件的 MVCHelper
-    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.4'
+    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.6'
 	//v4包应该都有导入吧，v7包里面包含v4包
 	compile 'com.android.support:support-v4:24.0.0'
 
 <4> 测试用例，可以方便的查看MVCHelper，Task的运行情况和返回数据，还提供了修改接口字段，用于接口测试很方便哦
 
 	//MVCHelper的测试用例，继承ABSTestCaseFragment实现List<TestCaseData> getTestCaseDatas()方法
-	compile 'com.shizhefei:MVCHelper-TestCase:1.0.4'
+	compile 'com.shizhefei:MVCHelper-TestCase:1.0.6'
 	//里面用到了gson
 	compile 'com.google.code.gson:gson:2.2.4'
 	
 <5> MVCHelper-OkHttp 对OKHttp的简单封装
 
 	//MVCHelper的 OKHttp的简单封装
-	compile 'com.shizhefei:MVCHelper-OkHttp:1.0.5'
+	compile 'com.shizhefei:MVCHelper-OkHttp:1.0.6'
 	//里面用到了okhttp3
 	compile 'com.squareup.okhttp3:okhttp:3.4.0'
 	compile 'com.squareup.okio:okio:1.9.0'
@@ -51,7 +51,7 @@
 #一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
 Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/releases/download/1.0.2/LuckyJayce_MVCHelper_1.0.2.zip)  
-Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/mastear/raw/MVCHelper_Demo.apk?raw=true)  
+Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
 ## 1.Model (IDataSource<DATA>)数据源，加载数据  
    **同步请求实现IDataSource，异步请求（okhttp,volley）实现IAsyncDataSource**  
@@ -356,14 +356,15 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 	}
 
 #二、 TaskHelper
-## 1.Model (Task<SUCCESS, FAIL>)
+## 1.Model (ITask<DATA>, IAsyncTask<DATA>)
+
+  **同步请求实现Task，异步请求（okhttp,volley）实现IAsyncTask**  
+
 	/**
-	 * @param <SUCCESS>
-	 *            成功的数据类型
-	 * @param <FAIL>
-	 *            失败的数据类型
+	 * @param <DATA>
+	 *            数据类型
 	 */
-	public interface Task<SUCCESS, FAIL> {
+	public interface Task<DATA> {
 	
 		/**
 		 * 执行后台任务
@@ -373,18 +374,29 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		 * @return
 		 * @throws Exception
 		 */
-		public Data<SUCCESS, FAIL> execute(ProgressSender progressSender) throws Exception;
+		public DATA execute(ProgressSender progressSender) throws Exception;
 	
 		/**
-		 * 注意cancle 和 execute 有可能不在同一个线程，cancle可能在UI线程被调用
+		 * cancel 和 execute 有可能不在同一个线程，cancle可能在UI线程被调用
 		 */
-		public void cancle();
+		public void cancel();
 	
+	}
+
+	public interface IAsyncTask<DATA> extends ISuperTask<DATA> {
+    
+	    /**
+	     * @param sender 用于请求结束时发送数据给TaskHelper,MVCHelper,然后在通知CallBack的Post回调方法
+	     * @return 用于提供外部取消请求的处理
+	     * @throws Exception
+	     */
+	    RequestHandle execute(ResponseSender<DATA> sender) throws Exception;
+
 	}
 
 例如登陆
 
-	public class LoginTask implements Task<User, String> {
+	public class LoginTask implements Task<User> {
 		private String name;
 		private String password;
 	
@@ -395,12 +407,12 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		}
 	
 		@Override
-		public Data<User, String> execute(ProgressSender progressSender) throws Exception {
+		public User execute(ProgressSender progressSender) throws Exception {
 			if (name.equals("aaa") && password.equals("111")) {
-				return Data.madeSuccess(new User("1", "aaa", 23, "中国人"));
-			} else {
-				return Data.madeFail("用户名或者密码不正确");
-			}
+                return new User("1", "aaa", 23, "中国人");
+	        } else {
+	            throw new BizException("用户名或者密码不正确");
+	        }
 		}
 	
 		@Override
@@ -409,20 +421,18 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		}
 	
 	}
-## 2.View（Callback<SUCCESS, FAIL>）
+## 2.View（ICallback<DATA>）
 	/**
 	 *
-	 * @param <SUCCESS>
-	 *            执行成功返回的数据类型
-	 * @param <FAIL>
-	 *            执行失败返回的数据类型
+	 * @param <DATA>
+	 *            数据类型
 	 */
-	public interface Callback<SUCCESS, FAIL> {
+	public interface ICallback<DATA> {
 	
 		/**
 		 * 执行task之前的回调
 		 */
-		public void onPreExecute();
+		public void onPreExecute(Object task);
 	
 		/**
 		 * 进度更新回调
@@ -432,7 +442,7 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		 * @param total
 		 * @param exraData
 		 */
-		public void onProgressUpdate(int percent, long current, long total, Object exraData);
+		public void onProgressUpdate(Object task,int percent, long current, long total, Object exraData);
 	
 		/**
 		 * 执行task结束的回调，通过code判断是什么情况结束task，（成功，失败，异常，取消）
@@ -441,61 +451,70 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		 *            返回码
 		 * @param exception
 		 *            异常信息（throw exception 时才有值）
-		 * @param success
-		 *            成功返回的数据
-		 * @param fail
-		 *            失败返回的数据
+		 * @param data
+		 *            返回的数据
 		 */
-		public void onPostExecute(Code code, Exception exception, SUCCESS success, FAIL fail);
+		public void onPostExecute(Object task,Code code, Exception exception, DATA data);
 	
 	}
 
 例如登陆请求更新UI
 
-	private Callback<User, String> loginCallback = new Callback<User, String>() {
-			@Override
-			public void onPreExecute() {
-				loginButton.setEnabled(false);
-				loginButton.setText("登陆中...");
-			}
-	
-			@Override
-			public void onProgressUpdate(int percent, long current, long total, Object exraData) {
-	
-			}
-	
-			@Override
-			public void onPostExecute(Code code, Exception exception, User success, String fail) {
-				loginButton.setEnabled(true);
-				loginButton.setText("登陆");
-				switch (code) {
-				case FAIL:
-				case EXCEPTION:
-					if (TextUtils.isEmpty(fail)) {
-						Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
-					} else {
-						Toast.makeText(getApplicationContext(), fail, Toast.LENGTH_SHORT).show();
-					}
-					break;
-				case SUCESS:
-					Toast.makeText(getApplicationContext(), "登陆成功：" + new Gson().toJson(success), Toast.LENGTH_LONG).show();
-					break;
-				default:
-					break;
-				}
-			}
-		};
+	private ICallback<User> loginCallback = new ICallback<User>() {
+        @Override
+        public void onPreExecute(Object task) {
+            loginButton.setEnabled(false);
+            loginButton.setText("登陆中...");
+        }
+
+        @Override
+        public void onProgress(Object task, int percent, long current, long total, Object extraData) {
+
+        }
+
+        @Override
+        public void onPostExecute(Object task, Code code, Exception exception, User user) {
+            loginButton.setEnabled(true);
+            loginButton.setText("登陆");
+            switch (code) {
+                case EXCEPTION:
+                    if (exception instanceof BizException) {
+                        BizException bizException = (BizException) exception;
+                        String fail = bizException.getMessage();
+                        Toast.makeText(getApplicationContext(), fail, Toast.LENGTH_SHORT).show();
+                        textView.setText(fail);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+                        textView.setText("网络连接失败");
+                    }
+                    break;
+                case SUCCESS:
+                    Toast.makeText(getApplicationContext(), "登陆成功：" + new Gson().toJson(user), Toast.LENGTH_LONG).show();
+                    textView.setText("登陆成功：" + new Gson().toJson(user));
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
 ## 3.Controller (Activity,Fragment,TaskHelper)
 
 Activity负责调度，代码如下
-	
-	loginHelper.setTask(new LoginTask(name, password));
-	loginHelper.setCallback(loginCallback);
-	loginHelper.execute();
 
-	//loginHelper.cancle();//执行取消操作
-	//loginHelper.destory();//执行释放操作
+	  TaskHelper<Object> taskHelper = new TaskHelper<>();
+		
+      //注册TaskHelper的callback，所有通过taskHelpe执行的task，都会回调它.
+	  //taskHelper.registerCallBack(loginCallback);
+
+	  TaskHandle taskHandle = taskHelper.execute(new LoginAsyncTask(name, password), loginCallback);
+	  //TaskHelper 可以执行多个task，TaskHandle对应执行的task，可以执行cancel，对单个task取消
+      TaskHandle taskHandle2 = taskHelper.execute(new LoginAsyncTask(name, password), loginCallback);
+
+	  //taskHandle.cancel();//执行取消操作
+
+	  //taskHelper.destory();//执行释放操作
+      //taskHelper.cancelAll();//取消全部
 
 ## 注意：  
         1.权限：  
