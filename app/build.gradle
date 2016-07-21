@@ -40,8 +40,8 @@ dependencies {
     compile project(':mvcswiperefreshhelper')
     compile project(':mvcultrahelper')
     compile project(':mvcpullrefshhelper')
-    compile project(':mvchelper_testcase')
     compile 'com.squareup.okio:okio:1.9.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.0'
     compile project(':mvchelper_okhttp')
+    compile project(':mvchelper_testcase')
 }

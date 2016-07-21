@@ -15,7 +15,7 @@ limitations under the License.
  */
 package com.shizhefei.test.models.enties;
 
-public class Book {
+public class Book extends BaseEntry{
 	private String name;
 	private double price;
 	private String author;

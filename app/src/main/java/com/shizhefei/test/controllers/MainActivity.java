@@ -18,28 +18,63 @@ package com.shizhefei.test.controllers;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.shizhefei.task.Code;
+import com.shizhefei.task.ICallback;
+import com.shizhefei.task.TaskHandle;
+import com.shizhefei.task.TaskHelper;
+import com.shizhefei.task.imp.MemoryCacheStore;
+import com.shizhefei.test.controllers.mvchelpers.NormalActivity;
+import com.shizhefei.test.controllers.mvchelpers.PullrefshActivity;
+import com.shizhefei.test.controllers.mvchelpers.SwipeRefreshActivity;
+import com.shizhefei.test.controllers.mvchelpers.UltraActivity;
 import com.shizhefei.test.controllers.other.BookDetailActivity;
 import com.shizhefei.test.controllers.other.MovieDetailActivity;
 import com.shizhefei.test.controllers.other.UltraRecyclerViewActivity;
 import com.shizhefei.test.controllers.other.Volley_OKHttp_GridViewActivity;
+import com.shizhefei.test.controllers.task.ListTaskActivity;
 import com.shizhefei.test.controllers.task.LoginActivity;
-import com.shizhefei.test.controllers.task.UploadActivity;
-import com.shizhefei.test.controllers.testhelpers.NormalActivity;
-import com.shizhefei.test.controllers.testhelpers.PullrefshActivity;
-import com.shizhefei.test.controllers.testhelpers.SwipeRefreshActivity;
-import com.shizhefei.test.controllers.testhelpers.UltraActivity;
+import com.shizhefei.test.controllers.task.TaskDemoActivity;
+import com.shizhefei.test.models.task.LoginTask;
 import com.shizhefei.view.mvc.demo.R;
 
-import testcase.TestCaseFragment;
-
 public class MainActivity extends Activity {
+
+    private TaskHelper<Object> taskHelper;
+    private LoginTask loginTask;
+    private TaskHandle taskHandle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        taskHelper = new TaskHelper<>(new MemoryCacheStore<>(100));
+
+        taskHelper.registerCallBack(new ICallback<Object>() {
+            @Override
+            public void onPreExecute(Object task) {
+                Log.d("vvvv", "registCallBak onPreExecute task:" + task);
+            }
+
+            @Override
+            public void onProgress(Object task, int percent, long current, long total, Object extraData) {
+//                Log.d("vvvv", "registCallBak onProgress current:"+current+"  task:" + task);
+            }
+
+            @Override
+            public void onPostExecute(Object task, Code code, Exception exception, Object Object) {
+                Log.d("vvvv", "registCallBak onPostExecute task:" + task + " code:" + code);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        taskHelper.destroy();
     }
 
     /**
@@ -125,6 +160,15 @@ public class MainActivity extends Activity {
     }
 
     /**
+     * 带有缓存的Task列表
+     *
+     * @param view
+     */
+    public void onClickTask3(View view) {
+        startActivity(new Intent(getApplicationContext(), ListTaskActivity.class));
+    }
+
+    /**
      * 登陆Task
      *
      * @param view
@@ -134,12 +178,13 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * 上传文件Task
+     * TaskDemo
      *
      * @param view
      */
-    public void onClickTask2(View view) {
-        startActivity(new Intent(getApplicationContext(), UploadActivity.class));
+    public void onClickTaskDemo(View view) {
+        startActivity(new Intent(getApplicationContext(), TaskDemoActivity.class));
     }
+
 
 }

@@ -21,7 +21,7 @@ package com.shizhefei.test.models.enties;
 
 import java.io.Serializable;
 
-public class Meizhi implements Serializable {
+public class Meizhi  extends BaseEntry implements Serializable {
     public String url;
     public String type;
     public String desc;

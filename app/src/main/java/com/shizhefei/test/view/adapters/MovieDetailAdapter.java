@@ -15,9 +15,6 @@
  */
 package com.shizhefei.test.view.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -32,6 +29,9 @@ import com.shizhefei.mvc.data.Data3;
 import com.shizhefei.test.models.enties.Discuss;
 import com.shizhefei.test.models.enties.Movie;
 import com.shizhefei.view.mvc.demo.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovieDetailAdapter extends RecyclerView.Adapter<ViewHolder> implements IDataAdapter<Data3<Movie, List<Discuss>, List<Movie>>> {
 
@@ -49,7 +49,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<ViewHolder> impleme
 		ViewHolder viewHolder;
 		switch (viewType) {
 		case ITEM_MOVIE:
-			viewHolder = new MovieViewHolder(inflater.inflate(R.layout.item_movie, parent, false));
+			viewHolder = new MovieViewHolder(inflater.inflate(R.layout.item_moviedetail, parent, false));
 			break;
 		case ITEM_DISCUSS:
 			viewHolder = new DiscussViewHolder(inflater.inflate(R.layout.item_discuss, parent, false));
@@ -156,9 +156,9 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<ViewHolder> impleme
 
 		public MovieViewHolder(View itemView) {
 			super(itemView);
-			description = (TextView) itemView.findViewById(R.id.item_movie_description_textView);
-			name = (TextView) itemView.findViewById(R.id.item_movie_name_textView);
-			time = (TextView) itemView.findViewById(R.id.item_movie_time_textView);
+			description = (TextView) itemView.findViewById(R.id.item_moviedetail_description_textView);
+			name = (TextView) itemView.findViewById(R.id.item_moviedetail_name_textView);
+			time = (TextView) itemView.findViewById(R.id.item_moviedetail_time_textView);
 		}
 	}
 

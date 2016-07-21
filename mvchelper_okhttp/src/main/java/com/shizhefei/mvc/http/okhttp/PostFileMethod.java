@@ -1,8 +1,8 @@
 package com.shizhefei.mvc.http.okhttp;
 
+import com.shizhefei.mvc.ProgressSender;
 import com.shizhefei.mvc.data.Data2;
 import com.shizhefei.mvc.http.MimeUtils;
-import com.shizhefei.task.ProgressSender;
 
 import java.io.File;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class PostFileMethod extends HttpMethod<PostFileMethod> {
         this.listener = new CountingRequestBody.Listener() {
             @Override
             public void onRequestProgress(long bytesWritten, long contentLength) {
-                progressSender.send(bytesWritten, contentLength, null);
+                progressSender.sendProgress(bytesWritten, contentLength, null);
             }
         };
     }

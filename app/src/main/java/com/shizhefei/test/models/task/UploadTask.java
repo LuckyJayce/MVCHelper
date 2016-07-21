@@ -1,26 +1,26 @@
 package com.shizhefei.test.models.task;
 
-import com.shizhefei.task.Data;
-import com.shizhefei.task.ProgressSender;
-import com.shizhefei.task.Task;
 
-public class UploadTask implements Task<String, String> {
+import com.shizhefei.mvc.ProgressSender;
+import com.shizhefei.task.ITask;
 
-	private volatile boolean isCancle;
+public class UploadTask implements ITask<String> {
 
-	@Override
-	public Data<String, String> execute(ProgressSender progressSender) throws Exception {
-		int total = 864;
-		for (int i = 1; i <= total && !isCancle; i++) {
-			Thread.sleep(20);
-			progressSender.send(i, total, "正在上传文件中...");
-		}
-		return Data.madeSuccess("文件上传成功");
-	}
+    private boolean isCancle;
 
-	@Override
-	public void cancle() {
-		isCancle = true;
-	}
+    @Override
+    public String execute(ProgressSender progressSender) throws Exception {
+        int total = 864;
+        for (int i = 1; i <= total && !isCancle; i++) {
+            Thread.sleep(20);
+            progressSender.sendProgress(i, total, "正在上传文件中...");
+        }
+        return "文件上传成功";
+    }
+
+    @Override
+    public void cancel() {
+        isCancle = true;
+    }
 
 }

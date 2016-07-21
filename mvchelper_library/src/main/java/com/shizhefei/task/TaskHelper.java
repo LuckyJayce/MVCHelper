@@ -1,208 +1,376 @@
 package com.shizhefei.task;
 
-import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.shizhefei.mvc.IAsyncDataSource;
+import com.shizhefei.mvc.IDataSource;
+import com.shizhefei.mvc.ProgressSender;
 import com.shizhefei.mvc.RequestHandle;
+import com.shizhefei.mvc.ResponseSender;
+import com.shizhefei.mvc.data.Data2;
+import com.shizhefei.task.imp.MemoryCacheStore;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * task执行类
+ * Created by LuckyJayce on 2016/7/17.
+ * TaskHelper用于执行多个Task
  *
- * @param <SUCCESS> 成功的数据类型
- * @param <FAIL>    失败的数据类型
- * @author LuckyJayce
+ * @param <BASE_DATA> 基础类型，execute的task的数据类型都继承于它，不是它的子类型的数据的task不能被执行
+ *                    为什么要定义它？主要用于registerCallBack 注册全局的callback数据的返回的数据不用强制转化，
  */
-public class TaskHelper<SUCCESS, FAIL> {
+public class TaskHelper<BASE_DATA> {
 
-    private final Handler handler;
-    private SuperTask<SUCCESS, FAIL> task;
-
-    private Callback<SUCCESS, FAIL> callback;
-
-    private MyTask<SUCCESS, FAIL> myTask;
-
-    private MyAsyncTask<SUCCESS, FAIL> myAsyncTask;
+    private Handler handler;
+    private ICacheStore cacheStore;
+    private Set<ICallback<BASE_DATA>> callBacks = new LinkedHashSet<>();
+    private Set<TaskImp> taskImps = new LinkedHashSet<>();
 
     public TaskHelper() {
-        super();
+        this(new MemoryCacheStore(100));
+    }
+
+    public TaskHelper(ICacheStore cacheStore) {
+        this.cacheStore = cacheStore;
         handler = new Handler(Looper.getMainLooper());
     }
 
-    public TaskHelper(Task<SUCCESS, FAIL> task, Callback<SUCCESS, FAIL> callback) {
-        this();
-        this.task = task;
-        this.callback = callback;
+    public ICacheStore getCacheStore() {
+        return cacheStore;
     }
 
-    public TaskHelper(IAsyncTask<SUCCESS, FAIL> task, Callback<SUCCESS, FAIL> callback) {
-        this();
-        this.task = task;
-        this.callback = callback;
+    public <DATA extends BASE_DATA> TaskHandle execute(ITask<DATA> task, ICallback<DATA> callBack) {
+        return executeCache(task, callBack, null);
     }
 
-    public void setTask(Task<SUCCESS, FAIL> task) {
-        this.task = task;
+    public <DATA extends BASE_DATA> TaskHandle execute(final IDataSource<DATA> dataSource, ICallback<DATA> callBack) {
+        return executeCache(dataSource, callBack, null);
     }
 
-    public void setTask(IAsyncTask<SUCCESS, FAIL> task) {
-        this.task = task;
+    public <DATA extends BASE_DATA> TaskHandle execute(final IAsyncDataSource<DATA> dataSource, ICallback<DATA> callBack) {
+        return executeCache(dataSource, callBack, null);
     }
 
-    public Callback<SUCCESS, FAIL> getCallback() {
-        return callback;
+    public <DATA extends BASE_DATA> TaskHandle execute(IAsyncTask<DATA> task, ICallback<DATA> callBack) {
+        return executeCache(task, callBack, null);
     }
 
-    public void setCallback(Callback<SUCCESS, FAIL> callback) {
-        this.callback = callback;
-    }
-
-    public void cancle() {
-        if (myTask != null && myTask.getStatus() != AsyncTask.Status.FINISHED) {
-            myTask.cancleMyTask();
+    public <DATA extends BASE_DATA> TaskHandle executeCache(IAsyncDataSource<DATA> task, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
+        TaskHandle requestHandle = checkTask(cacheConfig, task, callBack);
+        if (requestHandle != null) {
+            return requestHandle;
         }
-        if (myAsyncTask != null && myAsyncTask.isRunning()) {
-            myAsyncTask.cancle();
-        }
-        myTask = null;
-        myAsyncTask = null;
+        AsyncDataSourceImp taskImp = new AsyncDataSourceImp<>(cacheConfig, callBack, task);
+        taskImps.add(taskImp);
+        taskImp.execute();
+        return new TaskHandle(TaskHandle.TYPE_RUN, task, callBack, taskImp);
     }
 
-    public void execute() {
-        execute(true);
+    public <DATA extends BASE_DATA> TaskHandle executeCache(IAsyncTask<DATA> task, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
+        TaskHandle requestHandle = checkTask(cacheConfig, task, callBack);
+        if (requestHandle != null) {
+            return requestHandle;
+        }
+        AsyncTaskImp taskImp = new AsyncTaskImp<>(cacheConfig, callBack, task);
+        taskImps.add(taskImp);
+        taskImp.execute();
+        return new TaskHandle(TaskHandle.TYPE_RUN, task, callBack, taskImp);
     }
 
-    public boolean isRunning() {
-        if (myTask == null) {
-            return false;
+    public <DATA extends BASE_DATA> TaskHandle executeCache(IDataSource<DATA> task, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
+        TaskHandle requestHandle = checkTask(cacheConfig, task, callBack);
+        if (requestHandle != null) {
+            return requestHandle;
         }
-        if (myTask.getStatus() == AsyncTask.Status.FINISHED) {
-            return false;
-        }
-        return true;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void execute(boolean canclePre) {
-        if (!canclePre) {
-            if (myTask != null && myTask.getStatus() != AsyncTask.Status.FINISHED) {
-                return;
-            }
-            if (myAsyncTask != null && myAsyncTask.isRunning()) {
-                return;
-            }
+        SyncDataSourceImp<DATA> taskImp = new SyncDataSourceImp<>(cacheConfig, callBack, task);
+        taskImps.add(taskImp);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            taskImp.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            cancle();
+            taskImp.execute();
         }
-        if (task instanceof Task) {
-            myTask = new MyTask<SUCCESS, FAIL>(callback, (Task<SUCCESS, FAIL>) task);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                myTask.execute();
-            }
-        } else if (task instanceof IAsyncTask) {
-            IAsyncTask<SUCCESS, FAIL> asyncTask = (IAsyncTask<SUCCESS, FAIL>) task;
-            myAsyncTask = new MyAsyncTask<SUCCESS, FAIL>(callback, asyncTask);
-            myAsyncTask.execute();
-        }
+        return new TaskHandle(TaskHandle.TYPE_RUN, task, callBack, taskImp);
     }
 
-    public void destory() {
-        cancle();
+    public <DATA extends BASE_DATA> TaskHandle executeCache(ITask<DATA> task, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
+        TaskHandle requestHandle = checkTask(cacheConfig, task, callBack);
+        if (requestHandle != null) {
+            return requestHandle;
+        }
+        SyncTaskImp<DATA> taskImp = new SyncTaskImp<>(cacheConfig, callBack, task);
+        taskImps.add(taskImp);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            taskImp.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            taskImp.execute();
+        }
+        return new TaskHandle(TaskHandle.TYPE_RUN, task, callBack, taskImp);
     }
 
-    private class MyAsyncTask<SUCCESS, FAIL> implements ResponseSender<SUCCESS, FAIL>, ProgressSender {
-        private RequestHandle handle;
-        private boolean isCancle = false;
-        private Callback<SUCCESS, FAIL> callback;
-        private IAsyncTask<SUCCESS, FAIL> task;
-        private boolean isRunning;
-
-        public MyAsyncTask(Callback<SUCCESS, FAIL> callback, IAsyncTask<SUCCESS, FAIL> task) {
-            super();
-            this.callback = callback;
-            this.task = task;
-            isCancle = false;
-            isRunning = true;
-        }
-
-        @Override
-        public final void sendError(final Exception exception) {
-            if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        onPostExecute(Code.EXCEPTION, exception, null, null);
-                        handle = null;
-                    }
-                });
-            } else {
-                onPostExecute(Code.EXCEPTION, exception, null, null);
-                handle = null;
-            }
-        }
-
-        @Override
-        public final void sendData(final SUCCESS success) {
-            if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (success != null) {
-                            callback.onPostExecute(Code.SUCESS, null, success, null);
-                        } else {
-                            callback.onPostExecute(Code.FAIL, null, null, null);
-                        }
-                        handle = null;
-                    }
-                });
-            } else {
-                if (success != null) {
-                    callback.onPostExecute(Code.SUCESS, null, success, null);
-                } else {
-                    callback.onPostExecute(Code.FAIL, null, null, null);
+    private TaskImp getTaskImpByTask(Object task) {
+        for (TaskImp taskImp : taskImps) {
+            List<Data2<Object, ICallback<? extends BASE_DATA>>> calls = taskImp.getCallbacks();
+            for (Data2<Object, ICallback<? extends BASE_DATA>> data : calls) {
+                if (task.equals(data.getValue1())) {
+                    return taskImp;
                 }
-                handle = null;
             }
         }
+        return null;
+    }
 
-        public boolean isRunning() {
-            return isRunning;
-        }
-
-        public void cancle() {
-            if (handle != null) {
-                handle.cancle();
-                handle = null;
+    private TaskImp getTaskImpByTask(String taskKey) {
+        for (TaskImp entry : taskImps) {
+            if (taskKey.equals(entry.getTaskKey())) {
+                return entry;
             }
-            isCancle = true;
-            if (isRunning) {
-                callback.onPostExecute(Code.CANCLE, null, null, null);
-            }
-            isRunning = false;
         }
+        return null;
+    }
 
-        public RequestHandle execute() {
-            callback.onPreExecute();
-            try {
-                return handle = task.execute(this, this);
-            } catch (Exception e) {
-                e.printStackTrace();
-                onPostExecute(Code.EXCEPTION, e, null, null);
+
+    private <DATA extends BASE_DATA> TaskHandle checkTask(ICacheConfig<DATA> cacheConfig, Object task, ICallback<DATA> callBack) {
+        if (task == null) {
+            throw new RuntimeException("task不能为空");
+        }
+        if (cacheConfig != null) {
+            String taskKey = cacheConfig.getTaskKey(task);
+            if (TextUtils.isEmpty(taskKey)) {
+                throw new RuntimeException("ICacheConfig 返回的taskkey不能为空");
+            }
+            TaskImp taskImp = getTaskImpByTask(taskKey);
+            if (taskImp != null) {
+                callBack.onPreExecute(task);
+                taskImp.addCallBack(task, callBack);
+                return new TaskHandle(TaskHandle.TYPE_ATTACH, task, callBack, taskImp);
+            }
+        }
+        TaskHandle requestHandle = loadCache(cacheConfig, task, callBack);
+        if (requestHandle != null) {
+            return requestHandle;
+        }
+        return null;
+    }
+
+    private <DATA extends BASE_DATA> TaskHandle loadCache(ICacheConfig<DATA> cacheConfig, Object task, ICallback<DATA> callBack) {
+        if (cacheConfig != null) {
+            String taskKey = cacheConfig.getTaskKey(task);
+            ICacheStore.Cache cache = cacheStore.getCache(taskKey);
+            if (cache != null) {
+                DATA data = (DATA) cache.data;
+                if (cacheConfig.isUsefulCacheData(task, cache.requestTime, cache.saveTime, data)) {
+                    callBack.onPreExecute(task);
+                    callBack.onPostExecute(task, Code.SUCCESS, null, data);
+                    return new TaskHandle(TaskHandle.TYPE_CACHE, task, callBack, null);
+                }
             }
             return null;
         }
+        return null;
+    }
 
-        @Override
-        public void sendFail(FAIL data) {
-            onPostExecute(Code.FAIL, null, null, data);
+    public void cancel(Object task) {
+        if (task == null) {
+            return;
+        }
+        if (task instanceof TaskHandle) {
+            TaskHandle handle = (TaskHandle) task;
+            handle.cancelTaskIfMoreCallbackUnregisterCallback();
+            return;
+        }
+        TaskImp taskImp = getTaskImpByTask(task);
+        if (taskImp != null) {
+            taskImp.cancle();
+        }
+    }
+
+    public void cancelTaskIfMoreCallbackUnregisterCallback(Object task) {
+        if (task == null) {
+            return;
+        }
+        if (task instanceof TaskHandle) {
+            TaskHandle handle = (TaskHandle) task;
+            handle.cancelTaskIfMoreCallbackUnregisterCallback();
+            return;
+        }
+        for (TaskImp taskImp : taskImps) {
+            List<Data2<Object, ICallback>> calls = taskImp.getCallbacks();
+            Iterator<Data2<Object, ICallback>> iterator = calls.iterator();
+            while (iterator.hasNext()) {
+                Data2<Object, ICallback> data = iterator.next();
+                Object ct = data.getValue1();
+                if (task.equals(ct)) {
+                    if (calls.size() == 1) {
+                        taskImp.cancle();
+                    } else {
+                        iterator.remove();
+                        data.getValue2().onPostExecute(ct, Code.CANCEL, null, null);
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    public void registerCallBack(ICallback<BASE_DATA> callback) {
+        callBacks.add(callback);
+    }
+
+    public void unregisterCallBack(ICallback<BASE_DATA> callback) {
+        callBacks.remove(callback);
+    }
+
+    public void cancelAll() {
+        for (TaskImp entry : taskImps) {
+            entry.cancle();
+        }
+        taskImps.clear();
+    }
+
+    public void destroy() {
+        cancelAll();
+        handler.removeCallbacksAndMessages(null);
+    }
+
+
+    /**
+     * 执行类的接口
+     */
+    interface TaskImp<DATA> extends RequestHandle {
+
+        /**
+         * 可以被添加回调，多个相同taskKey的task同时执行的话只运行最先的一个task，后面的task通过addCallBack添加回调
+         *
+         * @param task     执行的对象
+         * @param callBack 回调
+         */
+        void addCallBack(Object task, ICallback<DATA> callBack);
+
+        /**
+         * 获取所有回调，包括第一个task也在里面
+         *
+         * @return 所有回调
+         */
+        List<Data2<Object, ICallback<DATA>>> getCallbacks();
+
+        /**
+         * 返回taskKey
+         *
+         * @return 返回taskKey
+         */
+        String getTaskKey();
+    }
+
+    /**
+     * IAsyncTask的执行类
+     *
+     * @param <DATA>
+     */
+    private class AsyncTaskImp<DATA extends BASE_DATA> extends AbsAsyncTaskImp<DATA> {
+        private IAsyncTask<DATA> task;
+
+        public AsyncTaskImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> callback, IAsyncTask<DATA> task) {
+            super(cacheConfig, callback, task);
+            this.task = task;
         }
 
         @Override
-        public void send(final long current, final long total, final Object exraData) {
+        protected RequestHandle executeImp(ResponseSender<DATA> responseSender) throws Exception {
+            return task.execute(responseSender);
+        }
+    }
+
+    /**
+     * IAsyncDataSource执行类
+     *
+     * @param <DATA>
+     */
+    private class AsyncDataSourceImp<DATA extends BASE_DATA> extends AbsAsyncTaskImp<DATA> {
+        private IAsyncDataSource<DATA> dataSource;
+
+        public AsyncDataSourceImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> callback, IAsyncDataSource<DATA> dataSource) {
+            super(cacheConfig, callback, dataSource);
+            this.dataSource = dataSource;
+        }
+
+        @Override
+        protected RequestHandle executeImp(ResponseSender<DATA> responseSender) throws Exception {
+            return dataSource.refresh(responseSender);
+        }
+    }
+
+    /**
+     * IAsyncTask和IAsyncDataSource 抽象执行类
+     *
+     * @param <DATA>
+     */
+    private abstract class AbsAsyncTaskImp<DATA extends BASE_DATA> implements ResponseSender<DATA>, TaskImp<DATA> {
+        private final Object realTask;
+        private final ICacheConfig<DATA> cacheConfig;
+        private final long requestTime;
+        private String taskKey;
+        private RequestHandle requestHandle;
+        private List<Data2<Object, ICallback<DATA>>> selfCallBacks = new ArrayList<>(2);
+        private boolean isRunning;
+
+        public AbsAsyncTaskImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> callback, Object task) {
+            this.isRunning = true;
+            this.realTask = task;
+            this.cacheConfig = cacheConfig;
+            if (cacheConfig != null) {
+                taskKey = cacheConfig.getTaskKey(task);
+            }
+            this.requestTime = System.currentTimeMillis();
+            selfCallBacks.add(new Data2<>(realTask, callback));
+        }
+
+        public void execute() {
+            for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                data2.getValue2().onPreExecute(data2.getValue1());
+            }
+            for (ICallback<BASE_DATA> callback : callBacks) {
+                callback.onPreExecute(realTask);
+            }
+            try {
+                requestHandle = executeImp(this);
+            } catch (Exception e) {
+                if (e instanceof InterruptedException) {
+                    Log.d("TaskHelper", realTask.toString() + e);
+                } else {
+                    e.printStackTrace();
+                }
+                sendError(e);
+            }
+        }
+
+        @Override
+        public String getTaskKey() {
+            return taskKey;
+        }
+
+        protected abstract RequestHandle executeImp(ResponseSender<DATA> responseSender) throws Exception;
+
+        @Override
+        public void sendError(final Exception exception) {
+            onPostExecute(Code.EXCEPTION, exception, null);
+        }
+
+        @Override
+        public void sendData(final DATA data) {
+            onPostExecute(Code.SUCCESS, null, data);
+        }
+
+        @Override
+        public void sendProgress(final long current, final long total, final Object extraData) {
             final int percent;
             if (current == 0) {
                 percent = 0;
@@ -211,79 +379,205 @@ public class TaskHelper<SUCCESS, FAIL> {
             } else {
                 percent = (int) (100 * current / total);
             }
-            if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+            onProgress(percent, current, total, extraData);
+        }
+
+        private void onProgress(final int percent, final long current, final long total, final Object extraData) {
+            if (Looper.myLooper() != Looper.getMainLooper()) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (!isCancle) {
-                            callback.onProgressUpdate(percent, current, total, exraData);
-                        }
+                        onProgressMainThread(percent, current, total, extraData);
                     }
                 });
             } else {
-                if (!isCancle) {
-                    callback.onProgressUpdate(percent, current, total, exraData);
-                }
+                onProgressMainThread(percent, current, total, extraData);
             }
         }
 
-        public void onPostExecute(Code code, Exception exception, SUCCESS success, FAIL fail) {
-            if (!isCancle) {
-                callback.onPostExecute(code, exception, success, fail);
+        private void onProgressMainThread(final int percent, final long current, final long total, final Object extraData) {
+            for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                data2.getValue2().onProgress(data2.getValue1(), percent, current, total, extraData);
+            }
+            for (ICallback<BASE_DATA> callback : callBacks) {
+                callback.onProgress(realTask, percent, current, total, extraData);
+            }
+        }
+
+        private void onPostExecute(final Code code, final Exception exception, final DATA data) {
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onPostExecuteMainThread(code, exception, data);
+                    }
+                });
+            } else {
+                onPostExecuteMainThread(code, exception, data);
+            }
+        }
+
+        private void onPostExecuteMainThread(final Code code, final Exception exception, final DATA data) {
+            if (!isRunning) {
+                return;
             }
             isRunning = false;
+            taskImps.remove(this);
+            if (code == Code.SUCCESS && cacheConfig != null) {
+                long saveTime = System.currentTimeMillis();
+                if (cacheConfig.isNeedSave(realTask, requestTime, saveTime, data)) {
+                    String taskKey = cacheConfig.getTaskKey(realTask);
+                    cacheStore.saveCache(taskKey, requestTime, saveTime, data);
+                }
+            }
+            for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                data2.getValue2().onPostExecute(data2.getValue1(), code, exception, data);
+            }
+            for (ICallback<BASE_DATA> callback : callBacks) {
+                callback.onPostExecute(realTask, code, exception, data);
+            }
         }
 
+        @Override
+        public void cancle() {
+            if (requestHandle != null) {
+                requestHandle.cancle();
+            }
+            onPostExecute(Code.CANCEL, null, null);
+        }
+
+        @Override
+        public boolean isRunning() {
+            return isRunning;
+        }
+
+        @Override
+        public void addCallBack(Object task, ICallback<DATA> callBack) {
+            selfCallBacks.add(new Data2<>(task, callBack));
+        }
+
+        @Override
+        public List<Data2<Object, ICallback<DATA>>> getCallbacks() {
+            return selfCallBacks;
+        }
     }
 
-    private static class MyTask<SUCCESS, FAIL> extends AsyncTask<Void, Object, Data<SUCCESS, FAIL>> {
+    /**
+     * ITask 的执行类
+     *
+     * @param <DATA>
+     */
+    private class SyncTaskImp<DATA> extends AbsSyncTaskImp {
+        private ITask<DATA> task;
 
-        private volatile Exception e;
-        private Callback<SUCCESS, FAIL> callback;
-        private Task<SUCCESS, FAIL> task;
-
-        public MyTask(Callback<SUCCESS, FAIL> callback, Task<SUCCESS, FAIL> task) {
-            super();
-            this.callback = callback;
+        public SyncTaskImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> call, ITask<DATA> task) {
+            super(cacheConfig, call, task);
             this.task = task;
+        }
+
+        @Override
+        protected DATA executeImp(ProgressSender sender) throws Exception {
+            return task.execute(sender);
+        }
+
+        @Override
+        protected void cancelImp() {
+            task.cancel();
+        }
+    }
+
+    /**
+     * IDataSource的执行类
+     *
+     * @param <DATA>
+     */
+    private class SyncDataSourceImp<DATA> extends AbsSyncTaskImp {
+        private IDataSource<DATA> task;
+
+        public SyncDataSourceImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> call, IDataSource<DATA> task) {
+            super(cacheConfig, call, task);
+            this.task = task;
+        }
+
+        @Override
+        protected DATA executeImp(ProgressSender sender) throws Exception {
+            return task.refresh();
+        }
+
+        @Override
+        protected void cancelImp() {
+
+        }
+    }
+
+    /**
+     * 同步task和IDataSource的抽象实现类
+     *
+     * @param <DATA>
+     */
+    private abstract class AbsSyncTaskImp<DATA extends BASE_DATA> extends AsyncTask<Object, Object, DATA> implements TaskImp<DATA> {
+
+        private final Object realTask;
+        private final ICacheConfig<DATA> cacheConfig;
+        private final long requestTime;
+        private volatile Exception e;
+        private List<Data2<Object, ICallback<DATA>>> selfCallBacks = new ArrayList<>(2);
+        private boolean isRunning;
+        private String taskKey;
+
+        public AbsSyncTaskImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> call, Object task) {
+            super();
+            this.isRunning = true;
+            this.realTask = task;
+            this.cacheConfig = cacheConfig;
+            this.requestTime = System.currentTimeMillis();
+            if (cacheConfig != null) {
+                this.taskKey = cacheConfig.getTaskKey(task);
+            }
+            selfCallBacks.add(new Data2<>(realTask, call));
+            for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                data2.getValue2().onPreExecute(data2.getValue1());
+            }
+            for (ICallback<BASE_DATA> callback : callBacks) {
+                callback.onPreExecute(realTask);
+            }
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            callback.onPreExecute();
-        }
-
-        public void cancleMyTask() {
-            task.cancle();
-            cancel(true);
         }
 
         @Override
-        protected Data<SUCCESS, FAIL> doInBackground(Void... params) {
+        protected DATA doInBackground(Object... params) {
             try {
                 ProgressSender progressSender = new ProgressSender() {
-
                     @Override
-                    public void send(long current, long total, Object exraData) {
+                    public void sendProgress(long current, long total, Object exraData) {
                         publishProgress(current, total, exraData);
                     }
                 };
-                return task.execute(progressSender);
+                return executeImp(progressSender);
             } catch (Exception e) {
-                e.printStackTrace();
+                if (e instanceof InterruptedException) {
+                    Log.d("TaskHelper", realTask.toString() + e);
+                } else {
+                    e.printStackTrace();
+                }
                 this.e = e;
             }
             return null;
         }
+
+        protected abstract DATA executeImp(ProgressSender sender) throws Exception;
 
         @Override
         protected void onProgressUpdate(Object... values) {
             super.onProgressUpdate(values);
             Long current = (Long) values[0];
             Long total = (Long) values[1];
-            Object exraData = values[2];
-            int percent = 0;
+            Object extraData = values[2];
+            int percent;
             if (current == 0) {
                 percent = 0;
             } else if (total == 0) {
@@ -291,29 +585,96 @@ public class TaskHelper<SUCCESS, FAIL> {
             } else {
                 percent = (int) (100 * current / total);
             }
-            callback.onProgressUpdate(percent, current, total, exraData);
+            for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                data2.getValue2().onProgress(data2.getValue1(), percent, current, total, extraData);
+            }
+            for (ICallback<BASE_DATA> callback : callBacks) {
+                callback.onProgress(realTask, percent, current, total, extraData);
+            }
         }
 
         @Override
-        protected void onPostExecute(Data<SUCCESS, FAIL> result) {
+        protected void onPostExecute(DATA result) {
             super.onPostExecute(result);
-            if (this.e != null) {
-                callback.onPostExecute(Code.EXCEPTION, this.e, null, null);
-            } else if (result == null) {
-                callback.onPostExecute(Code.FAIL, null, null, null);
-            } else if (result.isSuccess()) {
-                callback.onPostExecute(Code.SUCESS, null, result.getSuccess(), null);
-            } else {
-                callback.onPostExecute(Code.FAIL, null, null, result.getFail());
+            if (isRunning) {
+                isRunning = false;
+                taskImps.remove(this);
+                if (this.e != null) {
+                    for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                        data2.getValue2().onPostExecute(data2.getValue1(), Code.EXCEPTION, e, null);
+                    }
+                    for (ICallback<BASE_DATA> callback : callBacks) {
+                        callback.onPostExecute(realTask, Code.EXCEPTION, e, null);
+                    }
+                } else {
+                    if (cacheConfig != null) {
+                        long saveTime = System.currentTimeMillis();
+                        if (cacheConfig.isNeedSave(realTask, requestTime, saveTime, result)) {
+                            String taskKey = cacheConfig.getTaskKey(realTask);
+                            cacheStore.saveCache(taskKey, requestTime, saveTime, result);
+                        }
+                    }
+                    for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                        data2.getValue2().onPostExecute(data2.getValue1(), Code.SUCCESS, null, result);
+                    }
+                    for (ICallback<BASE_DATA> callback : callBacks) {
+                        callback.onPostExecute(realTask, Code.SUCCESS, null, result);
+                    }
+                }
             }
         }
 
         @Override
         protected void onCancelled() {
-            callback.onPostExecute(Code.CANCLE, null, null, null);
             super.onCancelled();
+            if (isRunning) {
+                isRunning = false;
+                taskImps.remove(this);
+                for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                    data2.getValue2().onPostExecute(data2.getValue1(), Code.CANCEL, null, null);
+                }
+                for (ICallback<BASE_DATA> callback : callBacks) {
+                    callback.onPostExecute(realTask, Code.CANCEL, null, null);
+                }
+            }
+        }
+
+        @Override
+        public void cancle() {
+            cancelImp();
+            cancel(true);
+            if (isRunning) {
+                isRunning = false;
+                taskImps.remove(this);
+                for (Data2<Object, ICallback<DATA>> data2 : selfCallBacks) {
+                    data2.getValue2().onPostExecute(data2.getValue1(), Code.CANCEL, null, null);
+                }
+                for (ICallback<BASE_DATA> callback : callBacks) {
+                    callback.onPostExecute(realTask, Code.CANCEL, null, null);
+                }
+            }
+        }
+
+        protected abstract void cancelImp();
+
+        @Override
+        public boolean isRunning() {
+            return isRunning;
+        }
+
+        @Override
+        public void addCallBack(Object task, ICallback<DATA> callBack) {
+            selfCallBacks.add(new Data2<>(task, callBack));
+        }
+
+        @Override
+        public List<Data2<Object, ICallback<DATA>>> getCallbacks() {
+            return selfCallBacks;
+        }
+
+        @Override
+        public String getTaskKey() {
+            return taskKey;
         }
     }
-
-    ;
 }

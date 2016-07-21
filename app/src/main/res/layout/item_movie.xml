@@ -3,15 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp" >
+    android:padding="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_height="50dp" >
+        android:layout_height="50dp"
+        android:gravity="center_vertical">
 
         <ImageView
-            android:id="@+id/imageView1"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/movie" />
@@ -20,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/item_movie_name_textView"
@@ -43,20 +42,32 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="剧情简介："
-        android:textColor="#000"
-        android:textSize="16sp" />
+        android:id="@+id/item_movie_updateTime_textView"
+        style="@style/text_normal"
+        android:padding="8dp"
+        android:text="更新时间:" />
 
-    <TextView
-        android:id="@+id/item_movie_description_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textColor="#888"
-        android:textSize="14sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="right|center_vertical">
 
+
+        <TextView
+            android:id="@+id/item_movie_commentCount_textView"
+            style="@style/text_normal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:minWidth="80dp"
+            android:text="评论数:" />
+
+        <TextView
+            android:id="@+id/item_movie_playCount_textView"
+            style="@style/text_normal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:minWidth="100dp"
+            android:text="播放量:" />
+
+    </LinearLayout>
 </LinearLayout>

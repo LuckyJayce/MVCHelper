@@ -1,27 +1,11 @@
 package com.shizhefei.task;
 
 import com.shizhefei.mvc.RequestHandle;
+import com.shizhefei.mvc.ResponseSender;
 
 /**
- * 任务
- * 
- * @author LuckyJayce
- *
- * @param <SUCCESS>
- *            成功的数据类型
- * @param <FAIL>
- *            失败的数据类型
+ * Created by LuckyJayce on 2016/7/17.
  */
-public interface IAsyncTask<SUCCESS, FAIL> extends SuperTask<SUCCESS, FAIL> {
-
-	/**
-	 * 执行后台任务
-	 * 
-	 * @param progressSender
-	 *            进度更新发送者
-	 * @return
-	 * @throws Exception
-	 */
-	public RequestHandle execute(ResponseSender<SUCCESS, FAIL> sender, ProgressSender progressSender) throws Exception;
-
+public interface IAsyncTask<DATA> extends ISuperTask<DATA> {
+    RequestHandle execute(ResponseSender<DATA> sender) throws Exception;
 }

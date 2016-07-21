@@ -2,12 +2,15 @@ package com.shizhefei.mvc;
 
 /**
  * 用于请求结束时发送数据或者发送异常
+ *
  * @param <DATA>
  */
-public interface ResponseSender<DATA> {
+public interface ResponseSender<DATA> extends ProgressSender {
 
-	public void sendError(Exception exception);
+    void sendError(Exception exception);
 
-	public void sendData(DATA data);
+    void sendData(DATA data);
+
+    void sendProgress(long current, long total, Object extraData);
 
 }
