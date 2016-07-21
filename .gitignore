@@ -6,6 +6,3 @@
 .DS_Store
 /build
 /captures
-/.idea/
-/mvchelper_okhttp/build/
-/MVCPullrefshHelper/build/
