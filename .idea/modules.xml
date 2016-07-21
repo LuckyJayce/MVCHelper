@@ -5,14 +5,15 @@
       <module fileurl="file://$PROJECT_DIR$/MVCHelper11.iml" filepath="$PROJECT_DIR$/MVCHelper11.iml" />
       <module fileurl="file://$PROJECT_DIR$/MVCHelper12.iml" filepath="$PROJECT_DIR$/MVCHelper12.iml" />
       <module fileurl="file://$PROJECT_DIR$/MVCHelper13.iml" filepath="$PROJECT_DIR$/MVCHelper13.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MVCHelper14.iml" filepath="$PROJECT_DIR$/MVCHelper14.iml" />
       <module fileurl="file://$PROJECT_DIR$/MVCHelper9.iml" filepath="$PROJECT_DIR$/MVCHelper9.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MVCHelper_Library/mvchelper_library.iml" filepath="$PROJECT_DIR$/MVCHelper_Library/mvchelper_library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvchelper_library/mvchelper_library.iml" filepath="$PROJECT_DIR$/mvchelper_library/mvchelper_library.iml" />
       <module fileurl="file://$PROJECT_DIR$/mvchelper_okhttp/mvchelper_okhttp.iml" filepath="$PROJECT_DIR$/mvchelper_okhttp/mvchelper_okhttp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MVCHelper_TestCase/mvchelper_testcase.iml" filepath="$PROJECT_DIR$/MVCHelper_TestCase/mvchelper_testcase.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MVCPullrefshHelper/mvcpullrefshhelper.iml" filepath="$PROJECT_DIR$/MVCPullrefshHelper/mvcpullrefshhelper.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MVCSwipeRefreshHelper/mvcswiperefreshhelper.iml" filepath="$PROJECT_DIR$/MVCSwipeRefreshHelper/mvcswiperefreshhelper.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MVCUltraHelper/mvcultrahelper.iml" filepath="$PROJECT_DIR$/MVCUltraHelper/mvcultrahelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvchelper_testcase/mvchelper_testcase.iml" filepath="$PROJECT_DIR$/mvchelper_testcase/mvchelper_testcase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvcpullrefshhelper/mvcpullrefshhelper.iml" filepath="$PROJECT_DIR$/mvcpullrefshhelper/mvcpullrefshhelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvcswiperefreshhelper/mvcswiperefreshhelper.iml" filepath="$PROJECT_DIR$/mvcswiperefreshhelper/mvcswiperefreshhelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvcultrahelper/mvcultrahelper.iml" filepath="$PROJECT_DIR$/mvcultrahelper/mvcultrahelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/pulltorefresh_library/pulltorefresh_library.iml" filepath="$PROJECT_DIR$/pulltorefresh_library/pulltorefresh_library.iml" />
     </modules>
   </component>

@@ -3,35 +3,8 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="LOCAL" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.10" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/MVCHelper_Library" />
-            <option value="$PROJECT_DIR$/MVCHelper_TestCase" />
-            <option value="$PROJECT_DIR$/MVCPullrefshHelper" />
-            <option value="$PROJECT_DIR$/MVCSwipeRefreshHelper" />
-            <option value="$PROJECT_DIR$/MVCUltraHelper" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/mvchelper_okhttp" />
-            <option value="$PROJECT_DIR$/pulltorefresh_library" />
-          </set>
-        </option>
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/MVCHelper_Library" />
-            <option value="$PROJECT_DIR$/MVCHelper_TestCase" />
-            <option value="$PROJECT_DIR$/MVCPullrefshHelper" />
-            <option value="$PROJECT_DIR$/MVCSwipeRefreshHelper" />
-            <option value="$PROJECT_DIR$/MVCUltraHelper" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/mvchelper_okhttp" />
-            <option value="$PROJECT_DIR$/pulltorefresh_library" />
-          </set>
-        </option>
       </GradleProjectSettings>
     </option>
   </component>

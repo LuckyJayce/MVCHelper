@@ -16,11 +16,10 @@ public interface ICacheConfig<DATA> {
     String getTaskKey(Object taskOrDataSource);
 
     /**
-     * <pre>
      * 是否有用的缓存的数据
      * 如果返回true，则task就不会被执行，直接返回缓存的data数据给ICallback,并调用onPostExecute Code.Success
      * 如果返回false,执行task
-     * </>
+     *
      * @param taskOrDataSource ITask，IDataSource，IAsyncTask，IDataSource，IAsyncDataSource 这四种类型
      * @param requestTime 请求的时间戳
      * @param saveTime 保存data请求的时间戳
