@@ -8,6 +8,7 @@ import com.shizhefei.task.ICallback;
  *
  */
 public abstract class SimpleCallback<DATA> implements ICallback<DATA> {
+
     @Override
     public void onPreExecute(Object task) {
 
