@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MVCHelper11.iml" filepath="$PROJECT_DIR$/MVCHelper11.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MVCHelper12.iml" filepath="$PROJECT_DIR$/MVCHelper12.iml" />
       <module fileurl="file://$PROJECT_DIR$/MVCHelper9.iml" filepath="$PROJECT_DIR$/MVCHelper9.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/MVCHelper_Library/mvchelper_library.iml" filepath="$PROJECT_DIR$/MVCHelper_Library/mvchelper_library.iml" />
