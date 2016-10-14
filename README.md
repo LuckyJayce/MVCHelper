@@ -99,6 +99,10 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 		}
 
 	}
+
+详细写法请看   
+https://github.com/LuckyJayce/MVCHelper/tree/master/app/src/main/java/com/shizhefei/test/models/datasource   
+里面有volley，okhttp，rxjava+retrofit等使用方法
 ## 2.View（IDataAdapter<DATA>） 视图，显示数据   
 **这里不是指Android的view，而是显示数据的概念和显示逻辑**  
           
