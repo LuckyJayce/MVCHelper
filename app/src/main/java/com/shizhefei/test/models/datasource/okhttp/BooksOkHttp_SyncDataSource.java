@@ -1,4 +1,4 @@
-package com.shizhefei.test.models.datasource;
+package com.shizhefei.test.models.datasource.okhttp;
 
 import com.shizhefei.mvc.IDataSource;
 import com.shizhefei.mvc.http.okhttp.GetMethod;

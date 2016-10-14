@@ -10,7 +10,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.shizhefei.mvc.RequestHandle;
 import com.shizhefei.mvc.ResponseSender;
 import com.shizhefei.task.IAsyncTask;
-import com.shizhefei.test.models.datasource.VolleyRequestHandle;
+import com.shizhefei.test.models.datasource.volley.VolleyRequestHandle;
 import com.shizhefei.test.models.enties.User;
 import com.shizhefei.test.models.exception.BizException;
 import com.shizhefei.utils.MyVolley;

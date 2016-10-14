@@ -1,6 +1,8 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="@android:style/Theme.Light.NoTitleBar"></style>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@android:color/background_dark</item>
+    </style>
 
     <style name="AppTheme" parent="AppBaseTheme"></style>
 

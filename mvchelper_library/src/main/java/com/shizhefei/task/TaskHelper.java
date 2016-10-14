@@ -87,6 +87,10 @@ public class TaskHelper<BASE_DATA> {
         return new TaskHandle(TaskHandle.TYPE_RUN, task, callBack, taskImp);
     }
 
+    public <DATA extends BASE_DATA, TASK extends IAsyncTask<DATA> & ICacheConfig<DATA>> void executeCache(TASK task, ICallback<DATA> callBack) {
+
+    }
+
     public <DATA extends BASE_DATA> TaskHandle executeCache(IDataSource<DATA> task, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
         TaskHandle requestHandle = checkTask(cacheConfig, task, callBack);
         if (requestHandle != null) {

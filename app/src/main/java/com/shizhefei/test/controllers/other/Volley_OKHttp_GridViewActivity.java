@@ -22,10 +22,7 @@ import android.view.View;
 
 import com.shizhefei.mvc.MVCHelper;
 import com.shizhefei.mvc.MVCSwipeRefreshHelper;
-import com.shizhefei.test.models.datasource.BooksOkHttpNormal_DataSource;
-import com.shizhefei.test.models.datasource.BooksOkHttp_AsyncDataSource;
-import com.shizhefei.test.models.datasource.BooksOkHttp_SyncDataSource;
-import com.shizhefei.test.models.datasource.BooksVolleyDataSource;
+import com.shizhefei.test.models.datasource.okhttp.BooksOkHttp_AsyncDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.view.adapters.BooksAdapter;
 import com.shizhefei.view.mvc.demo.R;
