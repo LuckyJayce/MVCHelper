@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/movie" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_movie_name_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="TextView"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/item_movie_time_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="时长：00:30"
+                android:textColor="#888"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/item_movie_updateTime_textView"
+        style="@style/text_normal"
+        android:padding="8dp"
+        android:text="更新时间:" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="right|center_vertical">
+
+
+        <TextView
+            android:id="@+id/item_movie_commentCount_textView"
+            style="@style/text_normal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:minWidth="80dp"
+            android:text="评论数:" />
+
+        <TextView
+            android:id="@+id/item_movie_playCount_textView"
+            style="@style/text_normal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:minWidth="100dp"
+            android:text="播放量:" />
+
+    </LinearLayout>
+</LinearLayout>
