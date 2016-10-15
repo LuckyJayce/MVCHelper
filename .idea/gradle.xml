@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="LOCAL" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.14.1" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/mvchelper_library" />
+            <option value="$PROJECT_DIR$/mvchelper_okhttp" />
+            <option value="$PROJECT_DIR$/mvchelper_testcase" />
+            <option value="$PROJECT_DIR$/mvcpullrefshhelper" />
+            <option value="$PROJECT_DIR$/mvcswiperefreshhelper" />
+            <option value="$PROJECT_DIR$/mvcultrahelper" />
+            <option value="$PROJECT_DIR$/pulltorefresh_library" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
