@@ -35,7 +35,7 @@ public class BooksVolleyDataSource implements IAsyncDataSource<List<Book>> {
 	}
 
 	private RequestHandle loadHomeGroup(final ResponseSender<List<Book>> sender, final int page) throws Exception {
-		String url = "http://www.baidu.com";
+		String url = "https://www.baidu.com";
 		Uri.Builder builder = Uri.parse(url).buildUpon();
 		builder.appendQueryParameter("page", String.valueOf(page));
 		StringRequest jsonObjRequest = new StringRequest(Request.Method.GET, builder.toString(), new Response.Listener<String>() {

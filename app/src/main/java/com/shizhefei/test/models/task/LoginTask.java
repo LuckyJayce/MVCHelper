@@ -21,7 +21,7 @@ public class LoginTask implements ITask<User>{
     @Override
     public User execute(ProgressSender progressSender) throws Exception {
         // 这里用百度首页模拟网络请求，如果网路出错的话，直接抛异常不会执行后面语句
-        HttpUtils.executeGet("http://www.baidu.com");
+        HttpUtils.executeGet("https://www.baidu.com");
         Thread.sleep(300);
         if (TextUtils.isEmpty(name)) {
             throw new BizException("请输入用户名");

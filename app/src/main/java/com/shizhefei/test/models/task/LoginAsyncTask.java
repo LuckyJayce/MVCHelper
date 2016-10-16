@@ -27,7 +27,7 @@ public class LoginAsyncTask implements IAsyncTask<User> {
 
     @Override
     public RequestHandle execute(final ResponseSender<User> sender) throws Exception {
-        String url = "http://www.baidu.com";
+        String url = "https://www.baidu.com";
         Uri.Builder builder = Uri.parse(url).buildUpon();
         builder.appendQueryParameter("userName", name);
         builder.appendQueryParameter("password", password);
@@ -38,11 +38,9 @@ public class LoginAsyncTask implements IAsyncTask<User> {
             public void onResponse(String response) {
                 if (TextUtils.isEmpty(name)) {
                     sender.sendError(new BizException("请输入用户名"));
-                }
-                if (TextUtils.isEmpty(password)) {
+                } else if (TextUtils.isEmpty(password)) {
                     sender.sendError(new BizException("请输入密码"));
-                }
-                if (name.equals("LuckyJayce") && password.equals("111")) {
+                } else if (name.equals("LuckyJayce") && password.equals("111")) {
                     sender.sendData(new User("1", "LuckyJayce", 23,
                             "中国人"));
                 } else {
