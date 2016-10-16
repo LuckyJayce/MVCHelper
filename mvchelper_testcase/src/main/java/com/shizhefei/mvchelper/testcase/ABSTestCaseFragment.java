@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,8 +45,8 @@ import com.shizhefei.task.Code;
 import com.shizhefei.task.IAsyncTask;
 import com.shizhefei.task.ICallback;
 import com.shizhefei.task.ITask;
-import com.shizhefei.task.imp.SimpleCallback;
 import com.shizhefei.task.TaskHelper;
+import com.shizhefei.task.imp.SimpleCallback;
 import com.shizhefei.utils.ArrayListMap;
 
 import java.io.PrintWriter;
@@ -497,6 +498,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
         private int index = 0;
         private TestCaseData data;
         private boolean exeNext;
+        private long startTime;
 
         public MyCallBack(int index, TestCaseData data, boolean exeNext) {
             this.index = index;
@@ -520,6 +522,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
             data.result = "";
             tasksAdapter.notifyDataSetChanged();
             updateRight();
+            startTime = SystemClock.uptimeMillis();
         }
 
         @Override
@@ -529,6 +532,8 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
         @Override
         public void onPostExecute(Object task, Code code, Exception exception, Object success) {
+            long time = SystemClock.uptimeMillis() - startTime;
+            String ttt = "执行耗时：" + time + "毫秒 \n\n" + data.result;
             switch (code) {
                 case SUCCESS:
                     data.status = 2;
@@ -544,6 +549,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
                     }
                     break;
             }
+            data.result = ttt+data.result;
             tasksAdapter.notifyDataSetChanged();
             updateRight();
             if (code != Code.CANCEL) {

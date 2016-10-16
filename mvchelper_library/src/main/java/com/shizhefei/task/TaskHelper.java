@@ -16,6 +16,7 @@ import com.shizhefei.mvc.data.Data2;
 import com.shizhefei.task.imp.MemoryCacheStore;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -235,7 +236,11 @@ public class TaskHelper<BASE_DATA> {
     }
 
     public void cancelAll() {
-        for (TaskImp entry : taskImps) {
+        if (taskImps.isEmpty()) {
+            return;
+        }
+        HashSet<TaskImp> temp = new HashSet<>(taskImps);
+        for (TaskImp entry : temp) {
             entry.cancle();
         }
         taskImps.clear();
