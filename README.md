@@ -4,6 +4,9 @@
 
 Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/releases/download/1.0.7/LuckyJayce_MVCHelper_1.0.7.zip)  
 Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
+  
+###历史版本和更新信息  
+https://github.com/LuckyJayce/MVCHelper/releases
 
 # Gradle导入 #
 ## 1.必须导入： ##
