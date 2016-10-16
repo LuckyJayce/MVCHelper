@@ -239,6 +239,8 @@ public class TaskHelper<BASE_DATA> {
         if (taskImps.isEmpty()) {
             return;
         }
+        //这里创建一个临时的map，主要原因是Set循环的时候不能remove操作，否则会报ConcurrentModificationException
+        //TaskImp里面会调用到Set的remove
         HashSet<TaskImp> temp = new HashSet<>(taskImps);
         for (TaskImp entry : temp) {
             entry.cancle();

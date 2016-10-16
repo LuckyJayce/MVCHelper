@@ -2,14 +2,14 @@
 
 ###TaskHelper主要用于执行多个任务，通过回调ICallback更新UI
 
-Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/releases/download/1.0.2/LuckyJayce_MVCHelper_1.0.2.zip)  
+Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/releases/download/1.0.7/LuckyJayce_MVCHelper_1.0.7.zip)  
 Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
 # Gradle导入 #
 ## 1.必须导入： ##
 	
 	//MVCHelper核心类库
-	compile 'com.shizhefei:MVCHelper-Library:1.0.6'
+	compile 'com.shizhefei:MVCHelper-Library:1.0.7'
 	//里面有使用recyclerview，所以需要导入recyclerview
     compile 'com.android.support:recyclerview-v7:24.0.0'
 
@@ -17,35 +17,35 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 <1>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入
 	
 	//里面包含一个MVCPullrefshHelper 是适配这个控件的 MVCHelper
-    compile 'com.shizhefei:MVCHelper-Pullrefresh:1.0.6'
+    compile 'com.shizhefei:MVCHelper-Pullrefresh:1.0.7'
 	//由于没有找到gradle排至，我自己把它上传到jcenter上
     compile 'com.shizhefei:pulltorefresh:1.0.1'
 
 <2>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh 的刷新控件导入 
 
     //里面包含一个MVCUltraHelper 是适配这个控件的 MVCHelper
-	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.6'
+	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.7'
 	//这里6月29号目前最新的，要实时关注新版本去秋大的网站上去看
     compile 'in.srain.cube:ultra-ptr:1.0.11'
 
 <3>  使用android v4的SwipeRefreshLayout的作为刷新控件导入  
 
 	//里面包含一个MVCSwipeRefreshHelper 是适配这个控件的 MVCHelper
-    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.6'
+    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.7'
 	//v4包应该都有导入吧，v7包里面包含v4包
 	compile 'com.android.support:support-v4:24.0.0'
 
 <4> 测试用例，可以方便的查看MVCHelper，Task的运行情况和返回数据，还提供了修改接口字段，用于接口测试很方便哦
 
 	//MVCHelper的测试用例，继承ABSTestCaseFragment实现List<TestCaseData> getTestCaseDatas()方法
-	compile 'com.shizhefei:MVCHelper-TestCase:1.0.6'
+	compile 'com.shizhefei:MVCHelper-TestCase:1.0.7'
 	//里面用到了gson
 	compile 'com.google.code.gson:gson:2.2.4'
 	
 <5> MVCHelper-OkHttp 对OKHttp的简单封装
 
 	//MVCHelper的 OKHttp的简单封装
-	compile 'com.shizhefei:MVCHelper-OkHttp:1.0.6'
+	compile 'com.shizhefei:MVCHelper-OkHttp:1.0.7'
 	//里面用到了okhttp3
 	compile 'com.squareup.okhttp3:okhttp:3.4.0'
 	compile 'com.squareup.okio:okio:1.9.0'
