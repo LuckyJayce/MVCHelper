@@ -1,6 +1,9 @@
 ###MVCHelper主要用于下拉刷新加载，失败，加载，空数据，成功的界面切换。
 
-###TaskHelper主要用于执行动作然后回调
+###TaskHelper主要用于执行多个任务，通过回调ICallback更新UI
+
+Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/releases/download/1.0.2/LuckyJayce_MVCHelper_1.0.2.zip)  
+Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
 # Gradle导入 #
 ## 1.必须导入： ##
@@ -50,8 +53,6 @@
 
 #一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
-Download Library [JAR](https://github.com/LuckyJayce/MVCHelper/releases/download/1.0.2/LuckyJayce_MVCHelper_1.0.2.zip)  
-Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
 
 ## 1.Model (IDataSource<DATA>)数据源，加载数据  
    **同步请求实现IDataSource，异步请求（okhttp,volley）实现IAsyncDataSource**  
@@ -267,9 +268,8 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		mvcHelper.refresh();
 5.如果使用其他刷新框架的话可以继承MVCHelper自定义一个
 
-## 6.不再局限于ListView的MVC
-可以任意的View作为刷新的内容，并且提供相同的MVC架构操作  
-果断支持RecyclerView的加载更多  
+## 6.任何View的MVC
+可以任意的View作为刷新的内容，并且提供相同的MVC架构操作    
 	
 	/***
 	 * 测试下拉组件的非列表界面
@@ -359,7 +359,8 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 	
 	}
 
-#二、 TaskHelper
+#二、 TaskHelper  
+主要用于执行多个任务，通过回调ICallback更新UI
 ## 1.Model (ITask<DATA>, IAsyncTask<DATA>)
 
   **同步请求实现Task，异步请求（okhttp,volley）实现IAsyncTask**  
@@ -526,9 +527,11 @@ Activity负责调度，代码如下
 	        android.permission.ACCESS_NETWORK_STATE  
         2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
 ## 类图  
+  大图：https://raw.githubusercontent.com/LuckyJayce/MVCHelper/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png  
+  
    ![image](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png)  
      
-   大图：https://raw.githubusercontent.com/LuckyJayce/MVCHelper/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png
+ 
 
 ## 三、说明
 
