@@ -52,7 +52,12 @@ https://github.com/LuckyJayce/MVCHelper/releases
 	//里面用到了okhttp3
 	compile 'com.squareup.okhttp3:okhttp:3.4.0'
 	compile 'com.squareup.okio:okio:1.9.0'
-  
+
+## 结构   
+![image](raw/MVC.png)  
+ 这里V和M是没有联系的，或许可以理解为是MVP结构吧.  
+###类图：  
+   https://raw.githubusercontent.com/LuckyJayce/MVCHelper/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png  
 
 #一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
@@ -529,10 +534,6 @@ Activity负责调度，代码如下
 	        android.permission.INTERNET  
 	        android.permission.ACCESS_NETWORK_STATE  
         2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
-## 类图  
-  大图：https://raw.githubusercontent.com/LuckyJayce/MVCHelper/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png  
-  
-   ![image](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png)  
      
  
 
