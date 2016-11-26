@@ -161,21 +161,22 @@ public class MVCHelper<DATA> {
     /**
      * 设置适配器，用于显示数据
      *
-     * @param adapter
+     * @param adapter 适配器
      */
     public void setAdapter(IDataAdapter<DATA> adapter) {
-        View view = getContentView();
-        hasInitLoadMoreView = false;
-        if (view instanceof ListView) {
-            hasInitLoadMoreView = listViewHandler.handleSetAdapter(view, adapter, mLoadMoreView, onClickLoadMoreListener);
-            listViewHandler.setOnScrollBottomListener(view, onScrollBottomListener);
-        } else if (view instanceof RecyclerView) {
-            hasInitLoadMoreView = recyclerViewHandler.handleSetAdapter(view, adapter, mLoadMoreView, onClickLoadMoreListener);
-            recyclerViewHandler.setOnScrollBottomListener(view, onScrollBottomListener);
+        if (contentView instanceof ListView) {
+            setAdapter(adapter, listViewHandler);
+        } else if (contentView instanceof RecyclerView) {
+            setAdapter(adapter, recyclerViewHandler);
         }
-        this.dataAdapter = adapter;
     }
 
+    /**
+     * 设置适配器，用于显示数据
+     *
+     * @param adapter 适配器
+     * @param viewHandler 用于处理contentView的添加滚动末尾加载更多，添加底部加载更多布局等操作
+     */
     public void setAdapter(IDataAdapter<DATA> adapter, ViewHandler viewHandler) {
         hasInitLoadMoreView = false;
         if (viewHandler != null) {

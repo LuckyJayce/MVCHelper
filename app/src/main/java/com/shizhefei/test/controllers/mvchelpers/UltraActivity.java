@@ -52,9 +52,9 @@ public class UltraActivity extends Activity {
 		 * 配置PtrClassicFrameLayout的刷新样式
 		 */
 		PtrClassicFrameLayout mPtrFrameLayout = (PtrClassicFrameLayout) findViewById(R.id.rotate_header_list_view_frame);
-		final MaterialHeader header = new MaterialHeader(getApplicationContext());
+		final MaterialHeader header = new MaterialHeader(this);
 		header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-		header.setPadding(0, dipToPix(getApplicationContext(), 15), 0, dipToPix(getApplicationContext(), 10));
+		header.setPadding(0, dipToPix(this, 15), 0, dipToPix(this, 10));
 		header.setPtrFrameLayout(mPtrFrameLayout);
 		mPtrFrameLayout.setLoadingMinTime(800);
 		mPtrFrameLayout.setDurationToCloseHeader(800);

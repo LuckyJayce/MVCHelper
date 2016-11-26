@@ -3,7 +3,6 @@ package com.shizhefei.mvc.viewhandler;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +27,7 @@ public class RecyclerViewHandler implements ViewHandler {
             if (adapter instanceof HFAdapter) {
                 hfAdapter = (HFAdapter) adapter;
             } else {
-                hfAdapter = new HFRecyclerAdapter(adapter2);
+                hfAdapter = new HFRecyclerAdapter(adapter2,false);
             }
             adapter2 = hfAdapter;
             loadMoreView.init(new RecyclerViewFootViewAdder(recyclerView, hfAdapter), onClickLoadMoreListener);

@@ -15,10 +15,6 @@ limitations under the License.
  */
 package com.shizhefei.test.controllers.other;
 
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +27,10 @@ import com.shizhefei.test.models.datasource.BooksDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.view.adapters.ReBooksAdapter;
 import com.shizhefei.view.mvc.demo.R;
+
+import java.util.List;
+
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /***
  * 测试下拉组件的简单的列表界面，MVCUltraHelper，RecyclerView
@@ -49,7 +49,7 @@ public class UltraRecyclerViewActivity extends Activity {
 		PtrClassicFrameLayout mPtrFrameLayout = (PtrClassicFrameLayout) findViewById(R.id.rotate_header_list_view_frame);
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-		recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		mvcHelper = new MVCUltraHelper<List<Book>>(mPtrFrameLayout);
 		// 设置数据源

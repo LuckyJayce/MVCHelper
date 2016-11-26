@@ -15,19 +15,21 @@
  */
 package com.shizhefei.test.view.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shizhefei.mvc.IDataAdapter;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.view.mvc.demo.R;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReBooksAdapter extends RecyclerView.Adapter<ViewHolder> implements IDataAdapter<List<Book>> {
 	private LayoutInflater inflater;
@@ -45,9 +47,16 @@ public class ReBooksAdapter extends RecyclerView.Adapter<ViewHolder> implements 
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
+	public void onBindViewHolder(ViewHolder holder, final int position) {
 		TextView textView = (TextView) holder.itemView;
 		textView.setText(books.get(position).getName());
+
+		textView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(v.getContext(),"p:"+position,Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override

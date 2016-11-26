@@ -59,7 +59,7 @@ public class ListTaskActivity extends Activity {
         PtrClassicFrameLayout mPtrFrameLayout = (PtrClassicFrameLayout) findViewById(R.id.rotate_header_list_view_frame);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         taskHelper = new TaskHelper<>(new MemoryCacheStore(200));
         //注册全局的task执行回调

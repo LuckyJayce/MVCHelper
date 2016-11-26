@@ -18,7 +18,6 @@ package com.shizhefei.test.view;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +37,7 @@ public class MyLoadViewFactory implements ILoadViewFactory {
 		return new LoadViewHelper();
 	}
 
-	private class LoadMoreHelper implements ILoadMoreView {
+	private static class LoadMoreHelper implements ILoadMoreView {
 
 		protected TextView footView;
 
@@ -77,14 +76,14 @@ public class MyLoadViewFactory implements ILoadViewFactory {
 
 	}
 
-	private class LoadViewHelper implements ILoadView {
+	private static class LoadViewHelper implements ILoadView {
 		private VaryViewHelper helper;
 		private OnClickListener onClickRefreshListener;
 		private Context context;
 
 		@Override
 		public void init(View switchView, OnClickListener onClickRefreshListener) {
-			this.context = switchView.getContext().getApplicationContext();
+			this.context = switchView.getContext();
 			this.onClickRefreshListener = onClickRefreshListener;
 			helper = new VaryViewHelper(switchView);
 		}

@@ -25,6 +25,15 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
 
     private List<View> mHeaders = new ArrayList<View>();
     private List<View> mFooters = new ArrayList<View>();
+    private boolean needSetClickListener = true;
+
+    public HFAdapter() {
+        this(true);
+    }
+
+    public HFAdapter(boolean needSetClickListener) {
+        this.needSetClickListener = needSetClickListener;
+    }
 
     private int mManagerType;
 
@@ -112,11 +121,18 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
             // add our view to a footer view and display it
             prepareHeaderFooter((HeaderFooterViewHolder) vh, v);
         } else {
-            vh.itemView.setOnClickListener(new MyOnClickListener(vh));
-            vh.itemView.setOnLongClickListener(new MyOnLongClickListener(vh));
+            if (needSetClickListener) {
+                vh.itemView.setOnClickListener(new MyOnClickListener(vh));
+                vh.itemView.setOnLongClickListener(new MyOnLongClickListener(vh));
+            }
             // it's one of our items, display as required
             onBindViewHolderHF(vh, getRealPosition(position));
         }
+    }
+
+    @Override
+    public final void onBindViewHolder(ViewHolder holder, int position, List payloads) {
+        super.onBindViewHolder(holder, position, payloads);
     }
 
     public int getRealPosition(int position) {

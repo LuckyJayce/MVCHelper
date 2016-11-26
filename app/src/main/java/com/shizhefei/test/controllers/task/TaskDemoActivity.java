@@ -63,6 +63,8 @@ public class TaskDemoActivity extends Activity {
                 result2TextView.append("\n");
                 if (code == Code.SUCCESS) {
                     result2TextView.append(new Gson().toJson(data));
+                } else if (code == Code.EXCEPTION) {
+                    result2TextView.append(exception.getMessage());
                 }
             }
         });
@@ -115,6 +117,8 @@ public class TaskDemoActivity extends Activity {
                         resultTextView.append("\n");
                         if (code == Code.SUCCESS) {
                             resultTextView.append(new Gson().toJson(books));
+                        } else if (code == Code.EXCEPTION) {
+                            resultTextView.append(exception.getMessage());
                         }
                     }
                 });
@@ -133,6 +137,8 @@ public class TaskDemoActivity extends Activity {
                         resultTextView.append("\n");
                         if (code == Code.SUCCESS) {
                             resultTextView.append(new Gson().toJson(books));
+                        } else if (code == Code.EXCEPTION) {
+                            resultTextView.append(exception.getMessage());
                         }
                     }
                 });
@@ -151,6 +157,8 @@ public class TaskDemoActivity extends Activity {
                         resultTextView.append("\n");
                         if (code == Code.SUCCESS) {
                             resultTextView.append(new Gson().toJson(user));
+                        } else if (code == Code.EXCEPTION) {
+                            resultTextView.append(exception.getMessage());
                         }
                     }
                 });
@@ -169,6 +177,8 @@ public class TaskDemoActivity extends Activity {
                         resultTextView.append("\n");
                         if (code == Code.SUCCESS) {
                             resultTextView.append(new Gson().toJson(user));
+                        } else if (code == Code.EXCEPTION) {
+                            resultTextView.append(exception.getMessage());
                         }
                     }
                 });
