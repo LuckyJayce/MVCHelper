@@ -18,35 +18,43 @@ https://github.com/LuckyJayce/MVCHelper/releases
     compile 'com.android.support:recyclerview-v7:24.0.0'
 
 ## 2.可选：   ##
-<1>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入
+<1>  使用 https://github.com/LuckyJayce/CoolRefreshView 的刷新控件导入  
+ 支持任意View的刷新 ，支持自定义Header，支持NestedScrollingParent,NestedScrollingChild的事件分发，嵌套ViewPager不会有事件冲突
+	
+	//里面包含一个MVCCoolHelper 是适配这个控件的 MVCHelper
+    compile 'com.shizhefei:MVCHelper-CoolRefresh:1.0.8'
+    compile 'com.shizhefei:CoolRefreshView:1.0.0'
+    compile 'com.android.support:support-v4:24.0.0'
+
+<2>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入
 	
 	//里面包含一个MVCPullrefshHelper 是适配这个控件的 MVCHelper
     compile 'com.shizhefei:MVCHelper-Pullrefresh:1.0.8'
 	//由于没有找到gradle排至，我自己把它上传到jcenter上
     compile 'com.shizhefei:pulltorefresh:1.0.1'
 
-<2>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh 的刷新控件导入 
+<3>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh 的刷新控件导入 
 
     //里面包含一个MVCUltraHelper 是适配这个控件的 MVCHelper
 	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.8'
 	//这里6月29号目前最新的，要实时关注新版本去秋大的网站上去看
     compile 'in.srain.cube:ultra-ptr:1.0.11'
 
-<3>  使用android v4的SwipeRefreshLayout的作为刷新控件导入  
+<4>  使用android v4的SwipeRefreshLayout的作为刷新控件导入  
 
 	//里面包含一个MVCSwipeRefreshHelper 是适配这个控件的 MVCHelper
     compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.8'
 	//v4包应该都有导入吧，v7包里面包含v4包
 	compile 'com.android.support:support-v4:24.0.0'
 
-<4> 测试用例，可以方便的查看MVCHelper，Task的运行情况和返回数据，还提供了修改接口字段，用于接口测试很方便哦
+<5> 测试用例，可以方便的查看MVCHelper，Task的运行情况和返回数据，还提供了修改接口字段，用于接口测试很方便哦
 
 	//MVCHelper的测试用例，继承ABSTestCaseFragment实现List<TestCaseData> getTestCaseDatas()方法
 	compile 'com.shizhefei:MVCHelper-TestCase:1.0.8'
 	//里面用到了gson
 	compile 'com.google.code.gson:gson:2.2.4'
 	
-<5> MVCHelper-OkHttp 对OKHttp的简单封装
+<6> MVCHelper-OkHttp 对OKHttp的简单封装
 
 	//MVCHelper的 OKHttp的简单封装
 	compile 'com.shizhefei:MVCHelper-OkHttp:1.0.8'
@@ -380,8 +388,20 @@ Activity负责调度，代码如下
 MVCHelper.setLoadViewFractory(new LoadViewFractory());  
 就这样，就会显示你自定义的布局
 
-## 5.你可以自由的切换主流刷新类库 
-1.用android-support-v4.jar 的SwipeRefreshLayout作为刷新框架（**MVCSwipeRefreshHelper）** 
+## 5.你可以自由的切换刷新类库 
+1.用CoolRefreshView 作为刷新框架（**MVCCoolHelper）** 
+
+		CoolRefreshView coolRefreshView = (CoolRefreshView) findViewById(R.id.coolRefreshView);
+		MVCHelper<List<Book>> mvcHelper = new MVCCoolHelper<List<Book>>(coolRefreshView);
+
+		// 设置数据源
+		mvcHelper.setDataSource(new BooksDataSource());
+		// 设置适配器
+		mvcHelper.setAdapter(new BooksAdapter(this));
+
+		// 加载数据
+		mvcHelper.refresh();
+2.用android-support-v4.jar 的SwipeRefreshLayout作为刷新框架（**MVCSwipeRefreshHelper）** 
 
 		SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 		MVCHelper<List<Book>> mvcHelper = new MVCSwipeRefreshHelper<List<Book>>(swipeRefreshLayout);
@@ -394,7 +414,7 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		// 加载数据
 		mvcHelper.refresh();
 
-2.用Android-PullToRefresh-Library作为刷新框架**（MVCPullrefshHelper）**  
+3.用Android-PullToRefresh-Library作为刷新框架**（MVCPullrefshHelper）**  
   地址：https://github.com/chrisbanes/Android-PullToRefresh
 
 		PullToRefreshListView refreshListView = (PullToRefreshListView) findViewById(R.id.pullToRefreshListView);
@@ -407,7 +427,7 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 
 		// 加载数据
 		mvcHelper.refresh();
-3.用android-Ultra-Pull-To-Refresh-library作为刷新框架**（MVCUltraHelper）**  
+4.用android-Ultra-Pull-To-Refresh-library作为刷新框架**（MVCUltraHelper）**  
   地址：https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh
 
 		PtrClassicFrameLayout mPtrFrameLayout = (PtrClassicFrameLayout) findViewById(R.id.rotate_header_list_view_frame);
@@ -421,7 +441,7 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 		// 加载数据
 		mvcHelper.refresh();
 
-4.不使用刷新框架（**MVCNormalHelper**）
+5.不使用刷新框架（**MVCNormalHelper**）
 
 		View contentLayout = findViewById(R.id.content_layout);
 		MVCHelper<Book> mvcHelper= new MVCNormalHelper<Book>(contentLayout);
@@ -433,7 +453,7 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 
 		// 加载数据
 		mvcHelper.refresh();
-5.如果使用其他刷新框架的话可以继承MVCHelper自定义一个
+6.如果使用其他刷新框架的话可以继承MVCHelper自定义一个
 
 ## 6.任何View的MVC
 可以任意的View作为刷新的内容，并且提供相同的MVC架构操作    
@@ -698,20 +718,22 @@ Activity负责调度，代码如下
 
 ## 三、说明
 
-以下三个是目前支持的下拉刷新的第三方开源类库  
+**以下是目前支持的下拉刷新的开源类库**   
+CoolRefreshView   
 Android-PullToRefresh-Library  
 android-Ultra-Pull-To-Refresh-library  
 android-support-v4.jar  
   
-以下三个是对应刷新类库的MVCHelper  
+**以下是对应刷新类库的MVCHelper**   
+MVCCoolHelper  
 MVCPullrefshHelper  
 MVCUltraHelper  
 MVCSwipeRefreshHelper  
 
-核心代码  
+**核心代码**  
 MVCHelper_Library
 
-示例代码   
+**示例代码**   
 MVCHelper_Demo  
 
 ##主力类库##
@@ -736,6 +758,10 @@ Indicator 取代 tabhost，实现网易顶部tab，新浪微博主页底部tab�
 
 **7.https://github.com/LuckyJayce/HVScrollView**  
 可以双向滚动的ScrollView，支持嵌套ScrollView联级滑动，支持设置支持的滚动方向
+
+**8.https://github.com/LuckyJayce/CoolRefreshView**   
+下拉刷新RefreshView，支持任意View的刷新 ，支持自定义Header，支持NestedScrollingParent,NestedScrollingChild的事件分发，嵌套ViewPager不会有事件冲突
+
 
 有了这些类库，让你6的飞起
 
