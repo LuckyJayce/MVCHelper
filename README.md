@@ -396,7 +396,8 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 就这样，就会显示你自定义的布局
 
 ## 5.你可以自由的切换刷新类库 
-1.用CoolRefreshView 作为刷新框架（**MVCCoolHelper）** 
+1.用CoolRefreshView 作为刷新框架（**MVCCoolHelper）**   
+地址：https://github.com/LuckyJayce/CoolRefreshView  
 
 		CoolRefreshView coolRefreshView = (CoolRefreshView) findViewById(R.id.coolRefreshView);
 		MVCHelper<List<Book>> mvcHelper = new MVCCoolHelper<List<Book>>(coolRefreshView);
