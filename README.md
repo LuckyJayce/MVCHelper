@@ -65,8 +65,15 @@ https://github.com/LuckyJayce/MVCHelper/releases
 ## 结构   
 ![image](raw/MVC.png)  
  这里V和M是没有联系的，或许可以理解为是MVP结构吧.  
+ 
 ###类图：  
-   https://raw.githubusercontent.com/LuckyJayce/MVCHelper/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png  
+    https://raw.githubusercontent.com/LuckyJayce/MVCHelper/master/raw/MVCHelper%E7%B1%BB%E5%9B%BE.png  
+ 
+###效果图：   
+![image](raw/mvchelper.gif)  
+ 
+
+   
 
 #一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
