@@ -26,6 +26,7 @@ import com.shizhefei.task.ICallback;
 import com.shizhefei.task.TaskHandle;
 import com.shizhefei.task.TaskHelper;
 import com.shizhefei.task.imp.MemoryCacheStore;
+import com.shizhefei.test.controllers.mvchelpers.CoolActivity;
 import com.shizhefei.test.controllers.mvchelpers.NormalActivity;
 import com.shizhefei.test.controllers.mvchelpers.PullrefshActivity;
 import com.shizhefei.test.controllers.mvchelpers.SwipeRefreshActivity;
@@ -84,6 +85,15 @@ public class MainActivity extends Activity {
      */
     public void onClickTestCase(View view) {
         ProxyActivity.startActivity(this, TestCaseFragment.class, "测试用例");
+    }
+
+    /**
+     * MVCPullrefshHelper的Demo
+     *
+     * @param view
+     */
+    public void onClickDemo10(View view) {
+        startActivity(new Intent(getApplicationContext(), CoolActivity.class));
     }
 
     /**

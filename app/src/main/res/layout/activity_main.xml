@@ -35,6 +35,13 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:onClick="onClickDemo10"
+                android:text="进入MVCCoolHelper的Demo" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:onClick="onClickDemo"
                 android:text="进入MVCPullrefshHelper的Demo" />
