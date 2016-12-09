@@ -25,7 +25,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided 'com.shizhefei:CoolRefreshView:1.0.0'
+    provided 'com.shizhefei:CoolRefreshView:1.0.1'
     provided 'com.android.support:support-v4:23.4.0'
     compile project(':mvchelper_library')
 }
