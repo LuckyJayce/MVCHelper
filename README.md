@@ -23,7 +23,7 @@ https://github.com/LuckyJayce/MVCHelper/releases
 	
 	//里面包含一个MVCCoolHelper 是适配这个控件的 MVCHelper
     compile 'com.shizhefei:MVCHelper-CoolRefresh:1.0.8'
-    compile 'com.shizhefei:CoolRefreshView:1.0.0'
+    compile 'com.shizhefei:CoolRefreshView:1.0.1'
     compile 'com.android.support:support-v4:24.0.0'
 
 <2>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入

@@ -36,7 +36,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'io.reactivex:rxandroid:1.0.0'
     compile 'com.shizhefei:ViewPagerIndicator:1.1.4'
-    compile 'com.shizhefei:CoolRefreshView:1.0.0'
+    compile 'com.shizhefei:CoolRefreshView:1.0.1'
     //    compile 'com.shizhefei:MVCHelper-Library:1.0.3'
     //    compile 'com.shizhefei:MVCHelper-Pullrefreh:1.0.2'
     //    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.2'
