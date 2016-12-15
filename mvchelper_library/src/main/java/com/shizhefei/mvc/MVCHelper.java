@@ -168,13 +168,15 @@ public class MVCHelper<DATA> {
             setAdapter(adapter, listViewHandler);
         } else if (contentView instanceof RecyclerView) {
             setAdapter(adapter, recyclerViewHandler);
+        } else {
+            setAdapter(adapter, null);
         }
     }
 
     /**
      * 设置适配器，用于显示数据
      *
-     * @param adapter 适配器
+     * @param adapter     适配器
      * @param viewHandler 用于处理contentView的添加滚动末尾加载更多，添加底部加载更多布局等操作
      */
     public void setAdapter(IDataAdapter<DATA> adapter, ViewHandler viewHandler) {
