@@ -399,15 +399,18 @@ public class MVCHelper<DATA> {
                     tDataAdapter.notifyDataChanged(data, true);
                 }
             }
+            if (tDataAdapter.isEmpty()) {
+                mLoadView.showLoading();
+            }else{
+                mLoadView.restore();
+            }
             handler.post(showRefreshing = new Runnable() {
 
                 @Override
                 public void run() {
                     if (tDataAdapter.isEmpty()) {
-                        mLoadView.showLoading();
                         refreshView.showRefreshComplete();
                     } else {
-                        mLoadView.restore();
                         refreshView.showRefreshing();
                     }
                 }
@@ -483,15 +486,18 @@ public class MVCHelper<DATA> {
                     tDataAdapter.notifyDataChanged(data, true);
                 }
             }
+            if (tDataAdapter.isEmpty()) {
+                mLoadView.showLoading();
+            }else{
+                mLoadView.restore();
+            }
             handler.post(showRefreshing = new Runnable() {
 
                 @Override
                 public void run() {
                     if (tDataAdapter.isEmpty()) {
-                        mLoadView.showLoading();
                         refreshView.showRefreshComplete();
                     } else {
-                        mLoadView.restore();
                         refreshView.showRefreshing();
                     }
                 }
