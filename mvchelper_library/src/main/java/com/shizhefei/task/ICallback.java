@@ -9,7 +9,7 @@ public interface ICallback<DATA> {
     /**
      * 执行task之前的回调
      */
-    public void onPreExecute(Object task);
+   void onPreExecute(Object task);
 
     /**
      * 进度更新回调
@@ -19,7 +19,7 @@ public interface ICallback<DATA> {
      * @param total
      * @param extraData
      */
-    public void onProgress(Object task, int percent, long current, long total, Object extraData);
+   void onProgress(Object task, int percent, long current, long total, Object extraData);
 
     /**
      * 执行完成的回调
@@ -29,5 +29,5 @@ public interface ICallback<DATA> {
      * @param exception
      * @param data
      */
-    public void onPostExecute(Object task, Code code, Exception exception, DATA data);
+   void onPostExecute(Object task, Code code, Exception exception, DATA data);
 }

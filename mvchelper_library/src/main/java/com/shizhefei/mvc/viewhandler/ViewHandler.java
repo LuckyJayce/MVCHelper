@@ -17,8 +17,8 @@ public interface ViewHandler {
 	 * @param onClickLoadMoreListener
      * @return 是否有 init ILoadMoreView
      */
-	public boolean handleSetAdapter(View contentView, IDataAdapter<?> adapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener);
+	boolean handleSetAdapter(View contentView, IDataAdapter<?> adapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener);
 
-	public void setOnScrollBottomListener(View contentView, OnScrollBottomListener onScrollBottomListener);
+	void setOnScrollBottomListener(View contentView, OnScrollBottomListener onScrollBottomListener);
 
 }

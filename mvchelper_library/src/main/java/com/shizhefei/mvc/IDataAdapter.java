@@ -22,10 +22,10 @@ package com.shizhefei.mvc;
  */
 public interface IDataAdapter<DATA> {
 
-	public abstract void notifyDataChanged(DATA data, boolean isRefresh);
+	void notifyDataChanged(DATA data, boolean isRefresh);
 
-	public abstract DATA getData();
+	DATA getData();
 
-	public boolean isEmpty();
+	boolean isEmpty();
 
 }

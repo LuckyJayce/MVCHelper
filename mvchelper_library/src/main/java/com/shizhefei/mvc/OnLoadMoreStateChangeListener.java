@@ -24,8 +24,8 @@ package com.shizhefei.mvc;
  */
 public interface OnLoadMoreStateChangeListener<DATA> {
 
-	public void onStartLoadMore(IDataAdapter<DATA> adapter);
+	void onStartLoadMore(IDataAdapter<DATA> adapter);
 
-	public void onEndLoadMore(IDataAdapter<DATA> adapter, DATA result);
+	void onEndLoadMore(IDataAdapter<DATA> adapter, DATA result);
 
 }

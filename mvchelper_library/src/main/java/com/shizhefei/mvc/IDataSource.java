@@ -17,32 +17,31 @@ package com.shizhefei.mvc;
 
 /**
  * 数据源
- * 
- * @author LuckyJayce
  *
  * @param <DATA>
+ * @author LuckyJayce
  */
 public interface IDataSource<DATA> {
-	/**
-	 * 获取刷新的数据
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public DATA refresh() throws Exception;
+    /**
+     * 获取刷新的数据
+     *
+     * @return
+     * @throws Exception
+     */
+    DATA refresh() throws Exception;
 
-	/**
-	 * 获取加载更多的数据
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public DATA loadMore() throws Exception;
+    /**
+     * 获取加载更多的数据
+     *
+     * @return
+     * @throws Exception
+     */
+    DATA loadMore() throws Exception;
 
-	/**
-	 * 是否还可以继续加载更多
-	 * 
-	 * @return
-	 */
-	public boolean hasMore();
+    /**
+     * 是否还可以继续加载更多
+     *
+     * @return
+     */
+    boolean hasMore();
 }

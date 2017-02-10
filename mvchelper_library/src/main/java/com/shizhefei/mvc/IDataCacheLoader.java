@@ -34,6 +34,6 @@ public interface IDataCacheLoader<DATA> {
 	 * @return 加载的数据，返回后会执行adapter.notifyDataChanged(data, true)<br>
 	 *         相当于refresh执行后adapter.notifyDataChanged(data, true)
 	 */
-	public DATA loadCache(boolean isEmpty);
+	DATA loadCache(boolean isEmpty);
 
 }

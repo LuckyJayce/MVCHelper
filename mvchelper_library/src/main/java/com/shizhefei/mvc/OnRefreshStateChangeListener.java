@@ -24,8 +24,8 @@ package com.shizhefei.mvc;
  */
 public interface OnRefreshStateChangeListener<DATA> {
 
-	public void onStartRefresh(IDataAdapter<DATA> adapter);
+	void onStartRefresh(IDataAdapter<DATA> adapter);
 
-	public void onEndRefresh(IDataAdapter<DATA> adapter, DATA result);
+	void onEndRefresh(IDataAdapter<DATA> adapter, DATA result);
 	
 }

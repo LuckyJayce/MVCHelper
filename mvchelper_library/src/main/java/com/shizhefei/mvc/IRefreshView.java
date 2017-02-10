@@ -24,31 +24,31 @@ public interface IRefreshView {
 	 * 
 	 * @return
 	 */
-	public View getContentView();
+	View getContentView();
 
 	/**
 	 * 通过替换这个View实现切换失败，成功，无数据布局
 	 * 
 	 * @return
 	 */
-	public View getSwitchView();
+	View getSwitchView();
 
 	/**
 	 * 设置刷新事件
 	 * 
 	 * @param onRefreshListener
 	 */
-	public void setOnRefreshListener(OnRefreshListener onRefreshListener);
+	void setOnRefreshListener(OnRefreshListener onRefreshListener);
 
 	/**
 	 * 显示刷新完成
 	 */
-	public void showRefreshComplete();
+	void showRefreshComplete();
 
 	/**
 	 * 显示正在刷新
 	 */
-	public void showRefreshing();
+	void showRefreshing();
 
 	/**
 	 * 刷新监听
@@ -56,8 +56,8 @@ public interface IRefreshView {
 	 * @author LuckyJayce
 	 *
 	 */
-	public static interface OnRefreshListener {
-		public void onRefresh();
+	interface OnRefreshListener {
+		void onRefresh();
 	}
 
 }
