@@ -161,7 +161,8 @@ public class MVCHelper<DATA> {
     /**
      * 设置适配器，用于显示数据
      *
-     * @param adapter 实现IDataAdapter，如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
+     * @param adapter 既是IDataAdapter，也是ListView，RecyclerView等view的适配器
+     *                 如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
      */
     public void setAdapter(IDataAdapter<DATA> adapter) {
         setAdapter2(adapter, adapter);
@@ -170,7 +171,8 @@ public class MVCHelper<DATA> {
     /**
      * 设置适配器，用于显示数据
      *
-     * @param adapter  实现IDataAdapter，如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
+     * @param adapter 既是IDataAdapter，也是ListView，RecyclerView等view的适配器
+     *                 如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
      * @param viewHandler 用于设置view的适配器,用于添加加载更多的FootView,滑动事件触发加载更多
      */
     public void setAdapter(IDataAdapter<DATA> adapter, ViewHandler viewHandler) {
@@ -178,10 +180,11 @@ public class MVCHelper<DATA> {
     }
 
     /**
-     * 设置适配器，用于显示数据
+     * 分别设置两种适配器，viewAdapter设置到对应的view上，IDataAdapter 处理显示的逻辑
      *
-     * @param viewAdapter 如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
-     * @param dataAdapter 数据显示adapter
+     * @param viewAdapter ListView，RecyclerView等view的适配器
+     *                  如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
+     * @param dataAdapter 接收数据，并显示数据的适配器
      */
     public void setAdapter2(Object viewAdapter, IDataAdapter<DATA> dataAdapter){
         if (contentView instanceof ListView) {
@@ -194,7 +197,7 @@ public class MVCHelper<DATA> {
     }
 
     /**
-     * 设置适配器，用于显示数据
+     * 分别设置两种适配器，viewAdapter设置到对应的view上，IDataAdapter 处理显示的逻辑
      * @param viewAdapter 如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
      * @param dataAdapter 数据显示adapter
      * @param viewHandler 用于设置view的适配器,用于添加加载更多的FootView,滑动事件触发加载更多
