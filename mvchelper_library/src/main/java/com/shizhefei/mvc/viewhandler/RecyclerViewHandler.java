@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.shizhefei.mvc.IDataAdapter;
 import com.shizhefei.mvc.ILoadViewFactory.FootViewAdder;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.MVCHelper.OnScrollBottomListener;
@@ -18,7 +17,7 @@ import com.shizhefei.recyclerview.HFRecyclerAdapter;
 public class RecyclerViewHandler implements ViewHandler {
 
     @Override
-    public boolean handleSetAdapter(View contentView, IDataAdapter<?> adapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener) {
+    public boolean handleSetAdapter(View contentView, Object adapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener) {
         final RecyclerView recyclerView = (RecyclerView) contentView;
         boolean hasInit = false;
         Adapter<?> adapter2 = (Adapter<?>) adapter;

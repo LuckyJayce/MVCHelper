@@ -161,32 +161,52 @@ public class MVCHelper<DATA> {
     /**
      * 设置适配器，用于显示数据
      *
-     * @param adapter 适配器
+     * @param adapter 实现IDataAdapter，如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
      */
     public void setAdapter(IDataAdapter<DATA> adapter) {
-        if (contentView instanceof ListView) {
-            setAdapter(adapter, listViewHandler);
-        } else if (contentView instanceof RecyclerView) {
-            setAdapter(adapter, recyclerViewHandler);
-        } else {
-            setAdapter(adapter, null);
-        }
+        setAdapter2(adapter, adapter);
     }
 
     /**
      * 设置适配器，用于显示数据
      *
-     * @param adapter     适配器
-     * @param viewHandler 用于处理contentView的添加滚动末尾加载更多，添加底部加载更多布局等操作
+     * @param adapter  实现IDataAdapter，如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
+     * @param viewHandler 用于设置view的适配器,用于添加加载更多的FootView,滑动事件触发加载更多
      */
     public void setAdapter(IDataAdapter<DATA> adapter, ViewHandler viewHandler) {
+        setAdapter2(adapter, adapter, viewHandler);
+    }
+
+    /**
+     * 设置适配器，用于显示数据
+     *
+     * @param viewAdapter 如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
+     * @param dataAdapter 数据显示adapter
+     */
+    public void setAdapter2(Object viewAdapter, IDataAdapter<DATA> dataAdapter){
+        if (contentView instanceof ListView) {
+            setAdapter2(viewAdapter, dataAdapter, listViewHandler);
+        } else if (contentView instanceof RecyclerView) {
+            setAdapter2(viewAdapter, dataAdapter,  recyclerViewHandler);
+        } else {
+            setAdapter2(viewAdapter, dataAdapter, null);
+        }
+    }
+
+    /**
+     * 设置适配器，用于显示数据
+     * @param viewAdapter 如果ContentView是ListView那么viewAdapter就要继承于ListAdapter，如果是RecyclerView，那么viewAdapter就要继承于RecyclerView.Adapter
+     * @param dataAdapter 数据显示adapter
+     * @param viewHandler 用于设置view的适配器,用于添加加载更多的FootView,滑动事件触发加载更多
+     */
+    public void setAdapter2(Object viewAdapter, IDataAdapter<DATA> dataAdapter, ViewHandler viewHandler) {
         hasInitLoadMoreView = false;
         if (viewHandler != null) {
             View view = getContentView();
-            hasInitLoadMoreView = viewHandler.handleSetAdapter(view, adapter, mLoadMoreView, onClickLoadMoreListener);
+            hasInitLoadMoreView = viewHandler.handleSetAdapter(view, viewAdapter, mLoadMoreView, onClickLoadMoreListener);
             viewHandler.setOnScrollBottomListener(view, onScrollBottomListener);
         }
-        this.dataAdapter = adapter;
+        this.dataAdapter = dataAdapter;
     }
 
     private boolean hasInitLoadMoreView = false;

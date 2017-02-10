@@ -12,7 +12,6 @@ import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.shizhefei.mvc.IDataAdapter;
 import com.shizhefei.mvc.ILoadViewFactory.FootViewAdder;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.MVCHelper.OnScrollBottomListener;
@@ -20,7 +19,7 @@ import com.shizhefei.mvc.MVCHelper.OnScrollBottomListener;
 public class ListViewHandler implements ViewHandler {
 
     @Override
-    public boolean handleSetAdapter(View contentView, IDataAdapter<?> adapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener) {
+    public boolean handleSetAdapter(View contentView, Object viewAdapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener) {
         final ListView listView = (ListView) contentView;
         boolean hasInit = false;
         if (loadMoreView != null) {
@@ -28,9 +27,9 @@ public class ListViewHandler implements ViewHandler {
             hasInit = true;
         }
         if (listView instanceof ExpandableListView) {
-            ((ExpandableListView) listView).setAdapter((ExpandableListAdapter) adapter);
+            ((ExpandableListView) listView).setAdapter((ExpandableListAdapter) viewAdapter);
         } else {
-            listView.setAdapter((ListAdapter) adapter);
+            listView.setAdapter((ListAdapter) viewAdapter);
         }
         return hasInit;
     }
