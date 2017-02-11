@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 public class HFRecyclerAdapter extends HFAdapter {
 
-    private Adapter adapter;
+    protected Adapter adapter;
 
     public HFRecyclerAdapter(Adapter adapter) {
         this(adapter, true);
@@ -18,6 +18,10 @@ public class HFRecyclerAdapter extends HFAdapter {
         super(needSetClickListener);
         this.adapter = adapter;
         adapter.registerAdapterDataObserver(adapterDataObserver);
+    }
+
+    public Adapter getAdapter() {
+        return adapter;
     }
 
     private AdapterDataObserver adapterDataObserver = new AdapterDataObserver() {
