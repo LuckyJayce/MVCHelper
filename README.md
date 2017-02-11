@@ -9,6 +9,9 @@ Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MV
 ###历史版本和更新信息  
 https://github.com/LuckyJayce/MVCHelper/releases
 
+###常见疑惑集锦
+  Info.md
+
 # Gradle导入 #
 ## 1.必须导入： ##
 	
