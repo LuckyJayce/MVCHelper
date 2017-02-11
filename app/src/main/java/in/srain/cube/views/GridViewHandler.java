@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListAdapter;
 
-import com.shizhefei.mvc.IDataAdapter;
 import com.shizhefei.mvc.ILoadViewFactory.FootViewAdder;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.MVCHelper.OnScrollBottomListener;
@@ -18,14 +17,14 @@ import com.shizhefei.mvc.viewhandler.ViewHandler;
 public class GridViewHandler implements ViewHandler {
 
 	@Override
-	public boolean handleSetAdapter(View contentView, IDataAdapter<?> adapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener) {
+	public boolean handleSetAdapter(View contentView, Object viewAdapter, ILoadMoreView loadMoreView, OnClickListener onClickLoadMoreListener) {
 		final GridViewWithHeaderAndFooter gridView = (GridViewWithHeaderAndFooter) contentView;
 		boolean hasInit = false;
 		if (loadMoreView != null) {
 			loadMoreView.init(new GridViewFFootViewAdder(gridView), onClickLoadMoreListener);
 			hasInit = true;
 		}
-		gridView.setAdapter((ListAdapter) adapter);
+		gridView.setAdapter((ListAdapter) viewAdapter);
 		return hasInit;
 	}
 

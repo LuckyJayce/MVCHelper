@@ -33,6 +33,7 @@ import com.shizhefei.test.controllers.mvchelpers.SwipeRefreshActivity;
 import com.shizhefei.test.controllers.mvchelpers.UltraActivity;
 import com.shizhefei.test.controllers.other.BookDetailActivity;
 import com.shizhefei.test.controllers.other.MovieDetailActivity;
+import com.shizhefei.test.controllers.other.MultiTypeActivity;
 import com.shizhefei.test.controllers.other.UltraRecyclerViewActivity;
 import com.shizhefei.test.controllers.other.Volley_OKHttp_GridViewActivity;
 import com.shizhefei.test.controllers.task.ListTaskActivity;
@@ -167,6 +168,14 @@ public class MainActivity extends Activity {
      */
     public void onClickDemo8(View view) {
         startActivity(new Intent(getApplicationContext(), Volley_OKHttp_GridViewActivity.class));
+    }
+
+    /**
+     * 结合MultiType达到大道至简的境界
+     * @param view
+     */
+    public void onClickDemo9(View view) {
+        startActivity(new Intent(getApplicationContext(), MultiTypeActivity.class));
     }
 
     /**

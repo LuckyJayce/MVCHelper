@@ -59,7 +59,10 @@
             android:label="@string/title_activity_list_task" />
         <activity
             android:name="com.shizhefei.test.controllers.task.TaskDemoActivity"
-            android:label="@string/title_activity_task_demo"></activity>
+            android:label="@string/title_activity_task_demo" />
+        <activity
+            android:name="com.shizhefei.test.controllers.other.MultiTypeActivity"
+            android:label="@string/title_activity_multi_type"></activity>
     </application>
 
 </manifest>

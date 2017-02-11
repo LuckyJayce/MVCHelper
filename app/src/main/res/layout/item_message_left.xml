@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="4dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="64dp"
+    android:paddingTop="4dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:src="@drawable/user_a" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/message_left_bg"
+        android:gravity="center_vertical"
+        android:minHeight="42dp"
+        android:minWidth="80dp">
+
+
+        <TextView
+            android:id="@+id/item_message_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="8dp"
+            android:textColor="#fff"
+            tools:text="fafdife fjiadofjoadfjfajidofjoae fraijofafdife fjiadofjoadfjfajidofjoae fraijofafdife fjiadofjoadfjfajidofjoae fraijo " />
+
+    </LinearLayout>
+</LinearLayout>
