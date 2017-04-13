@@ -30,7 +30,7 @@ import java.util.Set;
  * @param <BASE_DATA> 基础类型，execute的task的数据类型都继承于它，不是它的子类型的数据的task不能被执行
  *                    为什么要定义它？主要用于registerCallBack 注册全局的callback数据的返回的数据不用强制转化，
  */
-public class TaskHelper<BASE_DATA> {
+public class TaskHelper<BASE_DATA> implements RequestHandle{
 
     private Handler handler;
     private ICacheStore cacheStore;
@@ -58,7 +58,15 @@ public class TaskHelper<BASE_DATA> {
         return executeCache(dataSource, callBack, null);
     }
 
+    public <DATA extends BASE_DATA> TaskHandle execute(final IDataSource<DATA> dataSource, boolean isRefresh, ICallback<DATA> callBack) {
+        return executeCache(dataSource, isRefresh, callBack, null);
+    }
+
     public <DATA extends BASE_DATA> TaskHandle execute(final IAsyncDataSource<DATA> dataSource, ICallback<DATA> callBack) {
+        return executeCache(dataSource, callBack, null);
+    }
+
+    public <DATA extends BASE_DATA> TaskHandle execute(final IAsyncDataSource<DATA> dataSource, boolean isExeRefresh, ICallback<DATA> callBack) {
         return executeCache(dataSource, callBack, null);
     }
 
@@ -67,11 +75,15 @@ public class TaskHelper<BASE_DATA> {
     }
 
     public <DATA extends BASE_DATA> TaskHandle executeCache(IAsyncDataSource<DATA> task, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
+        return executeCache(task, true, callBack, cacheConfig);
+    }
+
+    private <DATA extends BASE_DATA> TaskHandle executeCache(IAsyncDataSource<DATA> task, boolean isExeRefresh, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
         TaskHandle requestHandle = checkTask(cacheConfig, task, callBack);
         if (requestHandle != null) {
             return requestHandle;
         }
-        AsyncDataSourceImp taskImp = new AsyncDataSourceImp<>(cacheConfig, callBack, task);
+        AsyncDataSourceImp taskImp = new AsyncDataSourceImp<>(cacheConfig, isExeRefresh, callBack, task);
         taskImps.add(taskImp);
         taskImp.execute();
         return new TaskHandle(TaskHandle.TYPE_RUN, task, callBack, taskImp);
@@ -93,11 +105,15 @@ public class TaskHelper<BASE_DATA> {
     }
 
     public <DATA extends BASE_DATA> TaskHandle executeCache(IDataSource<DATA> task, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
+        return executeCache(task, true, callBack, cacheConfig);
+    }
+
+    private <DATA extends BASE_DATA> TaskHandle executeCache(IDataSource<DATA> task, boolean isExeRefresh, ICallback<DATA> callBack, ICacheConfig<DATA> cacheConfig) {
         TaskHandle requestHandle = checkTask(cacheConfig, task, callBack);
         if (requestHandle != null) {
             return requestHandle;
         }
-        SyncDataSourceImp<DATA> taskImp = new SyncDataSourceImp<>(cacheConfig, callBack, task);
+        SyncDataSourceImp<DATA> taskImp = new SyncDataSourceImp<>(cacheConfig, isExeRefresh, callBack, task);
         taskImps.add(taskImp);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             taskImp.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -253,6 +269,16 @@ public class TaskHelper<BASE_DATA> {
         handler.removeCallbacksAndMessages(null);
     }
 
+    @Override
+    public void cancle() {
+        cancelAll();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return false;
+    }
+
 
     /**
      * 执行类的接口
@@ -307,16 +333,21 @@ public class TaskHelper<BASE_DATA> {
      * @param <DATA>
      */
     private class AsyncDataSourceImp<DATA extends BASE_DATA> extends AbsAsyncTaskImp<DATA> {
+        private final boolean isExeRefresh;
         private IAsyncDataSource<DATA> dataSource;
 
-        public AsyncDataSourceImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> callback, IAsyncDataSource<DATA> dataSource) {
+        public AsyncDataSourceImp(ICacheConfig<DATA> cacheConfig, boolean isExeRefresh, ICallback<DATA> callback, IAsyncDataSource<DATA> dataSource) {
             super(cacheConfig, callback, dataSource);
             this.dataSource = dataSource;
+            this.isExeRefresh = isExeRefresh;
         }
 
         @Override
         protected RequestHandle executeImp(ResponseSender<DATA> responseSender) throws Exception {
-            return dataSource.refresh(responseSender);
+            if (isExeRefresh) {
+                return dataSource.refresh(responseSender);
+            }
+            return dataSource.loadMore(responseSender);
         }
     }
 
@@ -504,16 +535,21 @@ public class TaskHelper<BASE_DATA> {
      * @param <DATA>
      */
     private class SyncDataSourceImp<DATA> extends AbsSyncTaskImp {
+        private final boolean isExeRefresh;
         private IDataSource<DATA> task;
 
-        public SyncDataSourceImp(ICacheConfig<DATA> cacheConfig, ICallback<DATA> call, IDataSource<DATA> task) {
+        public SyncDataSourceImp(ICacheConfig<DATA> cacheConfig, boolean isExeRefresh, ICallback<DATA> call, IDataSource<DATA> task) {
             super(cacheConfig, call, task);
             this.task = task;
+            this.isExeRefresh = isExeRefresh;
         }
 
         @Override
         protected DATA executeImp(ProgressSender sender) throws Exception {
-            return task.refresh();
+            if (isExeRefresh) {
+                return task.refresh();
+            }
+            return task.loadMore();
         }
 
         @Override
