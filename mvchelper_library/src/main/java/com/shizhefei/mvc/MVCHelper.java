@@ -477,7 +477,7 @@ public class MVCHelper<DATA> {
         return dataAdapter;
     }
 
-    public Object getDataSource() {
+    public ISuperTask<DATA> getDataSource() {
         return (IDataSource<DATA>) dataSource;
     }
 
