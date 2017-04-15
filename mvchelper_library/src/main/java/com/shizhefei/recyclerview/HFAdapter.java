@@ -58,7 +58,7 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
     }
 
     public void notifyItemMovedHF(int fromPosition, int toPosition) {
-        notifyItemMovedHF(getRealPosition(fromPosition), getRealPosition(toPosition));
+        notifyItemMoved(getRealPosition(fromPosition), getRealPosition(toPosition));
     }
 
     public void notifyItemRangeChangedHF(int positionStart, int itemCount) {
@@ -101,7 +101,7 @@ public abstract class HFAdapter extends RecyclerView.Adapter {
             return vh;
             // else we have a header/footer
         } else {
-            // create a new framelayout, or inflate from a resource
+            // createExecutor a new framelayout, or inflate from a resource
             FrameLayout frameLayout = new FrameLayout(viewGroup.getContext());
             // make sure it fills the space
             frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

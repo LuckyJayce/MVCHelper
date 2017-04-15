@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.shizhefei.mvc.MVCHelper;
 import com.shizhefei.mvc.MVCSwipeRefreshHelper;
@@ -46,15 +48,18 @@ public class SwipeRefreshActivity extends Activity {
 
 		// PullToRefreshListView refreshListView = (PullToRefreshListView)
 		// findViewById(R.id.pullToRefreshListView);
+		ListView listView = (ListView) findViewById(R.id.listView);
 		SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-		mvcHelper = new MVCSwipeRefreshHelper<List<Book>>(swipeRefreshLayout);
+
+		mvcHelper = new MVCSwipeRefreshHelper<>(swipeRefreshLayout);
 		// 设置数据源
 		mvcHelper.setDataSource(new BooksDataSource());
 		// 设置适配器
 		mvcHelper.setAdapter(new BooksAdapter(this));
-
 		// 加载数据
 		mvcHelper.refresh();
+
+		listView.setOnItemClickListener(onItemClickListener);
 	}
 
 	@Override
@@ -63,6 +68,14 @@ public class SwipeRefreshActivity extends Activity {
 		// 释放资源
 		mvcHelper.destory();
 	}
+
+	private AdapterView.OnItemClickListener onItemClickListener  = new AdapterView.OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+		}
+	};
+
 
 	public void onClickBack(View view) {
 		finish();

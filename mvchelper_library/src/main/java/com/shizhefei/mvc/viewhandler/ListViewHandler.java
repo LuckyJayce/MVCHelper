@@ -44,7 +44,7 @@ public class ListViewHandler implements ViewHandler {
     /**
      * 针对于电视 选择到了底部项的时候自动加载更多数据
      */
-    private class ListViewOnItemSelectedListener implements OnItemSelectedListener {
+    private static class ListViewOnItemSelectedListener implements OnItemSelectedListener {
         private OnScrollBottomListener onScrollBottomListener;
 
         public ListViewOnItemSelectedListener(OnScrollBottomListener onScrollBottomListener) {
@@ -72,7 +72,7 @@ public class ListViewHandler implements ViewHandler {
     /**
      * 滚动到底部自动加载更多数据
      */
-    private class ListViewOnScrollListener implements OnScrollListener {
+    private static class ListViewOnScrollListener implements OnScrollListener {
         private OnScrollBottomListener onScrollBottomListener;
 
         public ListViewOnScrollListener(OnScrollBottomListener onScrollBottomListener) {
@@ -97,7 +97,7 @@ public class ListViewHandler implements ViewHandler {
 
     ;
 
-    private class ListViewFootViewAdder implements FootViewAdder {
+    private static class ListViewFootViewAdder implements FootViewAdder {
         private ListView listView;
 
         public ListViewFootViewAdder(ListView listView) {

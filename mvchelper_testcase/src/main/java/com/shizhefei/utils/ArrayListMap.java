@@ -66,6 +66,7 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 		return null;
 	}
 
+
 	public Entry<K, V> getEntry(K key) {
 		for (Entry<K, V> entry : list) {
 			if (entry.key.equals(key)) {
@@ -184,20 +185,24 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 			key = k;
 		}
 
+		@Override
 		public final K getKey() {
 			return key;
 		}
 
+		@Override
 		public final V getValue() {
 			return value;
 		}
 
+		@Override
 		public final V setValue(V newValue) {
 			V oldValue = value;
 			value = newValue;
 			return oldValue;
 		}
 
+		@Override
 		public final boolean equals(Object o) {
 			if (!(o instanceof Map.Entry))
 				return false;
@@ -214,6 +219,7 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 			return false;
 		}
 
+		@Override
 		public final int hashCode() {
 			return h(getKey()) ^ h(getValue());
 		}
@@ -222,6 +228,7 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 			return (o == null) ? 0 : o.hashCode();
 		}
 
+		@Override
 		public final String toString() {
 			return getKey() + "=" + getValue();
 		}
@@ -230,10 +237,12 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 
 	private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
 
+		@Override
 		public EntryIterator iterator() {
 			return new EntryIterator(list.iterator());
 		}
 
+		@Override
 		public boolean contains(Object o) {
 			if (!(o instanceof Map.Entry))
 				return false;
@@ -243,10 +252,12 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 			return candidate != null && candidate.equals(e);
 		}
 
+		@Override
 		public int size() {
 			return ArrayListMap.this.size();
 		}
 
+		@Override
 		public void clear() {
 			ArrayListMap.this.clear();
 		}
@@ -301,18 +312,22 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 	}
 
 	private final class Values extends AbstractCollection<V> {
+		@Override
 		public Iterator<V> iterator() {
 			return new ValueIterator(list.iterator());
 		}
 
+		@Override
 		public int size() {
 			return ArrayListMap.this.size();
 		}
 
+		@Override
 		public boolean contains(Object o) {
 			return containsValue(o);
 		}
 
+		@Override
 		public void clear() {
 			ArrayListMap.this.clear();
 		}
@@ -344,18 +359,22 @@ public class ArrayListMap<K, V> implements Map<K, V> {
 
 	private final class Keys extends AbstractSet<K> {
 
+		@Override
 		public Iterator<K> iterator() {
 			return new KeyIterator(list.iterator());
 		}
 
+		@Override
 		public int size() {
 			return ArrayListMap.this.size();
 		}
 
+		@Override
 		public boolean contains(Object o) {
 			return containsKey(o);
 		}
 
+		@Override
 		public void clear() {
 			ArrayListMap.this.clear();
 		}

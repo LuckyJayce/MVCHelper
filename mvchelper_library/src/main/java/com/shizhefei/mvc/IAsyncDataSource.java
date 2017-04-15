@@ -1,10 +1,12 @@
 package com.shizhefei.mvc;
 
+import com.shizhefei.task.ISuperTask;
+
 /**
  * 异步数据源（比如Volley，OkHttp等异步请求使用）
  * @param <DATA>
  */
-public interface IAsyncDataSource<DATA> {
+public interface IAsyncDataSource<DATA> extends ISuperTask<DATA> {
     /**
      * 获取刷新的数据
      *

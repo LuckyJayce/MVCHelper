@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.shizhefei.mvc.demo"
         minSdkVersion 10
-        targetSdkVersion 25
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -53,4 +53,8 @@ dependencies {
     compile project(':mvchelper_okhttp')
     compile project(':mvchelper_testcase')
     compile project(':mvccoolhelper')
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }

@@ -133,7 +133,12 @@
                 android:onClick="onClickTaskDemo"
                 android:text="TaskDemo" />
 
-
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:onClick="onClickNormalTaskDemo"
+                android:text="测试普通的写法对象回收问题" />
 
         </LinearLayout>
     </ScrollView>

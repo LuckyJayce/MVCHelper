@@ -15,9 +15,7 @@ limitations under the License.
  */
 package com.shizhefei.mvc;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,6 +31,7 @@ import com.shizhefei.mvc.viewhandler.RecyclerViewHandler;
 import com.shizhefei.mvc.viewhandler.ViewHandler;
 import com.shizhefei.task.Code;
 import com.shizhefei.task.IAsyncTask;
+import com.shizhefei.task.ISuperTask;
 import com.shizhefei.task.ITask;
 import com.shizhefei.task.TaskHelper;
 import com.shizhefei.task.imp.SimpleCallback;
@@ -54,7 +53,7 @@ import com.shizhefei.utils.NetworkUtils;
 public class MVCHelper<DATA> {
     private IDataAdapter<DATA> dataAdapter;
     private IRefreshView refreshView;
-    private Object dataSource;
+    private ISuperTask<DATA> dataSource;
     private View contentView;
     private Context context;
     private MOnStateChangeListener<DATA> onStateChangeListener = new MOnStateChangeListener<DATA>();
@@ -242,7 +241,6 @@ public class MVCHelper<DATA> {
     /**
      * 刷新，开启异步线程，并且显示加载中的界面，当数据加载完成自动还原成加载完成的布局，并且刷新列表数据
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void refresh() {
         if (dataAdapter == null || (dataSource == null)) {
             if (refreshView != null) {
@@ -250,18 +248,21 @@ public class MVCHelper<DATA> {
             }
             return;
         }
+        if (requestHandle != null) {
+            requestHandle.cancle();
+            requestHandle = null;
+        }
         if (dataSource instanceof IDataSource) {
-            requestHandle = taskHelper.execute((IDataSource<DATA>) dataSource, true, refreshCallback);
+            requestHandle = TaskHelper.createExecutor((IDataSource<DATA>) dataSource, true, refreshCallback).execute();
         } else if (dataSource instanceof IAsyncDataSource) {
-            requestHandle = taskHelper.execute((IAsyncDataSource<DATA>) dataSource, true, refreshCallback);
+            requestHandle = TaskHelper.createExecutor((IAsyncDataSource<DATA>) dataSource, true, refreshCallback).execute();
         } else if (dataSource instanceof ITask) {
-            requestHandle = taskHelper.execute((ITask<DATA>) dataSource, refreshCallback);
+            requestHandle = TaskHelper.createExecutor((ITask<DATA>) dataSource, refreshCallback).execute();
         } else {
-            requestHandle = taskHelper.execute((IAsyncTask<DATA>) dataSource, refreshCallback);
+            requestHandle = TaskHelper.createExecutor((IAsyncTask<DATA>) dataSource, refreshCallback).execute();
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadMore() {
         if (isLoading()) {
             return;
@@ -281,9 +282,9 @@ public class MVCHelper<DATA> {
             requestHandle = null;
         }
         if (dataSource instanceof IDataSource) {
-            requestHandle = taskHelper.execute((IDataSource<DATA>) dataSource, false, loadMoreCallback);
+            requestHandle = TaskHelper.createExecutor((IDataSource<DATA>) dataSource, false, loadMoreCallback).execute();
         } else if (dataSource instanceof IAsyncDataSource) {
-            requestHandle = taskHelper.execute((IAsyncDataSource<DATA>) dataSource, false, loadMoreCallback);
+            requestHandle = TaskHelper.createExecutor((IAsyncDataSource<DATA>) dataSource, false, loadMoreCallback).execute();
         }
     }
 
@@ -295,6 +296,7 @@ public class MVCHelper<DATA> {
             requestHandle.cancle();
             requestHandle = null;
         }
+        taskHelper.destroy();
         handler.removeCallbacksAndMessages(null);
     }
 
@@ -347,7 +349,6 @@ public class MVCHelper<DATA> {
         @Override
         public void onPostExecute(Object task, Code code, Exception exception, DATA data) {
             handler.removeCallbacks(showRefreshing);
-            onStateChangeListener.onEndRefresh(dataAdapter, data);
             refreshView.showRefreshComplete();
             if (code == Code.SUCCESS && data == null) {
                 code = Code.EXCEPTION;
@@ -365,7 +366,7 @@ public class MVCHelper<DATA> {
                     }
                     hasMoreData = hasMore(task);
                     if (hasInitLoadMoreView && mLoadMoreView != null) {
-                        if (hasMoreData) {
+                        if (!hasMoreData) {
                             mLoadMoreView.showNormal();
                         } else {
                             mLoadMoreView.showNomore();
@@ -380,8 +381,12 @@ public class MVCHelper<DATA> {
                         mLoadView.tipFail(exception);
                     }
                     break;
+                case CANCEL:
+                    break;
             }
-            onStateChangeListener.onEndRefresh(dataAdapter, data);
+            if (onStateChangeListener != null) {
+                onStateChangeListener.onEndRefresh(dataAdapter, data);
+            }
         }
     };
 
@@ -399,8 +404,6 @@ public class MVCHelper<DATA> {
 
         @Override
         public void onPostExecute(Object task, Code code, Exception exception, DATA data) {
-            onStateChangeListener.onEndRefresh(dataAdapter, data);
-            refreshView.showRefreshComplete();
             if (code == Code.SUCCESS && data == null) {
                 code = Code.EXCEPTION;
                 exception = new Exception("数据不能返回null");
@@ -439,10 +442,10 @@ public class MVCHelper<DATA> {
         }
     };
 
-    private boolean hasMore(Object dataSource){
-        if(dataSource instanceof IAsyncDataSource){
+    private boolean hasMore(Object dataSource) {
+        if (dataSource instanceof IAsyncDataSource) {
             return ((IAsyncDataSource) dataSource).hasMore();
-        }else if(dataSource instanceof IDataSource){
+        } else if (dataSource instanceof IDataSource) {
             return ((IDataSource) dataSource).hasMore();
         }
         return false;

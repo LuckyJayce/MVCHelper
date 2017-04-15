@@ -39,6 +39,7 @@ import com.shizhefei.test.controllers.other.Volley_OKHttp_GridViewActivity;
 import com.shizhefei.test.controllers.task.ListTaskActivity;
 import com.shizhefei.test.controllers.task.LoginActivity;
 import com.shizhefei.test.controllers.task.TaskDemoActivity;
+import com.shizhefei.test.controllers.task.TestNormalTaskActivity;
 import com.shizhefei.test.models.task.LoginTask;
 import com.shizhefei.view.mvc.demo.R;
 
@@ -203,6 +204,15 @@ public class MainActivity extends Activity {
      */
     public void onClickTaskDemo(View view) {
         startActivity(new Intent(getApplicationContext(), TaskDemoActivity.class));
+    }
+
+    /**
+     * TaskDemo
+     *
+     * @param view
+     */
+    public void onClickNormalTaskDemo(View view) {
+        startActivity(new Intent(getApplicationContext(), TestNormalTaskActivity.class));
     }
 
 

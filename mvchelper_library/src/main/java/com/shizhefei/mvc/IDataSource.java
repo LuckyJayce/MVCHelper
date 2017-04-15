@@ -15,13 +15,15 @@ limitations under the License.
  */
 package com.shizhefei.mvc;
 
+import com.shizhefei.task.ISuperTask;
+
 /**
  * 数据源
  *
  * @param <DATA>
  * @author LuckyJayce
  */
-public interface IDataSource<DATA> {
+public interface IDataSource<DATA> extends ISuperTask<DATA>{
     /**
      * 获取刷新的数据
      *

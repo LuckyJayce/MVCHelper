@@ -36,7 +36,7 @@ public class BooksAsyncDataSource implements IAsyncDataSource<List<Book>> {
         return thread;
     }
 
-    private class LoadBooksThread extends Thread implements RequestHandle {
+    private static class LoadBooksThread extends Thread implements RequestHandle {
         private final int page;
         private ResponseSender<List<Book>> sender;
 
