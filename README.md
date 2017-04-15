@@ -1,15 +1,15 @@
-###MVCHelper主要用于下拉刷新加载，失败，加载，空数据，成功的界面切换。
+### MVCHelper主要用于下拉刷新加载，失败，加载，空数据，成功的界面切换。
 MVCHelper +（IDataSource或ITask）+ IDataAdapter + 下拉刷新控件 + 布局切换（ILoadViewFactory，ILoadView，ILoadMoreView）
 
-###TaskHelper主要用于没有布局切换和刷新控件的MVC架构，可以执行多个任务通过回调ICallback更新UI
+### TaskHelper主要用于没有布局切换和刷新控件的MVC架构，可以执行多个任务通过回调ICallback更新UI
 TaskHelper+（ITask或IDataSource）+ ICallBack
 
 Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
   
-###历史版本和更新信息  
+### 历史版本和更新信息  
 https://github.com/LuckyJayce/MVCHelper/releases
 
-###常见疑惑集锦
+### 常见疑惑集锦
   [Info.md](https://github.com/LuckyJayce/MVCHelper/blob/master/Info.md)
 
 # Gradle导入 #
@@ -78,13 +78,13 @@ https://github.com/LuckyJayce/MVCHelper/releases
 
    
 
-#一、 MVCHelper
+# 一、 MVCHelper
 MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，,真正的MVC架构.  
 
 ## 1.Model (IDataSource<DATA>)数据源，加载数据  
    **同步请求实现IDataSource，异步请求（okhttp,volley,rxjava+retrofit）实现IAsyncDataSource**  
 
-**<1>同步请求（直接返回结果）**
+**<1>同步请求（直接返回结果**
           
      //数据源
 		
@@ -131,7 +131,7 @@ MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，
 
 	}
 
-**<2>异步请求（就是请求等待回调函数返回结果）**
+**<2>异步请求（就是请求等待回调函数返回结果**
 
 	 /**
 	 * 异步数据源（比如Volley，OkHttp等异步请求使用）
@@ -356,7 +356,7 @@ https://github.com/LuckyJayce/MVCHelper/tree/master/app/src/main/java/com/shizhe
 	
 	
 	}
-## 3.Controller (Activity,Fragment,MVCHelper)控制器    
+## 3.Controller (Activity,Fragment,MVCHelper)控制器 ##    
 **控制器负责调用读取数据，调用显示数据，处理用户交互**  
        
 Activity负责调度，代码如下
@@ -557,7 +557,7 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 	
 	}
 
-#二、 TaskHelper  
+# 二、 TaskHelper  
 主要用于执行多个任务，通过回调ICallback更新UI
 ## 1.Model (ITask<DATA>, IAsyncTask<DATA>)
 
@@ -729,13 +729,13 @@ Activity负责调度，代码如下
 
 ## 三、说明
 
-**以下是目前支持的下拉刷新的开源类库**   
+** 以下是目前支持的下拉刷新的开源类库 **   
 CoolRefreshView   
 Android-PullToRefresh-Library  
 android-Ultra-Pull-To-Refresh-library  
 android-support-v4.jar  
   
-**以下是对应刷新类库的MVCHelper**   
+**以下是对应刷新类库的MVCHelper **   
 MVCCoolHelper  
 MVCPullrefshHelper  
 MVCUltraHelper  
@@ -747,7 +747,7 @@ MVCHelper_Library
 **示例代码**   
 MVCHelper_Demo  
 
-##主力类库##
+## 主力类库 ##
 
 **1.https://github.com/LuckyJayce/ViewPagerIndicator**  
 Indicator 取代 tabhost，实现网易顶部tab，新浪微博主页底部tab，引导页，无限轮播banner等效果，高度自定义tab和特效
