@@ -7,12 +7,7 @@
     <!-- 强调色 -->
     <color name="accent">#8BC34A</color>
     <!-- 文本颜色 -->
-    <color name="text_normal">#4d4d4d</color>
     <!-- 次文本颜色 -->
-    <color name="text_secondary">#858585</color>
     <!-- 分割线颜色 -->
-    <color name="divider">#dadada</color>
-    <color name="transparent">#00000000</color>
-    <color name="white">#ffffff</color>
     <color name="gray_bg">#aaaaaa</color>
 </resources>

@@ -149,7 +149,7 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
         return null;
     }
 
-    public void cancel(ISuperTask<? extends BASE_DATA> task) {
+    public void cancel(Object task) {
         if (task == null) {
             return;
         }

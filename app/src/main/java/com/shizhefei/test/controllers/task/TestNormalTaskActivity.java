@@ -190,7 +190,7 @@ public class TestNormalTaskActivity extends Activity {
             try {
                 for (int i = 0; i < 20; i++) {
                     Thread.sleep(1000);
-                    Log.d("zzzz", "AsyncTask progress:" + i);
+                    Log.d("zzzz", "AsyncLinkTask progress:" + i);
                     publishProgress(i);
                 }
                 return "完成";
@@ -204,16 +204,16 @@ public class TestNormalTaskActivity extends Activity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            resultTextView.append("\nAsyncTask progress:");
+            resultTextView.append("\nAsyncLinkTask progress:");
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (exception != null) {
-                resultTextView.append("\nAsyncTask exception:" + exception);
+                resultTextView.append("\nAsyncLinkTask exception:" + exception);
             } else {
-                resultTextView.append("\nAsyncTask 结果:" + s);
+                resultTextView.append("\nAsyncLinkTask 结果:" + s);
             }
         }
     }

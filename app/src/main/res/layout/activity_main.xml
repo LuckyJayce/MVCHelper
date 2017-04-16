@@ -137,6 +137,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:onClick="onClickTaskOpDemo"
+                android:text="Task操作符" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:onClick="onClickNormalTaskDemo"
                 android:text="测试普通的写法对象回收问题" />
 
