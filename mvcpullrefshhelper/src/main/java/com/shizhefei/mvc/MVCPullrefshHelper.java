@@ -47,7 +47,7 @@ public class MVCPullrefshHelper<DATA> extends MVCHelper<DATA> {
 			pullToRefreshAdapterViewBase.setOnRefreshListener(onRefreshListener211);
 		}
 
-		private class OnRefreshListenerNone<T extends View> implements OnRefreshListener2<T> {
+		private static class OnRefreshListenerNone<T extends View> implements OnRefreshListener2<T> {
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<T> refreshView) {

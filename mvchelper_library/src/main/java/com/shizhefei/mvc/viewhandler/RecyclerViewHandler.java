@@ -115,7 +115,7 @@ public class RecyclerViewHandler implements ViewHandler {
 
     }
 
-    private class RecyclerViewFootViewAdder implements FootViewAdder {
+    private static class RecyclerViewFootViewAdder implements FootViewAdder {
         private RecyclerView recyclerView;
         private HFAdapter hfAdapter;
 

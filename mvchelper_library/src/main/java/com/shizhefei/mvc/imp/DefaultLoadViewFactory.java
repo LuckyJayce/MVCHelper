@@ -42,7 +42,7 @@ public class DefaultLoadViewFactory implements ILoadViewFactory {
 		return new LoadViewHelper();
 	}
 
-	private class LoadMoreHelper implements ILoadMoreView {
+	private static class LoadMoreHelper implements ILoadMoreView {
 
 		protected TextView footView;
 
@@ -90,7 +90,7 @@ public class DefaultLoadViewFactory implements ILoadViewFactory {
 
 	}
 
-	private class LoadViewHelper implements ILoadView {
+	private static class LoadViewHelper implements ILoadView {
 		private VaryViewHelper helper;
 		private OnClickListener onClickRefreshListener;
 		private Context context;

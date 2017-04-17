@@ -23,6 +23,7 @@ public class ProxyActivity extends FragmentActivity {
     public static final String INTENT_STRING_FRAGMENT_TITLE = "intent_string_fragment_title";
     private View backView;
 
+    @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proxy);

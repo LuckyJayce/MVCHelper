@@ -39,6 +39,8 @@ import com.shizhefei.test.controllers.other.Volley_OKHttp_GridViewActivity;
 import com.shizhefei.test.controllers.task.ListTaskActivity;
 import com.shizhefei.test.controllers.task.LoginActivity;
 import com.shizhefei.test.controllers.task.TaskDemoActivity;
+import com.shizhefei.test.controllers.task.TaskOpActivity;
+import com.shizhefei.test.controllers.task.TestNormalTaskActivity;
 import com.shizhefei.test.models.task.LoginTask;
 import com.shizhefei.view.mvc.demo.R;
 
@@ -172,6 +174,7 @@ public class MainActivity extends Activity {
 
     /**
      * 结合MultiType达到大道至简的境界
+     *
      * @param view
      */
     public void onClickDemo9(View view) {
@@ -203,6 +206,25 @@ public class MainActivity extends Activity {
      */
     public void onClickTaskDemo(View view) {
         startActivity(new Intent(getApplicationContext(), TaskDemoActivity.class));
+    }
+
+    /**
+     * 测试task操作符
+     *
+     * @param view
+     */
+    public void onClickTaskOpDemo(View view) {
+       startActivity(new Intent(getApplicationContext(), TaskOpActivity.class));
+    }
+
+
+    /**
+     * 普通写法测试内存泄漏
+     *
+     * @param view
+     */
+    public void onClickNormalTaskDemo(View view) {
+        startActivity(new Intent(getApplicationContext(), TestNormalTaskActivity.class));
     }
 
 

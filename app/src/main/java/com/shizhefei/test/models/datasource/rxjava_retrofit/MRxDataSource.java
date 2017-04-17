@@ -19,7 +19,7 @@ import rx.functions.Func1;
 public abstract class MRxDataSource<DATA> extends RxDataSource<DATA> {
     private static final int DEFAULT_TIMEOUT = 5;
     private static Retrofit retrofit;
-    private static GankApi gankApi;
+    private static volatile GankApi gankApi;
 
     protected GankApi getGankApi() {
         if (gankApi == null) {

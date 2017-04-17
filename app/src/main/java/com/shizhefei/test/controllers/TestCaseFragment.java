@@ -29,18 +29,7 @@ public class TestCaseFragment extends ABSTestCaseFragment {
                 map.put("name", "nnnnn");
                 map.put("password", "ppppp");
                 sender.sendData(map);
-                return new RequestHandle() {
-
-                    @Override
-                    public boolean isRunning() {
-                        return false;
-                    }
-
-                    @Override
-                    public void cancle() {
-
-                    }
-                };
+                return null;
             }
         });
         datas.add(caseData);

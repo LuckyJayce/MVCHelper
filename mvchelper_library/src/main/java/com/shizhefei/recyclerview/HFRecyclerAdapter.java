@@ -26,22 +26,27 @@ public class HFRecyclerAdapter extends HFAdapter {
 
     private AdapterDataObserver adapterDataObserver = new AdapterDataObserver() {
 
+        @Override
         public void onChanged() {
             HFRecyclerAdapter.this.notifyDataSetChanged();
         }
 
+        @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
             HFRecyclerAdapter.this.notifyItemRangeChanged(positionStart + getHeadSize(), itemCount);
         }
 
+        @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
             HFRecyclerAdapter.this.notifyItemRangeInserted(positionStart + getHeadSize(), itemCount);
         }
 
+        @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
             HFRecyclerAdapter.this.notifyItemRangeRemoved(positionStart + getHeadSize(), itemCount);
         }
 
+        @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             HFRecyclerAdapter.this.notifyItemMoved(fromPosition + getHeadSize(), toPosition + getHeadSize());
         }

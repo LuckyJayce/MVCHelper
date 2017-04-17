@@ -42,6 +42,25 @@
             android:text="IAsyncTask" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/taskdemo_longTimeTask_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="超长时间ITask" />
+
+        <Button
+            android:id="@+id/taskdemo_longTimeAsyncTask_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="超长时间IAsyncTask" />
+
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

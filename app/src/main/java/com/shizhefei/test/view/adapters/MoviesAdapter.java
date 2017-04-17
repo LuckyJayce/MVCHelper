@@ -51,9 +51,8 @@ public class MoviesAdapter extends ListDataAdapter<Movie> {
         public void setData(Movie movie, int position) {
             nameTextView.setText(movie.getName());
             timeTextView.setText(movie.getTime());
-
             if (handle != null) {
-                handle.cancelTaskIfMoreCallbackUnregisterCallback();
+                handle.cancle();
             }
             handle = taskHelper.executeCache(new MovieAmountTask(movie.getName()), new SimpleCallback<MovieAmount>() {
                 @Override

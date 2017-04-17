@@ -62,6 +62,7 @@ public abstract class HttpMethod<METHOD extends HttpMethod> extends AbsHttpMetho
      *
      * @param callback 请求的回调
      */
+    @Override
     public final void executeAsync(Callback callback) {
         Request request = buildRequest();
         call = client.newCall(request);

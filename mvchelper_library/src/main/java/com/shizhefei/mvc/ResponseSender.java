@@ -11,6 +11,7 @@ public interface ResponseSender<DATA> extends ProgressSender {
 
     void sendData(DATA data);
 
+    @Override
     void sendProgress(long current, long total, Object extraData);
 
 }

@@ -19,6 +19,7 @@ public abstract class ListDataAdapter<ITEM> extends HFAdapter implements IDataAd
 
     private List<ITEM> datas = new ArrayList<ITEM>();
 
+    @Override
     public abstract AbsItemViewHolder onCreateViewHolderHF(ViewGroup viewGroup, int type);
 
     @Override

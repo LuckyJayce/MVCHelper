@@ -1,28 +1,23 @@
 package com.shizhefei.task;
 
 import com.shizhefei.mvc.RequestHandle;
-import com.shizhefei.mvc.data.Data2;
 
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * 用于取消task，判断task是否执行
  */
 public class TaskHandle implements RequestHandle {
-    private final Object task;
-    private final ICallback callBack;
+    private final WeakReference<Object> taskReference;
     private final int type;
-    private WeakReference<TaskHelper.TaskImp> taskImpWeakReference;
+    private WeakReference<TaskHelper.MultiTaskBindProxyCallBack> taskImpWeakReference;
     public static final int TYPE_RUN = 1;
     public static final int TYPE_CACHE = 2;
     public static final int TYPE_ATTACH = 3;
 
-    public TaskHandle(int type, Object exeTask, ICallback callBack, TaskHelper.TaskImp taskImp) {
-        this.task = exeTask;
-        this.callBack = callBack;
+    public TaskHandle(int type, Object exeTask, TaskHelper.MultiTaskBindProxyCallBack taskImp) {
         this.type = type;
+        this.taskReference = new WeakReference<>(exeTask);
         if (taskImp != null) {
             taskImpWeakReference = new WeakReference<>(taskImp);
         }
@@ -33,36 +28,23 @@ public class TaskHandle implements RequestHandle {
         if (taskImpWeakReference == null) {
             return;
         }
-        TaskHelper.TaskImp taskImp = taskImpWeakReference.get();
-        if (taskImp != null) {
-            taskImp.cancle();
+        TaskHelper.MultiTaskBindProxyCallBack taskImp = taskImpWeakReference.get();
+        Object task = taskReference.get();
+        if (taskImp == null || task == null) {
+            return;
         }
+        taskImp.cancel(task);
     }
 
-    public void cancelTaskIfMoreCallbackUnregisterCallback() {
-        if (taskImpWeakReference == null) {
-            return;
-        }
-        TaskHelper.TaskImp taskImp = taskImpWeakReference.get();
-        if (taskImp == null) {
-            return;
-        }
-        List<Data2<Object, ICallback>> calls = taskImp.getCallbacks();
-        Iterator<Data2<Object, ICallback>> iterator = calls.iterator();
-        while (iterator.hasNext()) {
-            Data2<Object, ICallback> data = iterator.next();
-            Object ct = data.getValue1();
-            if (task.equals(ct)) {
-                if (calls.size() == 1) {
-                    taskImp.cancle();
-                } else {
-                    iterator.remove();
-                    data.getValue2().onPostExecute(ct, Code.CANCEL, null, null);
-                }
-                return;
-            }
-        }
-    }
+//    public void cancelAllTaskBinder() {
+//        if (taskImpWeakReference == null) {
+//            return;
+//        }
+//        TaskHelper.MultiTaskBindProxyCallBack taskImp = taskImpWeakReference.get();
+//        if (taskImp != null) {
+//            taskImp.cancelAllTaskBinder();
+//        }
+//    }
 
     public int getRunType() {
         return type;
@@ -73,7 +55,7 @@ public class TaskHandle implements RequestHandle {
         if (taskImpWeakReference == null) {
             return false;
         }
-        TaskHelper.TaskImp taskImp = taskImpWeakReference.get();
+        TaskHelper.MultiTaskBindProxyCallBack taskImp = taskImpWeakReference.get();
         if (taskImp != null) {
             return taskImp.isRunning();
         }

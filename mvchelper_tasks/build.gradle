@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'//添加
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 24
+        versionCode rootProject.ext.VERSION_CODE
+        versionName rootProject.ext.VERSION_NAME
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':mvchelper_library')
+    provided 'com.squareup.okhttp3:okhttp:3.4.0'
+    provided 'com.squareup.okio:okio:1.9.0'
+}
+
+//添加
+publish {
+    userOrg = 'luckyjayce'//bintray.com用户名
+    groupId = 'com.shizhefei'//jcenter上的路径
+    artifactId = 'MVCHelper-Tasks'//项目名称
+    publishVersion = rootProject.ext.VERSION_NAME//版本号
+    desc = 'MVCHelper 下的Tasks类库'//描述，不重要
+    website = 'https://github.com/LuckyJayce/MVCHelper'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+}

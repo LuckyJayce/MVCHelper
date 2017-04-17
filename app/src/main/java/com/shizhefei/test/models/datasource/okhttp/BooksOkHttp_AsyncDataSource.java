@@ -41,7 +41,7 @@ public class BooksOkHttp_AsyncDataSource implements IAsyncDataSource<List<Book>>
         method.executeAsync(sender, new ResponseParser<List<Book>>() {
             @Override
             public List<Book> parse(Response response) throws Exception {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
                 List<Book> books = new ArrayList<Book>();
                 for (int i = 0; i < 15; i++) {
                     books.add(new Book("page" + page + "  Java编程思想 " + i, 108.00d));
