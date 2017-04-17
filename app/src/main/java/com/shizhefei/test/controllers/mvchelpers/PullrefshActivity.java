@@ -15,8 +15,6 @@ limitations under the License.
  */
 package com.shizhefei.test.controllers.mvchelpers;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,10 +22,14 @@ import android.view.View;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.shizhefei.mvc.MVCHelper;
 import com.shizhefei.mvc.MVCPullrefshHelper;
-import com.shizhefei.test.models.datasource.BooksDataSource;
+import com.shizhefei.task.datasource.DataSources;
+import com.shizhefei.test.models.datasource.okhttp.aa.BooksAsyncDataSource;
 import com.shizhefei.test.models.enties.Book;
+import com.shizhefei.test.models.task.InitTokenTask;
 import com.shizhefei.test.view.adapters.BooksAdapter;
 import com.shizhefei.view.mvc.demo.R;
+
+import java.util.List;
 
 /**
  * 测试下拉刷新组件，MVCPullrefshHelper
@@ -46,9 +48,9 @@ public class PullrefshActivity extends Activity {
 
 		PullToRefreshListView refreshListView = (PullToRefreshListView) findViewById(R.id.pullToRefreshListView);
 		
-		mvcHelper = new MVCPullrefshHelper<List<Book>>(refreshListView);
+		mvcHelper = new MVCPullrefshHelper<>(refreshListView);
 		// 设置数据源
-		mvcHelper.setDataSource(new BooksDataSource());
+		mvcHelper.setDataSource(DataSources.concatWith(new InitTokenTask(), new BooksAsyncDataSource()));
 		// 设置适配器
 		mvcHelper.setAdapter(new BooksAdapter(this));
 		// 加载数据

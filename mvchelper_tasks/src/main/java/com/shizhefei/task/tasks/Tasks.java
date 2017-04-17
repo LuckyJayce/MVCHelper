@@ -12,7 +12,7 @@ import com.shizhefei.task.function.Func2;
  * Created by luckyjayce on 2017/4/16.
  */
 
-public class LinkTasks {
+public class Tasks {
 
     public static <DATA> LinkTask<DATA> async(ITask<DATA> task) {
         return new AsyncLinkTask<>(task, true);

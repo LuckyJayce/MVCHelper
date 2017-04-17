@@ -52,7 +52,7 @@ public class NormalActivity extends Activity {
 		descriptionTextView = (TextView) findViewById(R.id.description_textView);
 		contentTextView = (TextView) findViewById(R.id.content_textView);
 
-		mvcHelper = new MVCNormalHelper<Book>(contentLayout);
+		mvcHelper = new MVCNormalHelper<>(contentLayout);
 		// 设置数据源
 		mvcHelper.setDataSource(new BookDetailDataSource());
 		// 设置适配器
