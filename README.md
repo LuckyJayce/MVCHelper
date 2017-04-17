@@ -16,54 +16,65 @@ https://github.com/LuckyJayce/MVCHelper/releases
 ## 1.必须导入： ##
 	
 	//MVCHelper核心类库
-	compile 'com.shizhefei:MVCHelper-Library:1.2.0'
+	compile 'com.shizhefei:MVCHelper-Library:1.3.0'
 	//里面有使用recyclerview，所以需要导入recyclerview
     compile 'com.android.support:recyclerview-v7:24.0.0'
 
 ## 2.可选：   ##
-<1>  使用 https://github.com/LuckyJayce/CoolRefreshView 的刷新控件导入  
+<1>  使用 https://github.com/LuckyJayce/CoolRefreshView 的刷新控件导入
  支持任意View的刷新 ，支持自定义Header，支持NestedScrollingParent,NestedScrollingChild的事件分发，嵌套ViewPager不会有事件冲突
-	
+
 	//里面包含一个MVCCoolHelper 是适配这个控件的 MVCHelper
-    compile 'com.shizhefei:MVCHelper-CoolRefresh:1.2.0'
+    compile 'com.shizhefei:MVCHelper-CoolRefresh:1.3.0'
     compile 'com.shizhefei:CoolRefreshView:1.0.1'
     compile 'com.android.support:support-v4:24.0.0'
 
 <2>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入
-	
+
 	//里面包含一个MVCPullrefshHelper 是适配这个控件的 MVCHelper
-    compile 'com.shizhefei:MVCHelper-Pullrefresh:1.2.0'
+    compile 'com.shizhefei:MVCHelper-Pullrefresh:1.3.0'
 	//由于没有找到gradle排至，我自己把它上传到jcenter上
     compile 'com.shizhefei:pulltorefresh:1.0.1'
 
-<3>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh 的刷新控件导入 
+<3>  使用 https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh 的刷新控件导入
 
     //里面包含一个MVCUltraHelper 是适配这个控件的 MVCHelper
-	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.2.0'
+	compile 'com.shizhefei:MVCHelper-UltraRefresh:1.3.0'
 	//这里6月29号目前最新的，要实时关注新版本去秋大的网站上去看
     compile 'in.srain.cube:ultra-ptr:1.0.11'
 
-<4>  使用android v4的SwipeRefreshLayout的作为刷新控件导入  
+<4>  使用android v4的SwipeRefreshLayout的作为刷新控件导入
 
 	//里面包含一个MVCSwipeRefreshHelper 是适配这个控件的 MVCHelper
-    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.2.0'
+    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.3.0'
 	//v4包应该都有导入吧，v7包里面包含v4包
 	compile 'com.android.support:support-v4:24.0.0'
 
 <5> 测试用例，可以方便的查看MVCHelper，Task的运行情况和返回数据，还提供了修改接口字段，用于接口测试很方便哦
 
 	//MVCHelper的测试用例，继承ABSTestCaseFragment实现List<TestCaseData> getTestCaseDatas()方法
-	compile 'com.shizhefei:MVCHelper-TestCase:1.2.0'
+	compile 'com.shizhefei:MVCHelper-TestCase:1.3.0'
 	//里面用到了gson
 	compile 'com.google.code.gson:gson:2.2.4'
-	
+
 <6> MVCHelper-OkHttp 对OKHttp的简单封装
 
 	//MVCHelper的 OKHttp的简单封装
-	compile 'com.shizhefei:MVCHelper-OkHttp:1.2.0'
+	compile 'com.shizhefei:MVCHelper-OkHttp:1.3.0'
 	//里面用到了okhttp3
 	compile 'com.squareup.okhttp3:okhttp:3.4.0'
 	compile 'com.squareup.okio:okio:1.9.0'
+
+<7> MVCHelper-Tasks 一些Task集合，支持类似RxJava的操作符处理多个Task
+    比如先初始化token，然后再调用获取用户信息task
+
+	 IAsyncTask<User> task = Tasks
+	                    .create(new InitTokenTask())
+	                    .concatWith(new GetUserTask()));
+导入方式
+
+	//MVCHelper的 Task操作集合
+	compile 'com.shizhefei:MVCHelper-Tasks:1.3.0'
 
 ## 结构   
 ![image](raw/MVC.png)  
