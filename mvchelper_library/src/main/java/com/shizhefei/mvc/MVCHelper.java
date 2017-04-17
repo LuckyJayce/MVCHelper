@@ -366,7 +366,7 @@ public class MVCHelper<DATA> {
                     }
                     hasMoreData = hasMore(task);
                     if (hasInitLoadMoreView && mLoadMoreView != null) {
-                        if (!hasMoreData) {
+                        if (hasMoreData) {
                             mLoadMoreView.showNormal();
                         } else {
                             mLoadMoreView.showNomore();

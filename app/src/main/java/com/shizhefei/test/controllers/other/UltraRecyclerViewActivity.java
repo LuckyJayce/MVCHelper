@@ -51,7 +51,7 @@ public class UltraRecyclerViewActivity extends Activity {
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-		mvcHelper = new MVCUltraHelper<List<Book>>(mPtrFrameLayout);
+		mvcHelper = new MVCUltraHelper<>(mPtrFrameLayout);
 		// 设置数据源
 		mvcHelper.setDataSource(new BooksDataSource());
 		// 设置适配器

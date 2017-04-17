@@ -22,7 +22,7 @@ public class TestNormalTaskActivity extends Activity {
     private View threadButton;
     private View asyTaskButton;
     private TextView resultTextView;
-    private StaticHandler handler;
+    private StaticHandler staticHandler;
     private SelfHandler selfHandler;
     private View threadWeakButton;
     private SelfAsyncTask selfInterruptAsyncTask;
@@ -42,7 +42,7 @@ public class TestNormalTaskActivity extends Activity {
         asyTaskButton = findViewById(R.id.normalTask_asyTask_button);
         resultTextView = (TextView) findViewById(R.id.normalTask_result2_textView);
 
-        handler = new StaticHandler(resultTextView);
+        staticHandler = new StaticHandler(resultTextView);
         selfHandler = new SelfHandler();
 
         staticThreadWeakButton.setOnClickListener(onClickListener);
@@ -68,26 +68,26 @@ public class TestNormalTaskActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            if (v == threadButton) {//测试Thread+Handler方式
+            if (v == threadButton) {//测试Thread+ 静态Handler方式
                 new Thread() {
                     @Override
                     public void run() {
                         super.run();
                         try {
-                            handler.sendMessage(handler.obtainMessage(WHAT_START));
+                            staticHandler.sendMessage(staticHandler.obtainMessage(WHAT_START));
                             for (int i = 0; i < 20; i++) {
                                 Thread.sleep(1000);
                                 Log.d("zzzz", "threadButton progress:" + i);
-                                handler.sendMessage(handler.obtainMessage(WHAT_PROGRESS, i));
+                                staticHandler.sendMessage(staticHandler.obtainMessage(WHAT_PROGRESS, i));
                             }
-                            handler.sendMessage(handler.obtainMessage(WHAT_SUCCESS, "完成"));
+                            staticHandler.sendMessage(staticHandler.obtainMessage(WHAT_SUCCESS, "完成"));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            handler.sendMessage(handler.obtainMessage(WHAT_EXCEPTION, e));
+                            staticHandler.sendMessage(staticHandler.obtainMessage(WHAT_EXCEPTION, e));
                         }
                     }
                 }.start();
-            } else if (v == threadWeakButton) {//测试Thread+Handler+WeakReference方式
+            } else if (v == threadWeakButton) {//测试Thread+ 内部类Handler+WeakReference方式
                 new Thread() {
                     @Override
                     public void run() {
@@ -106,15 +106,17 @@ public class TestNormalTaskActivity extends Activity {
                         }
                     }
                 }.start();
-            } else if (v == staticThreadWeakButton) {
-                new LongTimeThread(handler).start();
-            } else if (v == asyTaskButton) {//
+            } else if (v == staticThreadWeakButton) {//静态Thread+静态Handler+WeakReference方式
+                new LongTimeThread(staticHandler).start();
+            } else if (v == asyTaskButton) {// 内部类asyncTask 没有Interrupt
                 selfAsyncTask = new SelfAsyncTask();
                 selfAsyncTask.execute();
-            } else if (v == interruptAsyTaskButton) {
+            } else if (v == interruptAsyTaskButton) {//内部类asyncTask Interrupt
                 selfInterruptAsyncTask = new SelfAsyncTask();
                 selfInterruptAsyncTask.execute();
             }
+            //还有静态asyncTask + WeakReference方式
+            //静态asyncTask + cancel的时候置空引用对象
         }
     };
 
@@ -127,7 +129,7 @@ public class TestNormalTaskActivity extends Activity {
         private WeakReference<TextView> weakReference;
 
         public StaticHandler(TextView textView) {
-            this.weakReference = new WeakReference<TextView>(textView);
+            this.weakReference = new WeakReference<>(textView);
         }
 
         @Override

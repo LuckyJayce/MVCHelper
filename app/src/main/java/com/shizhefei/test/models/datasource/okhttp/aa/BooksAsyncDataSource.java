@@ -57,8 +57,10 @@ public class BooksAsyncDataSource implements IAsyncDataSource<List<Book>> {
                     }
                     books.add(new Book("Book" + page + "-" + i, 1));
                 }
-                //返回数据出去，执行结束
-                sender.sendData(books);
+                if (!cancel) {
+                    //返回数据出去，执行结束
+                    sender.sendData(books);
+                }
             } catch (Exception e) {
                 //抛出异常出去，执行结束
                 sender.sendError(e);

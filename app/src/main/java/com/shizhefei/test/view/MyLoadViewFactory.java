@@ -103,7 +103,7 @@ public class MyLoadViewFactory implements ILoadViewFactory {
 
 		@Override
 		public void tipFail(Exception exception) {
-			Toast.makeText(context, "网络加载失败", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context.getApplicationContext(), "网络加载失败", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override

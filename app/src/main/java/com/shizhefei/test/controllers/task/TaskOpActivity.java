@@ -16,7 +16,7 @@ import com.shizhefei.task.function.Func1;
 import com.shizhefei.task.function.Func2;
 import com.shizhefei.task.imp.SimpleCallback;
 import com.shizhefei.task.tasks.LinkTask;
-import com.shizhefei.task.tasks.LinkTasks;
+import com.shizhefei.task.tasks.Tasks;
 import com.shizhefei.task.tasks.ProxyTask;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.models.enties.User;
@@ -67,9 +67,9 @@ public class TaskOpActivity extends Activity {
         public void onClick(View v) {
             taskHelper.cancelAll();
             if (v == concatButton) {
-                LinkTask<String> task = LinkTasks
+                LinkTask<String> task = Tasks
                         .async(new InitTokenTask())
-                        .concatWith(LinkTasks.async(new GetUserTask()))
+                        .concatWith(Tasks.async(new GetUserTask()))
                         .concatMap(new Func1<User, IAsyncTask<String>>() {
                             @Override
                             public IAsyncTask<String> call(User data) throws Exception {
@@ -80,8 +80,8 @@ public class TaskOpActivity extends Activity {
             } else if (v == cancelButton) {
 
             } else if (v == combineButton) {
-                LinkTask<String> task = LinkTasks.create(new InitTokenTask())
-                        .concatWith(LinkTasks.combine(LinkTasks.async(new GetUserTask()), new GetBookTask(), new Func2<User, Book, String>() {
+                LinkTask<String> task = Tasks.create(new InitTokenTask())
+                        .concatWith(Tasks.combine(Tasks.async(new GetUserTask()), new GetBookTask(), new Func2<User, Book, String>() {
                             @Override
                             public String call(User user, Book book) throws Exception {
                                 return "userName:" + user.getName() + " read book:" + book.getName();
@@ -123,9 +123,9 @@ public class TaskOpActivity extends Activity {
 
         @Override
         protected IAsyncTask<String> getTask() {
-            LinkTask<String> task = LinkTasks
+            LinkTask<String> task = Tasks
                     .async(new InitTokenTask())
-                    .concatWith(LinkTasks.async(new GetUserTask()))
+                    .concatWith(Tasks.async(new GetUserTask()))
                     .concatMap(new Func1<User, IAsyncTask<String>>() {
                         @Override
                         public IAsyncTask<String> call(User data) throws Exception {
