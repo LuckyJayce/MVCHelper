@@ -14,7 +14,7 @@ import com.shizhefei.task.tasks.Tasks;
  * Created by luckyjayce on 2017/4/17.
  */
 
-public class ConcatDataSource<D, DATA> implements IAsyncDataSource<DATA> {
+class ConcatDataSource<D, DATA> implements IAsyncDataSource<DATA> {
     private IAsyncDataSource<DATA> dataSource;
     private IAsyncTask<D> asyncTask;
     private ResponseSenderCallback<DATA> successCallback;
