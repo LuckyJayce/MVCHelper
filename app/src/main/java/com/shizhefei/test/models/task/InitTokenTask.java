@@ -9,16 +9,15 @@ import com.shizhefei.task.IAsyncTask;
  */
 
 public class InitTokenTask implements IAsyncTask<Void> {
-    private int time;
+    public static  String userId;
+    public static  String token;
+
 
     @Override
     public RequestHandle execute(ResponseSender<Void> sender) throws Exception {
-        time++;
-        if (time > 2) {
-            sender.sendData(null);
-        } else {
-            sender.sendError(new Exception("初始化异常"));
-        }
+        userId = "54896";
+        token = "f09053jo";
+        sender.sendData(null);
         return null;
     }
 }
