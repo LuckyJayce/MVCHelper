@@ -52,12 +52,16 @@ public class MVCCoolHelper<DATA> extends MVCHelper<DATA> {
 
         @Override
         public void showRefreshComplete() {
+            coolRefreshView.removeOnPullListener(onPullListener);
             coolRefreshView.setRefreshing(false);
+            coolRefreshView.addOnPullListener(onPullListener);
         }
 
         @Override
         public void showRefreshing() {
+            coolRefreshView.removeOnPullListener(onPullListener);
             coolRefreshView.setRefreshing(true);
+            coolRefreshView.addOnPullListener(onPullListener);
         }
 
         private OnPullListener onPullListener = new SimpleOnPullListener() {

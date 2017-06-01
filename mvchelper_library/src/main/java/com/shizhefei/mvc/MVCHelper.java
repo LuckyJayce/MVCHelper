@@ -289,15 +289,22 @@ public class MVCHelper<DATA> {
     }
 
     /**
-     * 做销毁操作，比如关闭正在加载数据的异步线程等
+     * 取消正在执行的取消refresh和loadmore
      */
-    public void destory() {
+    public void cancel() {
         if (requestHandle != null) {
             requestHandle.cancle();
             requestHandle = null;
         }
-        taskHelper.destroy();
         handler.removeCallbacksAndMessages(null);
+    }
+
+    /**
+     * 做销毁操作，比如关闭正在加载数据的异步线程等，一般放在Activity的onDestroy()方法
+     */
+    public void destory() {
+        cancel();
+        taskHelper.destroy();
     }
 
     /**
