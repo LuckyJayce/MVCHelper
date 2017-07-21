@@ -11,7 +11,7 @@ public interface ProgressSender {
      *
      * @param current  当前进度
      * @param total    总量
-     * @param exraData 额外的数据，可以传null
+     * @param extraData 额外的数据，可以传null
      */
-    void sendProgress(long current, long total, Object exraData);
+    void sendProgress(long current, long total, Object extraData);
 }

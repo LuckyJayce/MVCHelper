@@ -485,7 +485,7 @@ public class MVCHelper<DATA> {
     }
 
     public ISuperTask<DATA> getDataSource() {
-        return (IDataSource<DATA>) dataSource;
+        return dataSource;
     }
 
     public ILoadView getLoadView() {
