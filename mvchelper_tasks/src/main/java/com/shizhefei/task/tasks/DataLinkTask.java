@@ -15,4 +15,9 @@ class DataLinkTask<DATA> extends LinkTask<DATA> {
         sender.sendData(data);
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "DataLinkTask->{data:" + data+"}";
+    }
 }

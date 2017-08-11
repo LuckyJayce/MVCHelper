@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadView;
+import com.shizhefei.utils.MVCLogUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -12,81 +13,81 @@ import java.lang.reflect.Method;
 /**
  * 注意 ：<br>
  * SwipeRefreshLayout必须有Parent
- * 
- * @author zsy
  *
  * @param <DATA>
+ * @author zsy
  */
 public class MVCSwipeRefreshHelper<DATA> extends MVCHelper<DATA> {
-	public MVCSwipeRefreshHelper(SwipeRefreshLayout swipeRefreshLayout) {
-		super(new RefreshView(swipeRefreshLayout));
-	}
-	public MVCSwipeRefreshHelper(SwipeRefreshLayout swipeRefreshLayout, ILoadView loadView, ILoadMoreView loadMoreView) {
-		super(new RefreshView(swipeRefreshLayout), loadView, loadMoreView);
-	}
+    public MVCSwipeRefreshHelper(SwipeRefreshLayout swipeRefreshLayout) {
+        super(new RefreshView(swipeRefreshLayout));
+    }
 
-	private static class RefreshView implements IRefreshView {
-		private SwipeRefreshLayout swipeRefreshLayout;
-		private View mTarget;
+    public MVCSwipeRefreshHelper(SwipeRefreshLayout swipeRefreshLayout, ILoadView loadView, ILoadMoreView loadMoreView) {
+        super(new RefreshView(swipeRefreshLayout), loadView, loadMoreView);
+    }
 
-		public RefreshView(SwipeRefreshLayout swipeRefreshLayout) {
-			this.swipeRefreshLayout = swipeRefreshLayout;
-			if (swipeRefreshLayout.getParent() == null) {
-				throw new RuntimeException("PtrClassicFrameLayout 必须有Parent");
-			}
-			try {
-				Method method = swipeRefreshLayout.getClass().getDeclaredMethod("ensureTarget");
-				method.setAccessible(true);
-				method.invoke(swipeRefreshLayout);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				Field field = swipeRefreshLayout.getClass().getDeclaredField("mTarget");
-				field.setAccessible(true);
-				mTarget = (View) field.get(swipeRefreshLayout);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			swipeRefreshLayout.setOnRefreshListener(listener);
-		}
+    private static class RefreshView implements IRefreshView {
+        private SwipeRefreshLayout swipeRefreshLayout;
+        private View mTarget;
 
-		@Override
-		public View getContentView() {
-			return mTarget;
-		}
+        public RefreshView(SwipeRefreshLayout swipeRefreshLayout) {
+            this.swipeRefreshLayout = swipeRefreshLayout;
+            if (swipeRefreshLayout.getParent() == null) {
+                throw new RuntimeException("PtrClassicFrameLayout 必须有Parent");
+            }
+            try {
+                Method method = swipeRefreshLayout.getClass().getDeclaredMethod("ensureTarget");
+                method.setAccessible(true);
+                method.invoke(swipeRefreshLayout);
+            } catch (Exception e) {
+                MVCLogUtil.e(e, "MVCSwipeRefreshHelper ensureTarget");
+            }
+            try {
+                Field field = swipeRefreshLayout.getClass().getDeclaredField("mTarget");
+                field.setAccessible(true);
+                mTarget = (View) field.get(swipeRefreshLayout);
+            } catch (Exception e) {
+                MVCLogUtil.e(e, "MVCSwipeRefreshHelper mTarget");
+            }
+            swipeRefreshLayout.setOnRefreshListener(listener);
+        }
 
-		@Override
-		public View getSwitchView() {
-			return swipeRefreshLayout;
-		}
+        @Override
+        public View getContentView() {
+            return mTarget;
+        }
 
-		private OnRefreshListener onRefreshListener;
+        @Override
+        public View getSwitchView() {
+            return swipeRefreshLayout;
+        }
 
-		@Override
-		public void setOnRefreshListener(OnRefreshListener onRefreshListener) {
-			this.onRefreshListener = onRefreshListener;
-		}
+        private OnRefreshListener onRefreshListener;
 
-		@Override
-		public void showRefreshComplete() {
-			swipeRefreshLayout.setRefreshing(false);
-		}
+        @Override
+        public void setOnRefreshListener(OnRefreshListener onRefreshListener) {
+            this.onRefreshListener = onRefreshListener;
+        }
 
-		@Override
-		public void showRefreshing() {
-			swipeRefreshLayout.setRefreshing(true);
-		}
+        @Override
+        public void showRefreshComplete() {
+            swipeRefreshLayout.setRefreshing(false);
+        }
 
-		private SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void showRefreshing() {
+            swipeRefreshLayout.setRefreshing(true);
+        }
 
-			@Override
-			public void onRefresh() {
-				if (onRefreshListener != null) {
-					onRefreshListener.onRefresh();
-				}
-			}
-		};
+        private SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
 
-	}
+            @Override
+            public void onRefresh() {
+                if (onRefreshListener != null) {
+                    onRefreshListener.onRefresh();
+                }
+            }
+        };
+
+    }
 }

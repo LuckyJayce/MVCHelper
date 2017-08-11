@@ -21,11 +21,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.shizhefei.mvc.RequestHandle;
+import com.shizhefei.mvc.ResponseSender;
 import com.shizhefei.task.Code;
+import com.shizhefei.task.IAsyncTask;
 import com.shizhefei.task.ICallback;
 import com.shizhefei.task.TaskHandle;
 import com.shizhefei.task.TaskHelper;
+import com.shizhefei.task.function.Func1;
 import com.shizhefei.task.imp.MemoryCacheStore;
+import com.shizhefei.task.tasks.LinkTask;
+import com.shizhefei.task.tasks.Tasks;
 import com.shizhefei.test.controllers.mvchelpers.CoolActivity;
 import com.shizhefei.test.controllers.mvchelpers.NormalActivity;
 import com.shizhefei.test.controllers.mvchelpers.PullrefshActivity;
@@ -73,6 +79,7 @@ public class MainActivity extends Activity {
                 Log.d("vvvv", "registCallBak onPostExecute task:" + task + " code:" + code);
             }
         });
+
     }
 
     @Override
@@ -87,7 +94,51 @@ public class MainActivity extends Activity {
      * @param view
      */
     public void onClickTestCase(View view) {
-        ProxyActivity.startActivity(this, TestCaseFragment.class, "测试用例");
+
+        IAsyncTask<String> task = Tasks.retry(new IAsyncTask<String>() {
+            private int times;
+
+            @Override
+            public RequestHandle execute(ResponseSender<String> sender) throws Exception {
+                if (times < 3) {
+                    throw new Exception("异常times:" + times++);
+                }
+                sender.sendData("ok");
+                return null;
+            }
+        }).concatWith(Tasks.async(new LoginTask("", "")))
+                .concatWith(Tasks.just(""))
+                .concatMap(new Func1<String, IAsyncTask<String>>() {
+                    @Override
+                    public IAsyncTask<String> call(String data) throws Exception {
+                        return null;
+                    }
+                });
+
+        LinkTask<String> stringLinkTask = Tasks.create(Tasks.just("data")).concatWith(Tasks.just("data2")).concatWith(new IAsyncTask<String>() {
+            @Override
+            public RequestHandle execute(ResponseSender<String> sender) throws Exception {
+                throw new RuntimeException("test");
+            }
+        });
+
+        new TaskHelper<>().execute(task, new ICallback<String>() {
+            @Override
+            public void onPreExecute(Object task) {
+
+            }
+
+            @Override
+            public void onProgress(Object task, int percent, long current, long total, Object extraData) {
+
+            }
+
+            @Override
+            public void onPostExecute(Object task, Code code, Exception exception, String s) {
+                Log.d("pppp", "task:" + task + " code:" + code + " ex:" + exception + " s:" + s);
+            }
+        });
+//        ProxyActivity.startActivity(this, TestCaseFragment.class, "测试用例");
     }
 
     /**
@@ -214,7 +265,7 @@ public class MainActivity extends Activity {
      * @param view
      */
     public void onClickTaskOpDemo(View view) {
-       startActivity(new Intent(getApplicationContext(), TaskOpActivity.class));
+        startActivity(new Intent(getApplicationContext(), TaskOpActivity.class));
     }
 
 

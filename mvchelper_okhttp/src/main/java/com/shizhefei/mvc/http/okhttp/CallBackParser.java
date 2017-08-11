@@ -1,7 +1,5 @@
 package com.shizhefei.mvc.http.okhttp;
 
-import android.util.Log;
-
 import com.shizhefei.mvc.ResponseSender;
 
 import java.io.IOException;
@@ -30,7 +28,6 @@ public class CallBackParser<DATA> implements Callback, ResponseParser<DATA> {
             DATA data = parse(response);
             sender.sendData(data);
         } catch (Exception e) {
-            e.printStackTrace();
             sender.sendError(e);
         }
     }
