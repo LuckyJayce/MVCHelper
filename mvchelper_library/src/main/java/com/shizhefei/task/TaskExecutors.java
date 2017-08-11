@@ -1,7 +1,5 @@
 package com.shizhefei.task;
 
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -12,6 +10,8 @@ import com.shizhefei.mvc.ProgressSender;
 import com.shizhefei.mvc.RequestHandle;
 import com.shizhefei.mvc.ResponseSender;
 
+import java.util.concurrent.Executor;
+
 /**
  * Created by luckyjayce on 2017/4/15.
  */
@@ -19,7 +19,11 @@ import com.shizhefei.mvc.ResponseSender;
 class TaskExecutors {
 
     public static <DATA> TaskExecutor<DATA> create(IDataSource<DATA> dataSource, boolean isExeRefresh, ICallback<DATA> callback) {
-        return new SyncDataSourceExecutor<>(dataSource, isExeRefresh, callback);
+        return create(dataSource, isExeRefresh, callback, AsyncTaskV25.THREAD_POOL_EXECUTOR);
+    }
+
+    public static <DATA> TaskExecutor<DATA> create(IDataSource<DATA> dataSource, boolean isExeRefresh, ICallback<DATA> callback, Executor executor) {
+        return new SyncDataSourceExecutor<>(dataSource, isExeRefresh, callback, executor);
     }
 
     public static <DATA> TaskExecutor<DATA> create(IAsyncDataSource<DATA> dataSource, boolean isExeRefresh, ICallback<DATA> callback) {
@@ -27,7 +31,11 @@ class TaskExecutors {
     }
 
     public static <DATA> TaskExecutor<DATA> create(ITask<DATA> task, ICallback<DATA> callback) {
-        return new SyncTaskExecutor<>(task, callback);
+        return create(task, callback, AsyncTaskV25.THREAD_POOL_EXECUTOR);
+    }
+
+    public static <DATA> TaskExecutor<DATA> create(ITask<DATA> task, ICallback<DATA> callback, Executor executor) {
+        return new SyncTaskExecutor<>(task, callback, executor);
     }
 
     public static <DATA> TaskExecutor<DATA> create(IAsyncTask<DATA> task, ICallback<DATA> callback) {
@@ -98,16 +106,18 @@ class TaskExecutors {
      *
      * @param <DATA>
      */
-    private static abstract class AbsSyncTaskExecutor<DATA> extends AsyncTask<Object, Object, DATA> implements TaskExecutor<DATA> {
+    private static abstract class AbsSyncTaskExecutor<DATA> extends AsyncTaskV25<Object, Object, DATA> implements TaskExecutor<DATA> {
 
         private final ISuperTask<DATA> realTask;
         private final TaskResponseSender<DATA> responseSender;
+        private final Executor executor;
         private ICallback<DATA> callback;
 
-        public AbsSyncTaskExecutor(ISuperTask<DATA> task, ICallback<DATA> callback) {
+        public AbsSyncTaskExecutor(ISuperTask<DATA> task, ICallback<DATA> callback, Executor executor) {
             super();
             this.callback = callback;
             this.realTask = task;
+            this.executor = executor;
             if (callback == null) {
                 responseSender = new TaskNoCallbackResponseSender<>();
             } else {
@@ -118,11 +128,7 @@ class TaskExecutors {
         @Override
         public RequestHandle execute() {
             responseSender.sendPreExecute(realTask, callback);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Boolean.TRUE);
-            } else {
-                execute(Boolean.TRUE);
-            }
+            executeOnExecutor(executor, Boolean.TRUE);
             return this;
         }
 
@@ -236,8 +242,8 @@ class TaskExecutors {
         private final boolean isExeRefresh;
         private IDataSource<DATA> task;
 
-        public SyncDataSourceExecutor(IDataSource<DATA> task, boolean isExeRefresh, ICallback<DATA> callback) {
-            super(task, callback);
+        public SyncDataSourceExecutor(IDataSource<DATA> task, boolean isExeRefresh, ICallback<DATA> callback, Executor executor) {
+            super(task, callback, executor);
             this.task = task;
             this.isExeRefresh = isExeRefresh;
         }
@@ -269,8 +275,8 @@ class TaskExecutors {
     private static class SyncTaskExecutor<DATA> extends AbsSyncTaskExecutor<DATA> {
         private ITask<DATA> task;
 
-        public SyncTaskExecutor(ITask<DATA> task, ICallback<DATA> callback) {
-            super(task, callback);
+        public SyncTaskExecutor(ITask<DATA> task, ICallback<DATA> callback, Executor executor) {
+            super(task, callback, executor);
             this.task = task;
         }
 

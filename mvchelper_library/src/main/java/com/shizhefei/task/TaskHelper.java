@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
 
 /**
  * Created by LuckyJayce on 2016/7/17.
@@ -29,6 +30,7 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
     private ICacheStore cacheStore;
     private Set<ICallback<BASE_DATA>> callBacks = new LinkedHashSet<>();
     private List<MultiTaskBindProxyCallBack<?, BASE_DATA>> taskImps = new LinkedList<>();
+    private Executor executor;
 
     public TaskHelper() {
         this(new MemoryCacheStore(100));
@@ -36,10 +38,19 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
 
     public TaskHelper(ICacheStore cacheStore) {
         this.cacheStore = cacheStore;
+        this.executor = AsyncTaskV25.THREAD_POOL_EXECUTOR;
     }
 
     public ICacheStore getCacheStore() {
         return cacheStore;
+    }
+
+    /**
+     * 提供设置执行ITask的线程池Executor
+     * @param executor
+     */
+    public void setThreadExecutor(Executor executor){
+        this.executor = executor;
     }
 
 //    public <DATA extends BASE_DATA> TaskHandle execute(ITask<DATA> task, ICallback<? super DATA> callBack) {
@@ -116,11 +127,11 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
             MultiTaskBindProxyCallBack<DATA, BASE_DATA> multiTaskBindProxyCallBack = new MultiTaskBindProxyCallBack<>(cacheConfig, task, callBack, callBacks, taskImps, cacheStore);
             TaskExecutor<DATA> taskExecutor;
             if (task instanceof IDataSource) {
-                taskExecutor = TaskExecutors.create((IDataSource<DATA>) task, isExeRefresh, multiTaskBindProxyCallBack);
+                taskExecutor = TaskExecutors.create((IDataSource<DATA>) task, isExeRefresh, multiTaskBindProxyCallBack, executor);
             } else if (task instanceof IAsyncDataSource) {
                 taskExecutor = TaskExecutors.create((IAsyncDataSource<DATA>) task, isExeRefresh, multiTaskBindProxyCallBack);
             } else if (task instanceof ITask) {
-                taskExecutor = TaskExecutors.create((ITask<DATA>) task, multiTaskBindProxyCallBack);
+                taskExecutor = TaskExecutors.create((ITask<DATA>) task, multiTaskBindProxyCallBack, executor);
             } else {
                 taskExecutor = TaskExecutors.create((IAsyncTask<DATA>) task, multiTaskBindProxyCallBack);
             }
@@ -368,5 +379,13 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
 
     public static <DATA> TaskExecutor<DATA> createExecutor(IAsyncTask<DATA> task, ICallback<DATA> callback) {
         return TaskExecutors.create(task, callback);
+    }
+
+    public static <DATA> TaskExecutor<DATA> create(IDataSource<DATA> dataSource, boolean isExeRefresh, ICallback<DATA> callback, Executor executor) {
+        return TaskExecutors.create(dataSource, isExeRefresh, callback, executor);
+    }
+
+    public static <DATA> TaskExecutor<DATA> create(ITask<DATA> task, ICallback<DATA> callback, Executor executor) {
+        return TaskExecutors.create(task, callback, executor);
     }
 }
