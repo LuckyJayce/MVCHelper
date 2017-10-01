@@ -71,13 +71,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
     private ArrayListMap<String, ParamLine> lines = new ArrayListMap<String, ParamLine>();
     private TaskHelper<Object> taskHelper;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
-        View view = inflater.inflate(R.layout.testcase, container, false);
-
-        taskHelper = new TaskHelper<>();
-
+    protected Gson buildGson(){
         GsonBuilder builder = new GsonBuilder();
         // 格式化输出
         builder.setPrettyPrinting();
@@ -99,7 +93,17 @@ public abstract class ABSTestCaseFragment extends Fragment {
                 return clazz == Gson.class || clazz == Bitmap.class;
             }
         }).create();
-        gson = builder.create();
+        Gson gson = builder.create();
+        return gson;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.gson = buildGson();
+        this.inflater = inflater;
+        View view = inflater.inflate(R.layout.testcase, container, false);
+
+        taskHelper = new TaskHelper<>();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.testcase2_recyclerView);
         paramsRecyclerView = (LinearLayout) view.findViewById(R.id.testcase2_params_recyclerView);
