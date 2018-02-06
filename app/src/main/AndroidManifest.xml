@@ -64,7 +64,7 @@
             android:name="com.shizhefei.test.controllers.other.MultiTypeActivity"
             android:label="@string/title_activity_multi_type" />
         <activity android:name="com.shizhefei.test.controllers.task.TestNormalTaskActivity" />
-        <activity android:name="com.shizhefei.test.controllers.task.TaskOpActivity"/>
+        <activity android:name="com.shizhefei.test.controllers.task.TaskOpExceptionActivity"/>
     </application>
 
 </manifest>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="异常设置" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/exception_editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="设置异常message"
+            android:padding="8dp" />
+
+        <ToggleButton
+            android:id="@+id/exception_toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="设置异常"
+            android:textOn="不设置异常" />
+    </LinearLayout>
+
+</LinearLayout>

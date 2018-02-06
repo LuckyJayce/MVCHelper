@@ -40,7 +40,7 @@ public class TimeoutLinkTask<DATA> extends LinkTask<DATA> {
             @Override
             public void run() {
                 if (resultCode == null) {
-                    sender.sendError(new TimeoutException());
+                    sender.sendError(new TimeoutException("time out :" + timeout + " ms"));
                     taskHelper.cancle();
                 }
             }
@@ -67,5 +67,8 @@ public class TimeoutLinkTask<DATA> extends LinkTask<DATA> {
 
     public static class TimeoutException extends Exception {
 
+        public TimeoutException(String s) {
+            super(s);
+        }
     }
 }
