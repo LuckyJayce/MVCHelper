@@ -1,27 +1,35 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'//添加
 
 android {
     compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        versionCode rootProject.ext.VERSION_CODE
+        versionName rootProject.ext.VERSION_NAME
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
-    provided 'com.android.support:appcompat-v7:26.1.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    provided 'com.android.support:support-v4:26.1.0'
+}
+
+//添加
+publish {
+    userOrg = 'luckyjayce'//bintray.com用户名
+    groupId = 'com.shizhefei'//jcenter上的路径
+    artifactId = 'MVCHelper-Task-Core'//项目名称
+    publishVersion = rootProject.ext.VERSION_NAME//版本号
+    desc = 'MVCHelper 下的Task 核心类库'//描述，不重要
+    website = 'https://github.com/LuckyJayce/MVCHelper'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }
