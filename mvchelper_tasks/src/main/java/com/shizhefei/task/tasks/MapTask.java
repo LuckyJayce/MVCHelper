@@ -4,26 +4,28 @@ import com.shizhefei.mvc.RequestHandle;
 import com.shizhefei.mvc.ResponseSender;
 import com.shizhefei.task.Code;
 import com.shizhefei.task.IAsyncTask;
-import com.shizhefei.task.ResponseSenderCallback;
 import com.shizhefei.task.function.Func1;
 import com.shizhefei.task.imp.SimpleCallback;
 
-import java.lang.ref.WeakReference;
+/**
+ * Created by luckyjayce on 2017/8/22.
+ */
 
-class ConcatLinkTask<D1, DATA> extends LinkTask<DATA> {
-    private IAsyncTask<D1> task;
-    private Func1<D1, IAsyncTask<DATA>> func1;
-    private WeakReference<IAsyncTask<DATA>> linkNextTask;
+class MapTask<DATA, D> extends LinkTask<DATA> {
 
-    public ConcatLinkTask(IAsyncTask<D1> task, Func1<D1, IAsyncTask<DATA>> func1) {
-        this.func1 = func1;
+    private final IAsyncTask<D> task;
+    private final Func1<D, DATA> func;
+
+    public MapTask(IAsyncTask<D> task, Func1<D, DATA> func) {
+        super();
         this.task = task;
+        this.func = func;
     }
 
     @Override
     public RequestHandle execute(final ResponseSender<DATA> sender) throws Exception {
         final SimpleTaskHelper taskHelper = new SimpleTaskHelper();
-        taskHelper.execute(task, new SimpleCallback<D1>() {
+        taskHelper.execute(task, new SimpleCallback<D>() {
             @Override
             public void onProgress(Object task, int percent, long current, long total, Object extraData) {
                 super.onProgress(task, percent, current, total, extraData);
@@ -31,13 +33,12 @@ class ConcatLinkTask<D1, DATA> extends LinkTask<DATA> {
             }
 
             @Override
-            public void onPostExecute(Object task, Code code, Exception exception, D1 d1) {
+            public void onPostExecute(Object task, Code code, Exception exception, D d1) {
                 switch (code) {
                     case SUCCESS:
                         try {
-                            IAsyncTask<DATA> task2 = func1.call(d1);
-                            linkNextTask = new WeakReference<>(task2);
-                            taskHelper.execute(task2, new ResponseSenderCallback<>(sender));
+                            DATA data = func.call(d1);
+                            sender.sendData(data);
                         } catch (Exception e) {
                             sender.sendError(e);
                         }
@@ -46,16 +47,10 @@ class ConcatLinkTask<D1, DATA> extends LinkTask<DATA> {
                         sender.sendError(exception);
                         break;
                     case CANCEL:
-                        func1 = null;
                         break;
                 }
             }
         });
         return taskHelper;
-    }
-
-    @Override
-    public String toString() {
-        return "ConcatLinkTask->{task:" + task + ",linkNextTask:" + (linkNextTask == null ? null : linkNextTask.get()+"}");
     }
 }
