@@ -2,12 +2,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'//添加
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 26
         versionCode rootProject.ext.VERSION_CODE
         versionName rootProject.ext.VERSION_NAME
     }
@@ -26,8 +26,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    provided 'com.android.support:recyclerview-v7:23.4.0'
-    provided 'com.android.support:support-v4:23.4.0'
+    provided 'com.android.support:recyclerview-v7:26.1.0'
+    provided 'com.android.support:support-v4:26.1.0'
     provided 'com.google.code.gson:gson:2.2.4'
     compile project(':mvchelper_library')
 }
