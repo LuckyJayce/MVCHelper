@@ -15,4 +15,9 @@ class LinkProxyTask<DATA> extends LinkTask<DATA> {
     public RequestHandle execute(ResponseSender<DATA> sender) throws Exception {
         return task.execute(sender);
     }
+
+    @Override
+    public String toString() {
+        return "LinkProxyTask->{" + task+"}";
+    }
 }

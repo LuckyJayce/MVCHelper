@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.shizhefei.mvc.demo"
@@ -55,7 +55,7 @@ dependencies {
     compile project(':mvchelper_testcase')
     compile project(':mvccoolhelper')
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+//    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }

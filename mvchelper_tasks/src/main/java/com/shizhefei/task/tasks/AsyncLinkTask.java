@@ -32,4 +32,9 @@ class AsyncLinkTask<DATA> extends LinkTask<DATA> {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "AsyncLinkTask->{"+task+"}";
+    }
 }

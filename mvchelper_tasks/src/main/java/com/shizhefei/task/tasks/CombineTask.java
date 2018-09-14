@@ -4,7 +4,6 @@ import com.shizhefei.mvc.RequestHandle;
 import com.shizhefei.mvc.ResponseSender;
 import com.shizhefei.task.Code;
 import com.shizhefei.task.IAsyncTask;
-import com.shizhefei.task.TaskHelper;
 import com.shizhefei.task.function.Func2;
 import com.shizhefei.task.imp.SimpleCallback;
 
@@ -16,7 +15,6 @@ class CombineTask<D1, D2, DATA> extends LinkTask<DATA> {
     private IAsyncTask<D1> task1;
     private IAsyncTask<D2> task2;
     private Func2<D1, D2, DATA> func2;
-    private TaskHelper<Object> taskHelper;
     private D1 data1;
     private D2 data2;
     private boolean d1Success;
@@ -26,11 +24,11 @@ class CombineTask<D1, D2, DATA> extends LinkTask<DATA> {
         this.task1 = task1;
         this.task2 = task2;
         this.func2 = func2;
-        taskHelper = new TaskHelper<>();
     }
 
     @Override
     public RequestHandle execute(final ResponseSender<DATA> sender) throws Exception {
+        final SimpleTaskHelper taskHelper = new SimpleTaskHelper();
         taskHelper.execute(task1, new SimpleCallback<D1>() {
             @Override
             public void onProgress(Object task, int percent, long current, long total, Object extraData) {
@@ -88,9 +86,13 @@ class CombineTask<D1, D2, DATA> extends LinkTask<DATA> {
                 DATA data = func2.call(data1, data2);
                 sender.sendData(data);
             } catch (Exception e) {
-                e.printStackTrace();
                 sender.sendError(e);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CombineTask->{task1:" + task1 + ",task2:" + task2 + "}";
     }
 }

@@ -6,6 +6,7 @@ import com.shizhefei.mvc.IAsyncDataSource;
 import com.shizhefei.mvc.IDataSource;
 import com.shizhefei.mvc.RequestHandle;
 import com.shizhefei.task.imp.MemoryCacheStore;
+import com.shizhefei.utils.MVCLogUtil;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,7 +29,7 @@ import java.util.concurrent.Executor;
 public class TaskHelper<BASE_DATA> implements RequestHandle {
 
     private ICacheStore cacheStore;
-    private Set<ICallback<BASE_DATA>> callBacks = new LinkedHashSet<>();
+    private Set<ICallback<BASE_DATA>> registerCallBacks = new LinkedHashSet<>();
     private List<MultiTaskBindProxyCallBack<?, BASE_DATA>> taskImps = new LinkedList<>();
     private Executor executor;
 
@@ -124,16 +125,17 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
         }
         TaskHandle requestHandle = loadCache(cacheConfig, task, callBack);
         if (requestHandle == null) {
-            MultiTaskBindProxyCallBack<DATA, BASE_DATA> multiTaskBindProxyCallBack = new MultiTaskBindProxyCallBack<>(cacheConfig, task, callBack, callBacks, taskImps, cacheStore);
+            MultiTaskBindProxyCallBack<DATA, BASE_DATA> multiTaskBindProxyCallBack = new MultiTaskBindProxyCallBack<>(cacheConfig, task, callBack, registerCallBacks, taskImps, cacheStore);
+            ICallback<DATA> callback = new LogCallback<>(multiTaskBindProxyCallBack);
             TaskExecutor<DATA> taskExecutor;
             if (task instanceof IDataSource) {
-                taskExecutor = TaskExecutors.create((IDataSource<DATA>) task, isExeRefresh, multiTaskBindProxyCallBack, executor);
+                taskExecutor = TaskExecutors.create((IDataSource<DATA>) task, isExeRefresh, callback, executor);
             } else if (task instanceof IAsyncDataSource) {
-                taskExecutor = TaskExecutors.create((IAsyncDataSource<DATA>) task, isExeRefresh, multiTaskBindProxyCallBack);
+                taskExecutor = TaskExecutors.create((IAsyncDataSource<DATA>) task, isExeRefresh, callback);
             } else if (task instanceof ITask) {
-                taskExecutor = TaskExecutors.create((ITask<DATA>) task, multiTaskBindProxyCallBack, executor);
+                taskExecutor = TaskExecutors.create((ITask<DATA>) task, callback, executor);
             } else {
-                taskExecutor = TaskExecutors.create((IAsyncTask<DATA>) task, multiTaskBindProxyCallBack);
+                taskExecutor = TaskExecutors.create((IAsyncTask<DATA>) task, callback);
             }
             multiTaskBindProxyCallBack.taskExecutor = taskExecutor;
             taskImps.add(multiTaskBindProxyCallBack);
@@ -187,11 +189,11 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
     }
 
     public void registerCallBack(ICallback<BASE_DATA> callback) {
-        callBacks.add(callback);
+        registerCallBacks.add(callback);
     }
 
     public void unRegisterCallBack(ICallback<BASE_DATA> callback) {
-        callBacks.remove(callback);
+        registerCallBacks.remove(callback);
     }
 
     public void cancelAll() {
@@ -225,8 +227,8 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
     static class MultiTaskBindProxyCallBack<DATA extends BASE_DATA, BASE_DATA> implements ICallback<DATA> {
         private ICallback<DATA> callback;
         private long requestTime;
-        private Set<ICallback<BASE_DATA>> callbacks;
-        private Map<Object, ICallback<DATA>> selfCallBacks = new LinkedHashMap<>();
+        private Set<ICallback<BASE_DATA>> registerCallbacks;
+        private Map<Object, ICallback<DATA>> bindCallBacks = new LinkedHashMap<>();
         private List<MultiTaskBindProxyCallBack<?, BASE_DATA>> taskImps;
         private ICacheStore cacheStore;
         private String taskKey;
@@ -234,14 +236,14 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
         private Object realTask;
         private TaskExecutor<DATA> taskExecutor;
 
-        public MultiTaskBindProxyCallBack(ICacheConfig<DATA> cacheConfig, Object realTask, ICallback<DATA> callback, Set<ICallback<BASE_DATA>> callbacks, List<MultiTaskBindProxyCallBack<?, BASE_DATA>> taskImps, ICacheStore cacheStore) {
+        public MultiTaskBindProxyCallBack(ICacheConfig<DATA> cacheConfig, Object realTask, ICallback<DATA> callback, Set<ICallback<BASE_DATA>> registerCallbacks, List<MultiTaskBindProxyCallBack<?, BASE_DATA>> taskImps, ICacheStore cacheStore) {
             this.cacheConfig = cacheConfig;
             this.requestTime = System.currentTimeMillis();
             if (cacheConfig != null) {
                 this.taskKey = cacheConfig.getTaskKey(realTask);
             }
             this.callback = callback;
-            this.callbacks = callbacks;
+            this.registerCallbacks = registerCallbacks;
             this.taskImps = taskImps;
             this.cacheStore = cacheStore;
             this.realTask = realTask;
@@ -249,7 +251,7 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
 
         @Override
         public void onPreExecute(Object task) {
-            for (Map.Entry<Object, ICallback<DATA>> callbackEntry : selfCallBacks.entrySet()) {
+            for (Map.Entry<Object, ICallback<DATA>> callbackEntry : bindCallBacks.entrySet()) {
                 Object aTask = callbackEntry.getKey();
                 ICallback<DATA> aCallback = callbackEntry.getValue();
                 aCallback.onPreExecute(aTask);
@@ -257,14 +259,14 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
             if (callback != null) {
                 callback.onPreExecute(task);
             }
-            for (ICallback<BASE_DATA> callback : callbacks) {
+            for (ICallback<BASE_DATA> callback : registerCallbacks) {
                 callback.onPreExecute(task);
             }
         }
 
         @Override
         public void onProgress(Object task, int percent, long current, long total, Object extraData) {
-            for (Map.Entry<Object, ICallback<DATA>> callbackEntry : selfCallBacks.entrySet()) {
+            for (Map.Entry<Object, ICallback<DATA>> callbackEntry : bindCallBacks.entrySet()) {
                 Object aTask = callbackEntry.getKey();
                 ICallback<DATA> aCallback = callbackEntry.getValue();
                 aCallback.onProgress(aTask, percent, current, total, extraData);
@@ -272,14 +274,14 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
             if (callback != null) {
                 callback.onProgress(task, percent, current, total, extraData);
             }
-            for (ICallback<BASE_DATA> callback : callbacks) {
+            for (ICallback<BASE_DATA> callback : registerCallbacks) {
                 callback.onProgress(task, percent, current, total, extraData);
             }
         }
 
         @Override
         public void onPostExecute(Object task, Code code, Exception exception, DATA data) {
-            for (Map.Entry<Object, ICallback<DATA>> taskCallbackEntry : selfCallBacks.entrySet()) {
+            for (Map.Entry<Object, ICallback<DATA>> taskCallbackEntry : bindCallBacks.entrySet()) {
                 Object aTask = taskCallbackEntry.getKey();
                 ICallback<DATA> aCallback = taskCallbackEntry.getValue();
                 aCallback.onPostExecute(aTask, code, exception, data);
@@ -287,7 +289,7 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
             if (callback != null) {
                 callback.onPostExecute(task, code, exception, data);
             }
-            for (ICallback<BASE_DATA> callback : callbacks) {
+            for (ICallback<BASE_DATA> callback : registerCallbacks) {
                 callback.onPostExecute(task, code, exception, data);
             }
             taskImps.remove(this);
@@ -301,23 +303,23 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
                 }
             }
             this.cacheStore = null;
-            this.callbacks = null;
+            this.registerCallbacks = null;
             this.cacheConfig = null;
             this.taskExecutor = null;
             this.taskImps = null;
             this.callback = null;
-            this.selfCallBacks = null;
+            this.bindCallBacks = null;
             this.realTask = null;
             this.taskKey = null;
         }
 
-        public Map<Object, ICallback<DATA>> getCallbacks() {
-            return selfCallBacks;
+        public Map<Object, ICallback<DATA>> getRegisterCallbacks() {
+            return bindCallBacks;
         }
 
         public void addCallBack(Object task, ICallback<DATA> callBack) {
-            if (selfCallBacks != null) {
-                selfCallBacks.put(task, callBack);
+            if (bindCallBacks != null) {
+                bindCallBacks.put(task, callBack);
             }
         }
 
@@ -328,7 +330,7 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
         }
 
         public boolean cancel(Object task) {
-            Map<Object, ICallback<DATA>> callbacks = getCallbacks();
+            Map<Object, ICallback<DATA>> callbacks = getRegisterCallbacks();
             if (callbacks == null) {
                 return false;
             }
@@ -366,18 +368,26 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
     }
 
     public static <DATA> TaskExecutor<DATA> createExecutor(IDataSource<DATA> dataSource, boolean isExeRefresh, ICallback<DATA> callback) {
-        return TaskExecutors.create(dataSource, isExeRefresh, callback);
+        return TaskExecutors.create(dataSource, isExeRefresh, new LogCallback<>(callback));
     }
 
     public static <DATA> TaskExecutor<DATA> createExecutor(IAsyncDataSource<DATA> dataSource, boolean isExeRefresh, ICallback<DATA> callback) {
-        return TaskExecutors.create(dataSource, isExeRefresh, callback);
+        return TaskExecutors.create(dataSource, isExeRefresh, new LogCallback<>(callback));
     }
 
     public static <DATA> TaskExecutor<DATA> createExecutor(ITask<DATA> task, ICallback<DATA> callback) {
-        return TaskExecutors.create(task, callback);
+        return TaskExecutors.create(task, new LogCallback<>(callback));
     }
 
     public static <DATA> TaskExecutor<DATA> createExecutor(IAsyncTask<DATA> task, ICallback<DATA> callback) {
+        return TaskExecutors.create(task, new LogCallback<>(callback));
+    }
+
+    public static <DATA> TaskExecutor<DATA> createExecutorWithoutLog(ITask<DATA> task, ICallback<DATA> callback) {
+        return TaskExecutors.create(task, callback);
+    }
+
+    public static <DATA> TaskExecutor<DATA> createExecutorWithoutLog(IAsyncTask<DATA> task, ICallback<DATA> callback) {
         return TaskExecutors.create(task, callback);
     }
 
@@ -388,4 +398,39 @@ public class TaskHelper<BASE_DATA> implements RequestHandle {
     public static <DATA> TaskExecutor<DATA> create(ITask<DATA> task, ICallback<DATA> callback, Executor executor) {
         return TaskExecutors.create(task, callback, executor);
     }
+
+    private static class LogCallback<DATA> implements ICallback<DATA> {
+        private ICallback<DATA> callback;
+
+        public LogCallback(ICallback<DATA> callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public void onPreExecute(Object task) {
+            if (callback != null) {
+                callback.onPreExecute(task);
+            }
+        }
+
+        @Override
+        public void onProgress(Object task, int percent, long current, long total, Object extraData) {
+            if (callback != null) {
+                callback.onProgress(task, percent, current, total, extraData);
+            }
+        }
+
+        @Override
+        public void onPostExecute(Object task, Code code, Exception exception, DATA data) {
+            if (exception == null) {
+                MVCLogUtil.d("{} task={} code={}  data={}", "执行结果", task, code, data);
+            } else {
+                MVCLogUtil.e(exception, "{} task={} code={} data={}", "执行结果", task, code, data);
+            }
+            if (callback != null) {
+                callback.onPostExecute(task, code, exception, data);
+            }
+        }
+    }
+
 }

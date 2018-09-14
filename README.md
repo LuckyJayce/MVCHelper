@@ -732,6 +732,16 @@ Activity负责调度，代码如下
 	  //taskHelper.destory();//执行释放操作
       //taskHelper.cancelAll();//取消全部
 
+## 4.结构
+ task 任务，子类IAsyncTask异步任务，ITask同步任务
+ ICallback task开始、progress、结果的事件回调
+ ResponseSender 用于task执行的结果通知给ICallback
+ TaskExecutor task执行者,实现类SyncDataSourceExecutor，AsyncDataSourceExecutor，SyncTaskExecutor，AsyncTaskExecutor
+ TaskExecutors 负责创建TaskExecutor
+ TaskHelper 执行多个TaskExecutor
+
+ taskHelper 调用TaskExecutors创建TaskExecutor，TaskExecutor执行task，通过ResponseSender通知ICallback
+
 ## 注意：  
         1.权限：  
 	        android.permission.INTERNET  

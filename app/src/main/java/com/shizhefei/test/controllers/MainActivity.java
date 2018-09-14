@@ -21,11 +21,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.shizhefei.mvc.RequestHandle;
+import com.shizhefei.mvc.ResponseSender;
 import com.shizhefei.task.Code;
+import com.shizhefei.task.IAsyncTask;
 import com.shizhefei.task.ICallback;
 import com.shizhefei.task.TaskHandle;
 import com.shizhefei.task.TaskHelper;
+import com.shizhefei.task.function.Func1;
 import com.shizhefei.task.imp.MemoryCacheStore;
+import com.shizhefei.task.tasks.LinkTask;
+import com.shizhefei.task.tasks.Tasks;
 import com.shizhefei.test.controllers.mvchelpers.CoolActivity;
 import com.shizhefei.test.controllers.mvchelpers.NormalActivity;
 import com.shizhefei.test.controllers.mvchelpers.PullrefshActivity;
@@ -214,7 +220,7 @@ public class MainActivity extends Activity {
      * @param view
      */
     public void onClickTaskOpDemo(View view) {
-       startActivity(new Intent(getApplicationContext(), TaskOpActivity.class));
+        startActivity(new Intent(getApplicationContext(), TaskOpActivity.class));
     }
 
 

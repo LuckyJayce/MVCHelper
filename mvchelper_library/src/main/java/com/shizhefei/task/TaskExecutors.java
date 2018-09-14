@@ -2,7 +2,6 @@ package com.shizhefei.task;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.shizhefei.mvc.IAsyncDataSource;
 import com.shizhefei.mvc.IDataSource;
@@ -137,11 +136,6 @@ class TaskExecutors {
             try {
                 return executeImp(responseSender);
             } catch (Exception e) {
-                if (e instanceof InterruptedException) {
-                    Log.d("TaskHelper", realTask.toString() + e);
-                } else {
-                    e.printStackTrace();
-                }
                 responseSender.sendError(e);
             }
             return null;
@@ -394,11 +388,11 @@ class TaskExecutors {
         private void onPreExecute() {
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            onPreExecuteMainThread();
-                        }
-                    });
+                    @Override
+                    public void run() {
+                        onPreExecuteMainThread();
+                    }
+                });
             } else {
                 onPreExecuteMainThread();
             }
@@ -420,11 +414,11 @@ class TaskExecutors {
         private void onPostExecute(final Code code, final Exception exception, final DATA data) {
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            onPostExecuteMainThread(code, exception, data);
-                        }
-                    });
+                    @Override
+                    public void run() {
+                        onPostExecuteMainThread(code, exception, data);
+                    }
+                });
             } else {
                 onPostExecuteMainThread(code, exception, data);
             }
