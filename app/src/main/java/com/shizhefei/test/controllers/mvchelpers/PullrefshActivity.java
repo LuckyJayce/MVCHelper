@@ -22,7 +22,7 @@ import android.view.View;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.shizhefei.mvc.MVCHelper;
 import com.shizhefei.mvc.MVCPullrefshHelper;
-import com.shizhefei.task.datasource.DataSources;
+//import com.shizhefei.task.datasource.DataSources;
 import com.shizhefei.test.models.datasource.BooksDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.models.task.InitTokenTask;
@@ -50,7 +50,7 @@ public class PullrefshActivity extends Activity {
 		
 		mvcHelper = new MVCPullrefshHelper<>(refreshListView);
 		// 设置数据源
-		mvcHelper.setDataSource(DataSources.concatWith(new InitTokenTask(), new BooksDataSource()));
+//		mvcHelper.setDataSource(DataSources.concatWith(new InitTokenTask(), new BooksDataSource()));
 		// 设置适配器
 		mvcHelper.setAdapter(new BooksAdapter(this));
 		// 加载数据
