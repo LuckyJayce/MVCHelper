@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
 
     defaultConfig {
         applicationId "com.shizhefei.mvc.demo"
-        minSdkVersion 10
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode rootProject.ext.VERSION_CODE
+        versionName rootProject.ext.VERSION_NAME
     }
     buildTypes {
         release {
@@ -25,37 +25,39 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'in.srain.cube:ultra-ptr:1.0.11'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.google.code.gson:gson:2.2.4'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'io.reactivex:rxandroid:1.0.0'
-    compile 'com.shizhefei:ViewPagerIndicator:1.1.4'
-    compile 'com.shizhefei:MultiTypeView:1.0.1'
-    compile 'com.shizhefei:CoolRefreshView:1.0.1'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
+
+    compile rootProject.ext.dependencies["appcompat-v7"]
+    compile rootProject.ext.dependencies["recyclerview-v7"]
+    compile rootProject.ext.dependencies["design"]
+    compile rootProject.ext.dependencies["ultra-ptr"]
+    compile rootProject.ext.dependencies["gson"]
+    compile rootProject.ext.dependencies["retrofit"]
+    compile rootProject.ext.dependencies["retrofit-rxjava"]
+    compile rootProject.ext.dependencies["retrofit-gson"]
+    compile rootProject.ext.dependencies["rxandroid"]
+    compile rootProject.ext.dependencies["ViewPagerIndicator"]
+    compile rootProject.ext.dependencies["MultiTypeView"]
+    compile rootProject.ext.dependencies["CoolRefreshView"]
+    compile rootProject.ext.dependencies["circleimageview"]
+    compile rootProject.ext.dependencies["pulltorefresh"]
+    compile rootProject.ext.dependencies["okhttp"]
+    compile rootProject.ext.dependencies["okio"]
+    compile rootProject.ext.dependencies["okio"]
+
     //    compile 'com.shizhefei:MVCHelper-Library:1.0.3'
     //    compile 'com.shizhefei:MVCHelper-Pullrefreh:1.0.2'
     //    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.2'
     //    compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.2'
-    compile 'com.shizhefei:pulltorefresh:1.0.0'
     compile project(':mvchelper_library')
     compile project(':mvchelper_tasks')
     compile project(':mvcswiperefreshhelper')
     compile project(':mvcultrahelper')
     compile project(':mvcpullrefshhelper')
-    compile 'com.squareup.okio:okio:1.9.0'
-    compile 'com.squareup.okhttp3:okhttp:3.4.0'
     compile project(':mvchelper_okhttp')
     compile project(':mvchelper_testcase')
     compile project(':mvccoolhelper')
 
-    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
-//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-//    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    debugImplementation rootProject.ext.dependencies["leakcanary-android"]
+    releaseImplementation rootProject.ext.dependencies["leakcanary-android-no-op"]
+    // Optional, if you use support library fragments:
 }

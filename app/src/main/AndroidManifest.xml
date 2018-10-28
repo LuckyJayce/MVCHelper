@@ -16,6 +16,7 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -64,7 +65,7 @@
             android:name="com.shizhefei.test.controllers.other.MultiTypeActivity"
             android:label="@string/title_activity_multi_type" />
         <activity android:name="com.shizhefei.test.controllers.task.TestNormalTaskActivity" />
-        <activity android:name="com.shizhefei.test.controllers.task.TaskOpActivity"/>
+        <activity android:name="com.shizhefei.test.controllers.task.TaskOpActivity" />
     </application>
 
 </manifest>
