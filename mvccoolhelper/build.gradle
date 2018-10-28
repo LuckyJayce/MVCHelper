@@ -2,10 +2,10 @@ apply plugin: 'com.android.library'
 apply from: rootProject.file("library.gradle")
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided rootProject.ext.dependencies["CoolRefreshView"]
-    provided rootProject.ext.dependencies["support-v4"]
-    compile project(':mvchelper_library')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly rootProject.ext.dependencies["CoolRefreshView"]
+    compileOnly rootProject.ext.dependencies["support-v4"]
+    implementation project(':mvchelper_library')
 }
 
 ////添加

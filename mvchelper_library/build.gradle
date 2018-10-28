@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 apply from: rootProject.file("library.gradle")
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided rootProject.ext.dependencies["recyclerview-v7"]
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly rootProject.ext.dependencies["recyclerview-v7"]
 }
 
 ////添加

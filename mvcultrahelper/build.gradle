@@ -2,12 +2,12 @@ apply plugin: 'com.android.library'
 apply from: rootProject.file("library.gradle")
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    provided rootProject.ext.dependencies["support-v4"]
-    provided rootProject.ext.dependencies["ultra-ptr"]
+    compileOnly rootProject.ext.dependencies["support-v4"]
+    compileOnly rootProject.ext.dependencies["ultra-ptr"]
 
-    compile project(':mvchelper_library')
+    implementation project(':mvchelper_library')
 }
 
 ////添加

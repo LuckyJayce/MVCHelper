@@ -2,11 +2,11 @@ apply plugin: 'com.android.library'
 apply from: rootProject.file("library.gradle")
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':mvchelper_library')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':mvchelper_library')
 
-    provided rootProject.ext.dependencies["okhttp"]
-    provided rootProject.ext.dependencies["okio"]
+    compileOnly rootProject.ext.dependencies["okhttp"]
+    compileOnly rootProject.ext.dependencies["okio"]
 }
 
 ////添加
