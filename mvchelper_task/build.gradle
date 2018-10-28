@@ -10,7 +10,7 @@ dependencies {
 //publish {
 //    userOrg = 'luckyjayce'//bintray.com用户名
 //    groupId = 'com.shizhefei'//jcenter上的路径
-//    artifactId = 'MVCHelper-Task'//项目名称
+//    artifactId = 'MVCHelper-Task-Core'//项目名称
 //    publishVersion = rootProject.ext.VERSION_NAME//版本号
 //    desc = 'Task类库'//描述，不重要
 //    website = 'https://github.com/LuckyJayce/MVCHelper'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
