@@ -3,16 +3,15 @@ apply from: rootProject.file("library.gradle")
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly rootProject.ext.dependencies["recyclerview-v7"]
-    api project(':mvchelper_task')
+    compileOnly rootProject.ext.dependencies["support-v4"]
 }
 
 ////添加
 //publish {
 //    userOrg = 'luckyjayce'//bintray.com用户名
 //    groupId = 'com.shizhefei'//jcenter上的路径
-//    artifactId = 'MVCHelper-Library'//项目名称
+//    artifactId = 'MVCHelper-Task'//项目名称
 //    publishVersion = rootProject.ext.VERSION_NAME//版本号
-//    desc = '实现下拉刷新，滚动底部自动加载更多，分页加载，自动切换显示网络失败布局，暂无数据布局，支持任意view，支持切换主流下拉刷新框架，真正的android MVC架构,listview,RecyclerView,refresh,loadmore'//描述，不重要
+//    desc = 'Task类库'//描述，不重要
 //    website = 'https://github.com/LuckyJayce/MVCHelper'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 //}
