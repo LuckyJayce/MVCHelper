@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,8 +40,6 @@ import com.shizhefei.mvc.IAsyncDataSource;
 import com.shizhefei.mvc.IDataSource;
 import com.shizhefei.mvc.testcase.R;
 import com.shizhefei.mvchelper.testcase.TestCaseData.IParamValuesNotify;
-import com.shizhefei.recyclerview.HFAdapter;
-import com.shizhefei.recyclerview.HFAdapter.OnItemClickListener;
 import com.shizhefei.task.Code;
 import com.shizhefei.task.IAsyncTask;
 import com.shizhefei.task.ICallback;
@@ -71,7 +70,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
     private ArrayListMap<String, ParamLine> lines = new ArrayListMap<String, ParamLine>();
     private TaskHelper<Object> taskHelper;
 
-    protected Gson buildGson(){
+    protected Gson buildGson() {
         GsonBuilder builder = new GsonBuilder();
         // 格式化输出
         builder.setPrettyPrinting();
@@ -128,7 +127,6 @@ public abstract class ABSTestCaseFragment extends Fragment {
         resetButton.setOnClickListener(onClickListener);
         runButton.setOnClickListener(onClickListener);
         itemRunButton.setOnClickListener(onClickListener);
-        tasksAdapter.setOnItemClickListener(onItemClickListener);
         resultTextView.setOnClickListener(onClickListener);
 
         updateRight();
@@ -155,7 +153,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
                 break;
         }
         // paramsAdapter.notifyDataSetChanged();
-        tasksAdapter.notifyDataSetChangedHF();
+        tasksAdapter.notifyDataSetChanged();
 
         String json;
         json = gson.toJson(data.task);
@@ -287,14 +285,6 @@ public abstract class ABSTestCaseFragment extends Fragment {
     protected abstract List<TestCaseData> getTestCaseDatas();
 
     private int selectPosition = 0;
-
-    private OnItemClickListener onItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onItemClick(HFAdapter adapter, ViewHolder vh, int position) {
-            selectPosition = position;
-            updateRight();
-        }
-    };
 
     private ArrayListMap<String, Object> map2 = new ArrayListMap<String, Object>();
 
@@ -428,60 +418,68 @@ public abstract class ABSTestCaseFragment extends Fragment {
 
     }
 
-    private class TasksAdapter extends HFAdapter {
+    private class TasksAdapter extends RecyclerView.Adapter<ViewHolder> {
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolderHF(ViewGroup viewGroup, int type) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             return new ItemViewHolder(inflater.inflate(R.layout.testcase_item, viewGroup, false));
         }
 
         @Override
-        public void onBindViewHolderHF(ViewHolder vh, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder vh, int position) {
             ItemViewHolder holder = (ItemViewHolder) vh;
             holder.setData(position, datas.get(position));
         }
 
         @Override
-        public int getItemCountHF() {
+        public int getItemCount() {
             return datas.size();
         }
+    }
 
-        class ItemViewHolder extends ViewHolder {
+    class ItemViewHolder extends ViewHolder {
 
-            private Button b;
-            private TestCaseData data;
-            private int index;
+        private Button b;
+        private TestCaseData data;
+        private int index;
 
-            public ItemViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            private void setData(int index, TestCaseData data) {
-                this.index = index;
-                this.data = data;
-                TextView textView = (TextView) itemView.findViewById(R.id.item_testcase2_textView);
-                View stateView = itemView.findViewById(R.id.item_testcase2_state_view);
-                if (index == selectPosition) {
-                    itemView.setBackgroundColor(Color.WHITE);
-                } else {
-                    itemView.setBackgroundColor(Color.parseColor("#cccccc"));
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectPosition = getLayoutPosition();
+                    updateRight();
                 }
-                switch (data.status) {
-                    case -1:
-                        stateView.setBackgroundColor(Color.RED);
-                        break;
-                    case 0:
-                        stateView.setBackgroundColor(Color.TRANSPARENT);
-                        break;
-                    case 1:
-                        stateView.setBackgroundResource(R.drawable.testcase_arrow);
-                        break;
-                    case 2:
-                        stateView.setBackgroundColor(Color.GREEN);
-                        break;
-                }
-                textView.setText(data.text);
+            });
+        }
+
+        private void setData(int index, TestCaseData data) {
+            this.index = index;
+            this.data = data;
+            TextView textView = (TextView) itemView.findViewById(R.id.item_testcase2_textView);
+            View stateView = itemView.findViewById(R.id.item_testcase2_state_view);
+            if (index == selectPosition) {
+                itemView.setBackgroundColor(Color.WHITE);
+            } else {
+                itemView.setBackgroundColor(Color.parseColor("#cccccc"));
             }
+            switch (data.status) {
+                case -1:
+                    stateView.setBackgroundColor(Color.RED);
+                    break;
+                case 0:
+                    stateView.setBackgroundColor(Color.TRANSPARENT);
+                    break;
+                case 1:
+                    stateView.setBackgroundResource(R.drawable.testcase_arrow);
+                    break;
+                case 2:
+                    stateView.setBackgroundColor(Color.GREEN);
+                    break;
+            }
+            textView.setText(data.text);
         }
     }
 
@@ -553,7 +551,7 @@ public abstract class ABSTestCaseFragment extends Fragment {
                     }
                     break;
             }
-            data.result = ttt+data.result;
+            data.result = ttt + data.result;
             tasksAdapter.notifyDataSetChanged();
             updateRight();
             if (code != Code.CANCEL) {

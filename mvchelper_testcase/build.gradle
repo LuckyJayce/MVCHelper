@@ -6,7 +6,7 @@ dependencies {
     compileOnly rootProject.ext.dependencies["recyclerview-v7"]
     compileOnly rootProject.ext.dependencies["support-v4"]
     compileOnly rootProject.ext.dependencies["gson"]
-    implementation project(':mvchelper_library')
+    implementation project(':mvchelper_task_core')
 }
 
 ////添加
