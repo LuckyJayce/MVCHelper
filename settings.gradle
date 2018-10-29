@@ -1,6 +1,6 @@
 include ':app'
 include ':mvchelper_library'
-include ':mvchelper_task'
+include ':mvchelper_task_core'
 include ':mvchelper_tasks'
 include ":mvchelper_okhttp"
 include ':mvcswiperefreshhelper'

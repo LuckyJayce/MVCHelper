@@ -33,6 +33,7 @@ ext {
                     "support-v4"                 : "com.android.support:support-v4:${supportVersion}",
                     "design"                     : "com.android.support:design:${supportVersion}",
                     "recyclerview-v7"            : "com.android.support:recyclerview-v7:${supportVersion}",
+                    "constraint"                 : "com.android.support.constraint:constraint-layout:1.1.0",
                     "nineoldandroids"            : "com.nineoldandroids:library:2.4.0",
                     "picasso"                    : "com.squareup.picasso:picasso:2.5.2",
                     "photoview"                  : "com.github.chrisbanes.photoview:library:1.2.3",

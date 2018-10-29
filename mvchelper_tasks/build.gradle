@@ -3,7 +3,7 @@ apply from: rootProject.file("library.gradle")
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':mvchelper_library')
+    implementation project(':mvchelper_task_core')
 }
 
 ////添加
