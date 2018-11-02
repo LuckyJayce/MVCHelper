@@ -18,73 +18,26 @@ package com.shizhefei.test.controllers;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
-import com.shizhefei.mvc.RequestHandle;
-import com.shizhefei.mvc.ResponseSender;
-import com.shizhefei.task.Code;
-import com.shizhefei.task.IAsyncTask;
-import com.shizhefei.task.ICallback;
-import com.shizhefei.task.TaskHandle;
-import com.shizhefei.task.TaskHelper;
-import com.shizhefei.task.function.Func1;
-import com.shizhefei.task.imp.MemoryCacheStore;
-import com.shizhefei.task.tasks.LinkTask;
-import com.shizhefei.task.tasks.Tasks;
 import com.shizhefei.test.controllers.mvchelpers.CoolActivity;
 import com.shizhefei.test.controllers.mvchelpers.NormalActivity;
 import com.shizhefei.test.controllers.mvchelpers.PullrefshActivity;
 import com.shizhefei.test.controllers.mvchelpers.SwipeRefreshActivity;
 import com.shizhefei.test.controllers.mvchelpers.UltraActivity;
 import com.shizhefei.test.controllers.other.BookDetailActivity;
-import com.shizhefei.test.controllers.other.MovieDetailActivity;
 import com.shizhefei.test.controllers.other.MultiTypeActivity;
 import com.shizhefei.test.controllers.other.UltraRecyclerViewActivity;
 import com.shizhefei.test.controllers.other.Volley_OKHttp_GridViewActivity;
 import com.shizhefei.test.controllers.task.ListTaskActivity;
-import com.shizhefei.test.controllers.task.LoginActivity;
-import com.shizhefei.test.controllers.task.TaskDemoActivity;
-import com.shizhefei.test.controllers.task.TaskOpActivity;
-import com.shizhefei.test.controllers.task.TestNormalTaskActivity;
-import com.shizhefei.test.models.task.LoginTask;
 import com.shizhefei.view.mvc.demo.R;
 
 public class MainActivity extends Activity {
-
-    private TaskHelper<Object> taskHelper;
-    private LoginTask loginTask;
-    private TaskHandle taskHandle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        taskHelper = new TaskHelper<>(new MemoryCacheStore(100));
-
-        taskHelper.registerCallBack(new ICallback<Object>() {
-            @Override
-            public void onPreExecute(Object task) {
-                Log.d("vvvv", "registCallBak onPreExecute task:" + task);
-            }
-
-            @Override
-            public void onProgress(Object task, int percent, long current, long total, Object extraData) {
-//                Log.d("vvvv", "registCallBak onProgress current:"+current+"  task:" + task);
-            }
-
-            @Override
-            public void onPostExecute(Object task, Code code, Exception exception, Object Object) {
-                Log.d("vvvv", "registCallBak onPostExecute task:" + task + " code:" + code);
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        taskHelper.destroy();
     }
 
     /**
@@ -160,15 +113,6 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * 超复杂的界面
-     *
-     * @param view
-     */
-    public void onClickDemo7(View view) {
-        startActivity(new Intent(getApplicationContext(), MovieDetailActivity.class));
-    }
-
-    /**
      * Volley和OKhttp网络请求\nandroid-async-http网络请求\n
      * GridView界面
      *
@@ -195,43 +139,4 @@ public class MainActivity extends Activity {
     public void onClickTask3(View view) {
         startActivity(new Intent(getApplicationContext(), ListTaskActivity.class));
     }
-
-    /**
-     * 登陆Task
-     *
-     * @param view
-     */
-    public void onClickTask1(View view) {
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-    }
-
-    /**
-     * TaskDemo
-     *
-     * @param view
-     */
-    public void onClickTaskDemo(View view) {
-        startActivity(new Intent(getApplicationContext(), TaskDemoActivity.class));
-    }
-
-    /**
-     * 测试task操作符
-     *
-     * @param view
-     */
-    public void onClickTaskOpDemo(View view) {
-        startActivity(new Intent(getApplicationContext(), TaskOpActivity.class));
-    }
-
-
-    /**
-     * 普通写法测试内存泄漏
-     *
-     * @param view
-     */
-    public void onClickNormalTaskDemo(View view) {
-        startActivity(new Intent(getApplicationContext(), TestNormalTaskActivity.class));
-    }
-
-
 }

@@ -40,18 +40,11 @@
             android:name="com.shizhefei.test.controllers.other.UltraRecyclerViewActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.shizhefei.test.controllers.other.MovieDetailActivity"
-            android:label="@string/app_name" />
-        <activity
             android:name="com.shizhefei.test.controllers.other.Volley_OKHttp_GridViewActivity"
             android:label="@string/app_name" />
         <activity
             android:name="com.shizhefei.test.controllers.mvchelpers.CoolActivity"
             android:label="@string/app_name" />
-        <activity
-            android:name="com.shizhefei.test.controllers.task.LoginActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name="com.shizhefei.test.controllers.ProxyActivity"
             android:label="@string/app_name" />
@@ -59,13 +52,8 @@
             android:name="com.shizhefei.test.controllers.task.ListTaskActivity"
             android:label="@string/title_activity_list_task" />
         <activity
-            android:name="com.shizhefei.test.controllers.task.TaskDemoActivity"
-            android:label="@string/title_activity_task_demo" />
-        <activity
             android:name="com.shizhefei.test.controllers.other.MultiTypeActivity"
             android:label="@string/title_activity_multi_type" />
-        <activity android:name="com.shizhefei.test.controllers.task.TestNormalTaskActivity" />
-        <activity android:name="com.shizhefei.test.controllers.task.TaskOpActivity" />
     </application>
 
 </manifest>

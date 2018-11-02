@@ -85,13 +85,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:onClick="onClickDemo7"
-                android:text="超复杂的界面" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:onClick="onClickDemo8"
                 android:text="Volley和OKhttp网络请求\nandroid-async-http网络请求\n
@@ -118,34 +111,6 @@
                 android:layout_marginTop="5dp"
                 android:onClick="onClickTask3"
                 android:text="带有缓存的Task列表" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:onClick="onClickTask1"
-                android:text="登陆Task" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:onClick="onClickTaskDemo"
-                android:text="TaskDemo" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:onClick="onClickTaskOpDemo"
-                android:text="Task操作符" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:onClick="onClickNormalTaskDemo"
-                android:text="测试普通的写法对象回收问题" />
 
         </LinearLayout>
     </ScrollView>
