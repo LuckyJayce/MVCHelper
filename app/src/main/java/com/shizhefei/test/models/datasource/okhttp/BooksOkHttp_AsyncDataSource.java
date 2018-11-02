@@ -50,7 +50,7 @@ public class BooksOkHttp_AsyncDataSource implements IAsyncDataSource<List<Book>>
                 return books;
             }
         });
-//      下面演示正常解析
+//      下面演示正常请求的代码
 //        method.executeAsync(sender, new ResponseParser<List<Book>>() {
 //            @Override
 //            public List<Book> parse(Response response) throws Exception {
