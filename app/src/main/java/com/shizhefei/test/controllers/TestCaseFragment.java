@@ -8,7 +8,7 @@ import com.shizhefei.task.IAsyncTask;
 import com.shizhefei.test.models.datasource.BookDetailDataSource;
 import com.shizhefei.test.models.datasource.okhttp.BooksOkHttpNormal_DataSource;
 import com.shizhefei.test.models.datasource.SearchBookDataSource;
-import com.shizhefei.test.models.task.LoginAsyncTask;
+import com.shizhefei.test.models.task.LoginTask;
 import com.shizhefei.utils.ArrayListMap;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class TestCaseFragment extends ABSTestCaseFragment {
     @Override
     protected List<TestCaseData> getTestCaseDatas() {
         List<TestCaseData> datas = new ArrayList<TestCaseData>();
-        TestCaseData caseData = new TestCaseData("测试登录", new LoginAsyncTask("LuckyJayce", "111"));
+        TestCaseData caseData = new TestCaseData("测试登录", new LoginTask("LuckyJayce", "111"));
         caseData.addParamGet(new String[]{"name", "password"}, new IAsyncTask<Map<String, String>>() {
 
             @Override

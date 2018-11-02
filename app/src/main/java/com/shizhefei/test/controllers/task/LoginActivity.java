@@ -14,7 +14,7 @@ import com.shizhefei.task.ICallback;
 import com.shizhefei.task.TaskHelper;
 import com.shizhefei.test.models.enties.User;
 import com.shizhefei.test.models.exception.BizException;
-import com.shizhefei.test.models.task.LoginAsyncTask;
+import com.shizhefei.test.models.task.LoginTask;
 import com.shizhefei.test.models.task.UploadTask;
 import com.shizhefei.test.view.callback.UploadCallback;
 import com.shizhefei.view.mvc.demo.R;
@@ -56,7 +56,7 @@ public class LoginActivity extends Activity {
             if (v == loginButton) {
                 String name = nameEditText.getText().toString();
                 String password = pwEditText.getText().toString();
-                taskHelper.execute(new LoginAsyncTask(name, password), loginCallback);
+                taskHelper.execute(new LoginTask(name, password), loginCallback);
             } else if (v == uploadButton) {
                 taskHelper.execute(new UploadTask(), new UploadCallback(taskHelper, LoginActivity.this, false));
             }

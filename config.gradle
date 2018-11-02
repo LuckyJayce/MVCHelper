@@ -28,6 +28,7 @@ ext {
                versionName      : "2.6.0"]
 
     supportVersion = "28.0.0"
+    mvcHelperVersion = "1.4.0"
 
     dependencies = ["appcompat-v7"               : "com.android.support:appcompat-v7:${supportVersion}",
                     "support-v4"                 : "com.android.support:support-v4:${supportVersion}",
@@ -47,12 +48,14 @@ ext {
                     "okio"                       : "com.squareup.okio:okio:1.9.0",
                     "butterknife"                : "com.jakewharton:butterknife:7.0.1",
                     "otto"                       : "com.squareup:otto:1.3.8",
-                    "mvchelper-core"             : "com.shizhefei:MVCHelper-Library:1.0.6",
-                    "mvchelper-swipe"            : "com.shizhefei:MVCHelper-SwipeRefresh:1.0.6",
-                    "mvchelper-ultra"            : "com.shizhefei:MVCHelper-UltraRefresh:1.0.6",
-                    "mvchelper-testcase"         : "com.shizhefei:MVCHelper-TestCase:1.0.6",
-                    "mvchelper-pull"             : "com.shizhefei:MVCHelper-Pullrefresh:1.0.6",
-                    "mvchelper-okhttp"           : "com.shizhefei:MVCHelper-OkHttp:1.0.6",
+                    "MVCHelper-Task-Core"        : "com.shizhefei:MVCHelper-Task-Core:${mvcHelperVersion}",
+                    "MVCHelper-Library"          : "com.shizhefei:MVCHelper-Library:${mvcHelperVersion}",
+                    "MVCHelper-SwipeRefresh"     : "com.shizhefei:MVCHelper-SwipeRefresh:${mvcHelperVersion}",
+                    "MVCHelper-UltraRefresh"     : "com.shizhefei:MVCHelper-UltraRefresh:${mvcHelperVersion}",
+                    "MVCHelper-TestCase"         : "com.shizhefei:MVCHelper-TestCase:${mvcHelperVersion}",
+                    "MVCHelper-Pullrefresh"      : "com.shizhefei:MVCHelper-Pullrefresh:${mvcHelperVersion}",
+                    "MVCHelper-OkHttp"           : "com.shizhefei:MVCHelper-OkHttp:${mvcHelperVersion}",
+                    "MVCHelper-Tasks"            : "com.shizhefei:MVCHelper-Tasks:${mvcHelperVersion}",
                     "ultra"                      : "in.srain.cube:ultra-ptr:1.0.11",
                     "pulltorefresh"              : "com.shizhefei:pulltorefresh:1.0.1",
                     "ViewPagerIndicator"         : "com.shizhefei:ViewPagerIndicator:1.0.7",

@@ -42,19 +42,19 @@ dependencies {
     implementation rootProject.ext.dependencies["pulltorefresh"]
     implementation rootProject.ext.dependencies["okhttp"]
     implementation rootProject.ext.dependencies["okio"]
-    implementation rootProject.ext.dependencies["okio"]
+    implementation rootProject.ext.dependencies["MVCHelper-Task-Core"]
+    implementation rootProject.ext.dependencies["MVCHelper-Tasks"]
+    implementation rootProject.ext.dependencies["MVCHelper-OkHttp"]
+    implementation rootProject.ext.dependencies["MVCHelper-TestCase"]
 
     //    compile 'com.shizhefei:MVCHelper-Library:1.0.3'
     //    compile 'com.shizhefei:MVCHelper-Pullrefreh:1.0.2'
     //    compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.0.2'
     //    compile 'com.shizhefei:MVCHelper-UltraRefresh:1.0.2'
     implementation project(':mvchelper_library')
-    implementation project(':mvchelper_tasks')
     implementation project(':mvcswiperefreshhelper')
     implementation project(':mvcultrahelper')
     implementation project(':mvcpullrefshhelper')
-    implementation project(':mvchelper_okhttp')
-    implementation project(':mvchelper_testcase')
     implementation project(':mvccoolhelper')
 
     debugImplementation rootProject.ext.dependencies["leakcanary-android"]

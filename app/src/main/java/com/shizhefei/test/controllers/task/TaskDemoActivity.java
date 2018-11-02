@@ -19,7 +19,6 @@ import com.shizhefei.test.models.datasource.okhttp.BooksOkHttp_AsyncDataSource;
 import com.shizhefei.test.models.datasource.okhttp.BooksOkHttp_SyncDataSource;
 import com.shizhefei.test.models.enties.Book;
 import com.shizhefei.test.models.enties.User;
-import com.shizhefei.test.models.task.LoginAsyncTask;
 import com.shizhefei.test.models.task.LoginTask;
 import com.shizhefei.view.mvc.demo.R;
 
@@ -142,7 +141,7 @@ public class TaskDemoActivity extends Activity {
                     }
                 });
             } else if (v == asyncTaskButton) {
-                taskHelper.execute(new LoginAsyncTask("LuckyJayce", "111"), new SimpleCallback<User>() {
+                taskHelper.execute(new LoginTask("LuckyJayce", "111"), new SimpleCallback<User>() {
                     @Override
                     public void onPreExecute(Object task) {
                         super.onPreExecute(task);

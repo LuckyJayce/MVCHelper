@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.shizhefei.mvc.ILoadViewFactory.ILoadMoreView;
 import com.shizhefei.mvc.ILoadViewFactory.ILoadView;
-import com.shizhefei.utils.MVCLogUtil;
+import com.shizhefei.utils.TaskLogUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -40,14 +40,14 @@ public class MVCSwipeRefreshHelper<DATA> extends MVCHelper<DATA> {
                 method.setAccessible(true);
                 method.invoke(swipeRefreshLayout);
             } catch (Exception e) {
-                MVCLogUtil.e(e, "MVCSwipeRefreshHelper ensureTarget");
+                TaskLogUtil.e(e, "MVCSwipeRefreshHelper ensureTarget");
             }
             try {
                 Field field = swipeRefreshLayout.getClass().getDeclaredField("mTarget");
                 field.setAccessible(true);
                 mTarget = (View) field.get(swipeRefreshLayout);
             } catch (Exception e) {
-                MVCLogUtil.e(e, "MVCSwipeRefreshHelper mTarget");
+                TaskLogUtil.e(e, "MVCSwipeRefreshHelper mTarget");
             }
             swipeRefreshLayout.setOnRefreshListener(listener);
         }

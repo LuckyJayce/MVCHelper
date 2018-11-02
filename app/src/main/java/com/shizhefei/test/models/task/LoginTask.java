@@ -29,7 +29,7 @@ public class LoginTask implements ITask<User>{
         if (TextUtils.isEmpty(password)) {
             throw new BizException("请输入密码");
         }
-        if (name.equals("aaa") && password.equals("111")) {
+        if (name.equals("LuckyJayce") && password.equals("111")) {
             return new User("1", "aaa", 23, "中国人");
         } else {
             throw new BizException("用户名或者密码不正确");
