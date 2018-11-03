@@ -42,10 +42,10 @@ dependencies {
     implementation rootProject.ext.dependencies["pulltorefresh"]
     implementation rootProject.ext.dependencies["okhttp"]
     implementation rootProject.ext.dependencies["okio"]
-    implementation rootProject.ext.dependencies["MVCHelper-Task-Core"]
-    implementation rootProject.ext.dependencies["MVCHelper-Tasks"]
-    implementation rootProject.ext.dependencies["MVCHelper-OkHttp"]
-    implementation rootProject.ext.dependencies["MVCHelper-TestCase"]
+    implementation rootProject.ext.dependencies["task-core"]
+    implementation rootProject.ext.dependencies["task-tasks"]
+    implementation rootProject.ext.dependencies["task-okhttp"]
+    implementation rootProject.ext.dependencies["task-testcase"]
 
     //    compile 'com.shizhefei:MVCHelper-Library:1.0.3'
     //    compile 'com.shizhefei:MVCHelper-Pullrefreh:1.0.2'

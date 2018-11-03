@@ -4,7 +4,7 @@ apply from: rootProject.file("library.gradle")
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly rootProject.ext.dependencies["recyclerview-v7"]
-    api rootProject.ext.dependencies["MVCHelper-Task-Core"]
+    api rootProject.ext.dependencies["task-core"]
 }
 
 ////添加
