@@ -19,7 +19,7 @@ https://github.com/LuckyJayce/MVCHelper/releases
 
 	//MVCHelper核心类库
 	compile 'com.shizhefei:MVCHelper-Library:1.4.0'
-	//里面有使用recyclerview，所以需要导入recyclerview
+	//里面有使用recyclerview，所以需要导入recyclerview,版本不限
 	compile 'com.android.support:recyclerview-v7:28.0.0'
 
 ## 2.可选：   ##
@@ -29,6 +29,7 @@ https://github.com/LuckyJayce/MVCHelper/releases
 	//里面包含一个MVCCoolHelper 是适配这个控件的 MVCHelper
 	compile 'com.shizhefei:MVCHelper-CoolRefresh:1.4.0'
 	compile 'com.shizhefei:CoolRefreshView:1.0.1'
+	//v4版本不限
 	compile 'com.android.support:support-v4:28.0.0'
 
 <2>  使用 https://github.com/chrisbanes/Android-PullToRefresh 的刷新控件导入
@@ -49,8 +50,8 @@ https://github.com/LuckyJayce/MVCHelper/releases
 
 	//里面包含一个MVCSwipeRefreshHelper 是适配这个控件的 MVCHelper
 	compile 'com.shizhefei:MVCHelper-SwipeRefresh:1.4.0'
-	//v4包应该都有导入吧，v7包里面包含v4包
-	compile 'com.android.support:support-v4:24.0.0'
+	//v4包应该都有导入吧，v7包里面包含v4包， v4版本不限
+	compile 'com.android.support:support-v4:28.0.0'
 
 <5> 测试用例，可以方便的查看MVCHelper，Task的运行情况和返回数据，还提供了修改接口字段，用于接口测试很方便哦
 
