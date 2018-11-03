@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply from: rootProject.file("library.gradle")
+apply from: rootProject.file("buildsystem/library.gradle")
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

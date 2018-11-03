@@ -41,6 +41,7 @@ ext {
                     "photoview"                  : "com.github.chrisbanes.photoview:library:1.2.3",
                     "numberprogressbar"          : "com.daimajia.numberprogressbar:library:1.2@aar",
                     "umeng-analytics"            : "com.umeng.analytics:analytics:latest.integration",
+                    "rxjava"                     : "io.reactivex.rxjava2:rxjava:2.2.3",
                     "retrofit"                   : "com.squareup.retrofit2:retrofit:2.1.0",
                     "retrofit-rxjava"            : "com.squareup.retrofit2:adapter-rxjava:2.1.0",
                     "retrofit-gson"              : "com.squareup.retrofit2:converter-gson:2.1.0",
