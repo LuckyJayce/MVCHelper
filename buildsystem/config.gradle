@@ -53,7 +53,7 @@ ext {
                     "task-core"                  : "com.shizhefei:task-core:${taskVersion}",
                     "task-okhttp"                : "com.shizhefei:task-okhttp:${taskVersion}",
                     "task-tasks"                 : "com.shizhefei:task-tasks:${taskVersion}",
-                    "task-testcase"         : "com.shizhefei:task-testcase:${taskVersion}",
+                    "task-testcase"              : "com.shizhefei:task-testcase:${taskVersion}",
                     "MVCHelper-Library"          : "com.shizhefei:MVCHelper-Library:${mvcHelperVersion}",
                     "MVCHelper-SwipeRefresh"     : "com.shizhefei:MVCHelper-SwipeRefresh:${mvcHelperVersion}",
                     "MVCHelper-UltraRefresh"     : "com.shizhefei:MVCHelper-UltraRefresh:${mvcHelperVersion}",
