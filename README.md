@@ -3,10 +3,9 @@
 ### MVCHelper主要用于下拉刷新加载，失败，加载，空数据，成功的界面切换。
 MVCHelper +（IDataSource或ITask）+ IDataAdapter + 下拉刷新控件 + 布局切换（ILoadViewFactory，ILoadView，ILoadMoreView）
 
-### TaskHelper主要用于没有布局切换和刷新控件的MVC架构，可以执行多个任务通过回调ICallback更新UI
-TaskHelper+（ITask或IDataSource）+ ICallBack
+**原先Task的代码已经抽离出单独一个类库：https://github.com/LuckyJayce/Task**
 
-Download sample [Apk](https://github.com/LuckyJayce/MVCHelper/blob/master/raw/MVCHelper_Demo.apk?raw=true)  
+
 
 ### 历史版本和更新信息  
 https://github.com/LuckyJayce/MVCHelper/releases
@@ -86,10 +85,10 @@ MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，
 ​          
 ​     //数据源
 ​    	
-    public interface IDataSource<DATA> {
-    	// 获取刷新的数据
-    	public DATA refresh() throws Exception;
-    
+​    public interface IDataSource<DATA> {
+​    	// 获取刷新的数据
+​    	public DATA refresh() throws Exception;
+​    
     	// 获取加载更多的数据
     	public DATA loadMore() throws Exception;
     
@@ -103,11 +102,11 @@ MVCHelper. 实现下拉刷新，滚动底部自动加载更多，分页加载，
 ​		private int page = 1;
 ​		private int maxPage = 5;
 ​	
-		@Override
-		public List<Book> refresh() throws Exception {
-			return loadBooks(1);
-		}
-	
+​		@Override
+​		public List<Book> refresh() throws Exception {
+​			return loadBooks(1);
+​		}
+​	
 		@Override
 		public List<Book> loadMore() throws Exception {
 			return loadBooks(page + 1);
@@ -286,8 +285,8 @@ https://github.com/LuckyJayce/MVCHelper/tree/master/app/src/main/java/com/shizhe
 ​       
 ​	public interface IDataAdapter<DATA> {
 ​	
-		public abstract void notifyDataChanged(DATA data, boolean isRefresh);
-	
+​		public abstract void notifyDataChanged(DATA data, boolean isRefresh);
+​	
 		public abstract DATA getData();
 	
 		public boolean isEmpty();
@@ -300,11 +299,11 @@ https://github.com/LuckyJayce/MVCHelper/tree/master/app/src/main/java/com/shizhe
 ​		private List<Book> books = new ArrayList<Book>();
 ​		private LayoutInflater inflater;
 ​	
-		public BooksAdapter(Context context) {
-			super();
-			inflater = LayoutInflater.from(context);
-		}
-	
+​		public BooksAdapter(Context context) {
+​			super();
+​			inflater = LayoutInflater.from(context);
+​		}
+​	
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
@@ -355,8 +354,8 @@ Activity负责调度，代码如下
 ​	
 ​	public class MainActivity extends Activity {
 ​	
-		private MVCHelper<List<Book>> mvcHelper;
-	
+​		private MVCHelper<List<Book>> mvcHelper;
+​	
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -469,12 +468,13 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
 ​	 */
 ​	public class BooDetailActivity extends Activity {
 ​	
-		private MVCHelper<Book> listViewHelper;
-		private TextView authorTextView;
-		private TextView contentTextView;
-		private TextView descriptionTextView;
-		private TextView nameTextView;
-	
+​		private MVCHelper<Book> listViewHelper;
+​		private TextView authorTextView;
+​		private TextView contentTextView;
+​		private TextView descriptionTextView;
+​		private TextView nameTextView;
+​	
+
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -559,6 +559,7 @@ MVCHelper.setLoadViewFractory(new LoadViewFractory());
         2.如果不是网络请求数据，比如从数据库获取数据设置 mvcHelper.setNeedCheckNetwork(false);  
 
  
+
 
 
 
